@@ -20,7 +20,7 @@
   body{margin:0;color:var(--hueso);font-family:'Archivo',sans-serif;
     background-color:var(--negro);
     background-image:linear-gradient(rgba(12,12,12,var(--fondo-oscurecido,.9)),rgba(12,12,12,var(--fondo-oscurecido,.9))), var(--fondo-imagen, none);
-    background-repeat:repeat;background-size:480px auto;background-attachment:fixed;
+    background-repeat:repeat;background-size:var(--fondo-tam, 480px) auto;background-attachment:fixed;
     font-size:16px;line-height:1.5;-webkit-font-smoothing:antialiased;}
   h1,h2,h3{font-family:'Oswald',sans-serif;font-weight:700;margin:0;}
   button{font-family:inherit;cursor:pointer;}
@@ -283,6 +283,7 @@
     <div class="slider-mini"><span>Tamaño carrito (%)</span><input type="number" id="cart-escala-slider" min="60" max="300" value="115"></div>
     <button id="fondo-cambiar-btn">🎨 Fondo</button>
     <div class="slider-mini"><span>Transparencia fondo (%)</span><input type="number" id="fondo-opacidad-slider" min="0" max="100" value="10"></div>
+    <div class="slider-mini"><span>Tamaño del mosaico de fondo</span><input type="number" id="fondo-tam-slider" min="20" max="4000" value="480"></div>
     <div class="slider-mini"><span>Foto del popup</span><input type="number" id="popup-foto-tam-slider" min="150" max="700" value="380"></div>
     <button id="config-btn">⚙️ Configuración</button>
     <button id="admin-download">Descargar sitio (.zip)</button>
@@ -2298,6 +2299,11 @@ qs("#fondo-opacidad-slider").addEventListener("change", (e) => {
   document.documentElement.style.setProperty("--fondo-oscurecido", TEXTOS.fondoOpacidad / 100);
   saveState();
 });
+qs("#fondo-tam-slider").addEventListener("change", (e) => {
+  TEXTOS.fondoTamPx = Number(e.target.value);
+  document.documentElement.style.setProperty("--fondo-tam", TEXTOS.fondoTamPx + "px");
+  saveState();
+});
 
 /* ================= exportar sitio (.zip) ================= */
 function cargarJSZip() {
@@ -2427,6 +2433,7 @@ function init() {
   if (TEXTOS.cartEscala) { document.documentElement.style.setProperty("--cart-escala", TEXTOS.cartEscala); qs("#cart-escala-slider").value = TEXTOS.cartEscala * 100; }
   if (TEXTOS.fondoImagen && TEXTOS.fondoImagen.archivo) document.documentElement.style.setProperty("--fondo-imagen", `url(${TEXTOS.fondoImagen.archivo})`);
   if (TEXTOS.fondoOpacidad != null) { document.documentElement.style.setProperty("--fondo-oscurecido", TEXTOS.fondoOpacidad / 100); qs("#fondo-opacidad-slider").value = TEXTOS.fondoOpacidad; }
+  if (TEXTOS.fondoTamPx != null) { document.documentElement.style.setProperty("--fondo-tam", TEXTOS.fondoTamPx + "px"); qs("#fondo-tam-slider").value = TEXTOS.fondoTamPx; }
   if (TEXTOS.popupFotoTamPx) { document.documentElement.style.setProperty("--popup-foto-tam", TEXTOS.popupFotoTamPx + "px"); qs("#popup-foto-tam-slider").value = TEXTOS.popupFotoTamPx; }
   qs("#wa-float").href = waLink(TEXTOS.whatsappNumero, "Hola BRASAS, quería hacerte una consulta.");
   renderTodo();
