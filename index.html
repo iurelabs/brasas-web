@@ -90,8 +90,8 @@
 
   .col-central{flex:1;min-width:0;padding:36px 30px;display:flex;flex-direction:column;align-items:center;gap:24px;}
   @media(max-width:700px){
-    .banner-lat{width:30% !important;}
-    .col-central{flex:0 0 40% !important;max-width:40% !important;padding:16px 4px;}
+    .banner-lat{width:var(--banner-mobile-pct, 30%) !important;}
+    .col-central{flex:0 0 calc(100% - (var(--banner-mobile-pct, 30%) * 2)) !important;max-width:calc(100% - (var(--banner-mobile-pct, 30%) * 2)) !important;padding:16px 4px;}
     .prod-item{max-width:100% !important;}
   }
   #lista-productos{display:flex;flex-direction:column;align-items:center;gap:var(--espacio-productos, 56px);width:100%;}
@@ -277,6 +277,7 @@
     <div class="slider-mini"><span>Ancho banners</span><input type="number" id="banner-ancho-slider" min="80" max="700" value="210"></div>
     <div class="slider-mini"><span>Espaciado fotos del banner</span><input type="number" id="banner-espacio-slider" min="0" max="100" value="3"></div>
     <div class="slider-mini"><span>Espacio inicial del banner</span><input type="number" id="banner-espacio-inicio-slider" min="0" max="400" value="0"></div>
+    <div class="slider-mini"><span>Banner en mobile (%)</span><input type="number" id="banner-mobile-pct-slider" min="0" max="49" step="1" value="30"></div>
     <label class="slider-mini"><input type="checkbox" id="banners-animados-check"> Banners en movimiento</label>
     <label class="slider-mini"><input type="checkbox" id="galeria-inferior-check"> Galería inferior (abajo)</label>
     <div class="slider-mini"><span>Tamaño carrito (%)</span><input type="number" id="cart-escala-slider" min="60" max="300" value="115"></div>
@@ -2195,6 +2196,11 @@ qs("#banner-espacio-inicio-slider").addEventListener("change", (e) => {
   document.documentElement.style.setProperty("--banner-espacio-inicio", TEXTOS.bannerEspacioInicioPx + "px");
   saveState();
 });
+qs("#banner-mobile-pct-slider").addEventListener("change", (e) => {
+  TEXTOS.bannerMobilePct = Number(e.target.value);
+  document.documentElement.style.setProperty("--banner-mobile-pct", TEXTOS.bannerMobilePct + "%");
+  saveState();
+});
 qs("#banners-animados-check").addEventListener("change", (e) => {
   TEXTOS.bannersAnimados = e.target.checked;
   saveState();
@@ -2411,6 +2417,7 @@ function init() {
   if (TEXTOS.espacioProductosPx) { document.documentElement.style.setProperty("--espacio-productos", TEXTOS.espacioProductosPx + "px"); qs("#espacio-prod-slider").value = TEXTOS.espacioProductosPx; }
   if (TEXTOS.bannerEspaciadoPx != null) { document.documentElement.style.setProperty("--banner-espacio", TEXTOS.bannerEspaciadoPx + "px"); qs("#banner-espacio-slider").value = TEXTOS.bannerEspaciadoPx; }
   if (TEXTOS.bannerEspacioInicioPx != null) { document.documentElement.style.setProperty("--banner-espacio-inicio", TEXTOS.bannerEspacioInicioPx + "px"); qs("#banner-espacio-inicio-slider").value = TEXTOS.bannerEspacioInicioPx; }
+  if (TEXTOS.bannerMobilePct != null) { document.documentElement.style.setProperty("--banner-mobile-pct", TEXTOS.bannerMobilePct + "%"); qs("#banner-mobile-pct-slider").value = TEXTOS.bannerMobilePct; }
   qs("#banners-animados-check").checked = !!TEXTOS.bannersAnimados;
   qs("#galeria-inferior-check").checked = !!TEXTOS.mostrarGaleriaInferior;
   document.body.classList.toggle("mostrar-galeria-inferior", !!TEXTOS.mostrarGaleriaInferior);
