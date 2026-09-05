@@ -33,7 +33,7 @@
   #galeria-track.animar:hover{animation-play-state:paused;}
   @keyframes cinta{from{transform:translateX(0);}to{transform:translateX(-50%);}}
   @media(prefers-reduced-motion:reduce){#galeria-track.animar{animation:none;}}
-  #cart-galeria-wrap{flex:1;min-width:0;overflow:hidden;display:none;height:56px;}
+  #cart-galeria-wrap{flex:1;min-width:0;overflow:hidden;display:none;height:var(--galeria-inf-tam, 56px);}
   body.mostrar-galeria-inferior #cart-galeria-wrap, .admin-mode #cart-galeria-wrap{display:block;}
   #galeria-inferior-track{display:flex;gap:3px;height:100%;width:max-content;}
   #galeria-inferior-track.animar{animation:cinta 40s linear infinite;}
@@ -249,11 +249,12 @@
     border-radius:50%;font-size:1.2rem;}
 
   #admin-toolbar{display:none;position:fixed;top:0;left:0;right:0;background:var(--admin);color:#08202e;z-index:90;
-    padding:9px 16px;align-items:center;justify-content:space-between;font-size:.78rem;flex-wrap:wrap;gap:8px;}
+    padding:9px 16px;align-items:center;justify-content:flex-start;font-size:.78rem;flex-wrap:wrap;gap:8px;}
   .admin-mode #admin-toolbar{display:flex;}
-  .admin-mode #galeria{margin-top:42px;}
+  .admin-mode #galeria{margin-top:var(--admin-toolbar-h, 42px);}
+  #admin-toolbar.colapsado .right{display:none;}
   #admin-toolbar strong{font-family:'Oswald',sans-serif;text-transform:uppercase;font-size:.8rem;}
-  #admin-toolbar .right{display:flex;gap:10px;align-items:center;flex-wrap:wrap;}
+  #admin-toolbar .right{display:flex;gap:10px;align-items:center;flex-wrap:wrap;width:100%;}
   #admin-toolbar button{background:#08202e;color:var(--hueso);border:none;padding:6px 12px;border-radius:var(--radius);font-size:.72rem;}
   #admin-toolbar .slider-mini{display:flex;align-items:center;gap:5px;font-size:.68rem;}
   #admin-toolbar .slider-mini input[type="number"]{width:58px;background:#08202e;border:1px solid rgba(255,255,255,.25);
@@ -270,6 +271,7 @@
 
 <div id="admin-toolbar">
   <strong>Modo edición · BRASAS</strong>
+  <button type="button" id="admin-toolbar-toggle" style="background:#08202e;color:var(--hueso);border:none;padding:5px 10px;border-radius:2px;font-size:.72rem;">▾ Ocultar controles</button>
   <div class="right">
     <div class="slider-mini"><span>Galería (arriba y abajo)</span><input type="number" id="galeria-tam-slider" min="40" max="600" value="84"></div>
     <div class="slider-mini"><span>Foto producto</span><input type="number" id="foto-tam-slider" min="200" max="2000" value="480"></div>
@@ -280,6 +282,7 @@
     <div class="slider-mini"><span>Banner en mobile (%)</span><input type="number" id="banner-mobile-pct-slider" min="0" max="49" step="1" value="30"></div>
     <label class="slider-mini"><input type="checkbox" id="banners-animados-check"> Banners en movimiento</label>
     <label class="slider-mini"><input type="checkbox" id="galeria-inferior-check"> Galería inferior (abajo)</label>
+    <div class="slider-mini"><span>Tamaño galería inferior</span><input type="number" id="galeria-inf-tam-slider" min="30" max="300" value="56"></div>
     <div class="slider-mini"><span>Tamaño carrito (%)</span><input type="number" id="cart-escala-slider" min="60" max="300" value="115"></div>
     <button id="fondo-cambiar-btn">🎨 Fondo</button>
     <div class="slider-mini"><span>Transparencia fondo (%)</span><input type="number" id="fondo-opacidad-slider" min="0" max="100" value="10"></div>
@@ -2425,6 +2428,12 @@ qs("#galeria-inferior-check").addEventListener("change", (e) => {
   saveState();
   ajustarEspaciosFijos();
 });
+qs("#galeria-inf-tam-slider").addEventListener("change", (e) => {
+  TEXTOS.galeriaInfTamPx = Number(e.target.value);
+  document.documentElement.style.setProperty("--galeria-inf-tam", TEXTOS.galeriaInfTamPx + "px");
+  saveState();
+  ajustarEspaciosFijos();
+});
 qs("#cart-escala-slider").addEventListener("change", (e) => {
   TEXTOS.cartEscala = Number(e.target.value) / 100;
   document.documentElement.style.setProperty("--cart-escala", TEXTOS.cartEscala);
@@ -2574,12 +2583,19 @@ qs("#admin-download").addEventListener("click", async () => {
     delete textosExport.fondoImagen._pendienteExport; delete textosExport.fondoImagen._nombreSugerido;
   }
   const dataFinal = { version: SCHEMA_VERSION, textos: textosExport, productos: productosExport };
-  let html = document.documentElement.outerHTML;
-  html = html.replace(/<script id="data-json" type="application\/json">[\s\S]*?<\/script>/,
-    `<script id="data-json" type="application/json">${JSON.stringify(dataFinal)}<\/script>`);
-  html = html.replace(//, "");
-  html = html.replace(/<div class="toast show" id="toast">[^<]*<\/div>/, '<div class="toast" id="toast"></div>');
-  html = html.replace(/class="overlay"/g, 'class="overlay"').replace(/class="(popup|sheet)([^"]*) open"/g, 'class="$1$2"');
+  const clon = document.documentElement.cloneNode(true);
+  clon.querySelector("body").classList.remove("admin-mode");
+  clon.querySelector("body").removeAttribute("style"); // el padding se recalcula solo al cargar
+  qsa(".overlay, .popup, #cart-sheet", clon).forEach(el => el.classList.remove("open"));
+  // saca cualquier panel de edicion que haya quedado insertado dinamicamente en el body (editar producto, config, historial, ver foto ampliada)
+  qsa("body > div.overlay", clon).forEach(el => {
+    if (!["popup-overlay", "cart-overlay"].includes(el.id)) el.remove();
+  });
+  const toastClon = clon.querySelector("#toast");
+  if (toastClon) { toastClon.className = ""; toastClon.textContent = ""; }
+  const dataScript = clon.querySelector("#data-json");
+  if (dataScript) dataScript.textContent = JSON.stringify(dataFinal);
+  const html = clon.outerHTML;
   zip.file("index.html", `<!DOCTYPE html>\n${html}`);
   const blob = await zip.generateAsync({ type: "blob" });
   const a = document.createElement("a");
@@ -2595,8 +2611,18 @@ function ajustarEspaciosFijos() {
   document.body.style.paddingTop = galeriaEl.offsetHeight + "px";
   document.body.style.paddingBottom = cartEl.offsetHeight + "px";
   document.documentElement.style.setProperty("--wa-float-bottom", (cartEl.offsetHeight + 16) + "px");
+  const toolbarEl = qs("#admin-toolbar");
+  if (toolbarEl && document.body.classList.contains("admin-mode")) {
+    document.documentElement.style.setProperty("--admin-toolbar-h", toolbarEl.offsetHeight + "px");
+  }
 }
 window.addEventListener("resize", ajustarEspaciosFijos);
+qs("#admin-toolbar-toggle").addEventListener("click", (e) => {
+  const toolbarEl = qs("#admin-toolbar");
+  const colapsado = toolbarEl.classList.toggle("colapsado");
+  e.target.textContent = colapsado ? "▸ Mostrar controles" : "▾ Ocultar controles";
+  ajustarEspaciosFijos();
+});
 
 function renderTodo() {
   renderGaleria();
@@ -2638,6 +2664,7 @@ function init() {
   if (TEXTOS.bannerMobilePct != null) { document.documentElement.style.setProperty("--banner-mobile-pct", TEXTOS.bannerMobilePct + "%"); qs("#banner-mobile-pct-slider").value = TEXTOS.bannerMobilePct; }
   qs("#banners-animados-check").checked = !!TEXTOS.bannersAnimados;
   qs("#galeria-inferior-check").checked = !!TEXTOS.mostrarGaleriaInferior;
+  if (TEXTOS.galeriaInfTamPx != null) { document.documentElement.style.setProperty("--galeria-inf-tam", TEXTOS.galeriaInfTamPx + "px"); qs("#galeria-inf-tam-slider").value = TEXTOS.galeriaInfTamPx; }
   document.body.classList.toggle("mostrar-galeria-inferior", !!TEXTOS.mostrarGaleriaInferior);
   TEXTOS.galeriaInferior = TEXTOS.galeriaInferior || [];
   if (TEXTOS.fotoTamPx) { document.documentElement.style.setProperty("--foto-tam", TEXTOS.fotoTamPx + "px"); qs("#foto-tam-slider").value = TEXTOS.fotoTamPx; }
