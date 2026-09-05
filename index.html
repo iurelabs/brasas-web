@@ -267,7 +267,7 @@
   .toast.show{opacity:1;}
 </style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script></head>
-<body class="mostrar-galeria-inferior admin-mode" style="padding-top: 114px; padding-bottom: 98px;">
+<body class="mostrar-galeria-inferior">
 
 <div id="admin-toolbar">
   <strong>Modo edición · BRASAS</strong>
@@ -2677,7 +2677,6 @@ function init() {
   qs("#wa-float").href = waLink(TEXTOS.whatsappNumero, "Hola BRASAS, quería hacerte una consulta.");
   renderTodo();
   renderCartBar();
-  saveState();
   iniciarAutoAvanceFotos();
 }
 init();
