@@ -34,7 +34,12 @@
   #galeria-track.animar:hover{animation-play-state:paused;}
   @keyframes cinta{from{transform:translateX(0);}to{transform:translateX(-50%);}}
   @media(prefers-reduced-motion:reduce){#galeria-track.animar{animation:none;}}
-  #cart-galeria-wrap{flex:1;min-width:0;overflow-x:auto;overflow-y:hidden;display:none;height:var(--galeria-inf-tam, 56px);}
+  #cart-galeria-wrap{flex:1;min-width:0;overflow-x:auto;overflow-y:hidden;display:none;align-self:stretch;
+    scrollbar-width:none;-ms-overflow-style:none;}
+  #cart-galeria-wrap::-webkit-scrollbar{display:none;}
+  .admin-mode #cart-galeria-wrap{scrollbar-width:thin;-ms-overflow-style:auto;}
+  .admin-mode #cart-galeria-wrap::-webkit-scrollbar{display:block;height:6px;}
+  .admin-mode #cart-galeria-wrap::-webkit-scrollbar-thumb{background:var(--admin);border-radius:3px;}
   body.mostrar-galeria-inferior #cart-galeria-wrap, .admin-mode #cart-galeria-wrap{display:block;}
   #galeria-inferior-track{display:flex;gap:3px;height:100%;width:max-content;}
   #galeria-inferior-track.animar{animation:cinta 40s linear infinite;}
@@ -194,7 +199,7 @@
   #cart-bar{position:fixed;left:0;right:0;bottom:0;z-index:70;background:var(--negro);border-top:3px solid var(--hueso);
     box-shadow:0 -8px 26px rgba(0,0,0,.65);
     padding:calc(16px * var(--cart-escala)) calc(24px * var(--cart-escala)) calc(16px * var(--cart-escala) + env(safe-area-inset-bottom));}
-  #cart-bar .row{display:flex;align-items:center;gap:16px;max-width:none;margin:0 auto;}
+  #cart-bar .row{display:flex;align-items:stretch;gap:16px;max-width:none;margin:0 auto;}
   .cart-resumen{flex-shrink:0;display:flex;align-items:center;gap:16px;margin-left:auto;}
   #cart-bar .total{font-family:'Oswald',sans-serif;font-size:calc(1.35rem * var(--cart-escala));}
   #cart-bar .envio{font-size:calc(.78rem * var(--cart-escala));color:var(--wa);font-weight:700;}
@@ -290,7 +295,6 @@
     <div class="slider-mini"><span>Banner en mobile (%)</span><input type="number" id="banner-mobile-pct-slider" min="0" max="49" step="1" value="30"></div>
     <label class="slider-mini"><input type="checkbox" id="banners-animados-check"> Banners en movimiento</label>
     <label class="slider-mini"><input type="checkbox" id="galeria-inferior-check"> Galería inferior (abajo)</label>
-    <div class="slider-mini"><span>Tamaño galería inferior</span><input type="number" id="galeria-inf-tam-slider" min="30" max="300" value="56"></div>
     <div class="slider-mini"><span>Tamaño carrito (%)</span><input type="number" id="cart-escala-slider" min="60" max="300" value="115"></div>
     <button id="fondo-cambiar-btn">🎨 Fondo</button>
     <div class="slider-mini"><span>Transparencia fondo (%)</span><input type="number" id="fondo-opacidad-slider" min="0" max="100" value="10"></div>
@@ -298,6 +302,7 @@
     <div class="slider-mini"><span>Foto del popup</span><input type="number" id="popup-foto-tam-slider" min="150" max="700" value="380"></div>
     <button id="config-btn">⚙️ Configuración</button>
     <button id="admin-download">Descargar sitio (.zip)</button>
+    <button id="admin-borrar-cache" style="background:#5a1414;">🗑️ Borrar memoria local</button>
     <button id="admin-exit">Salir</button>
   </div>
 </div>
@@ -1938,12 +1943,17 @@ function comprimirImagen(file, maxAncho = 1400, calidad = 0.8) {
 
 function loadState() {
   const saved = storage.getItem("brasas_v2_state");
-  let data = { textos: TEXTOS, productos: PRODUCTOS }; // lo que ya vino embebido en el archivo (tus datos reales)
+  const embebido = { textos: TEXTOS, productos: PRODUCTOS }; // lo que ya vino embebido en el archivo (tus datos reales, recien publicados)
+  let data = embebido;
   if (saved) {
     try {
       const parsed = JSON.parse(saved);
-      if (parsed.version === SCHEMA_VERSION) data = parsed;
-      else { console.warn("Estructura de datos vieja, se descarta."); storage.removeItem("brasas_v2_state"); }
+      if (parsed.version === SCHEMA_VERSION) {
+        const fechaGuardada = (parsed.textos || {}).publicadoEn;
+        const fechaEmbebida = (embebido.textos || {}).publicadoEn || 0;
+        // solo descartamos lo guardado si tiene fecha propia Y es mas vieja que lo recien publicado
+        data = (fechaGuardada != null && fechaGuardada < fechaEmbebida) ? embebido : parsed;
+      } else { console.warn("Estructura de datos vieja, se descarta."); storage.removeItem("brasas_v2_state"); }
     } catch (e) { }
   }
   TEXTOS = { ...DEFAULT_DATA.textos, ...data.textos };
@@ -1966,6 +1976,7 @@ function normalizarProducto(p) {
 }
 const SCHEMA_VERSION = 1;
 function saveState() {
+  TEXTOS.publicadoEn = Date.now();
   const data = { version: SCHEMA_VERSION, textos: TEXTOS, productos: PRODUCTOS };
   try { storage.setItem("brasas_v2_state", JSON.stringify(data)); }
   catch (err) { toast("⚠️ Se llenó el espacio del navegador. Descargá el sitio ya para no perder cambios."); }
@@ -2685,6 +2696,11 @@ function intentarLogin() {
   } else toast("Contraseña incorrecta");
 }
 qs("#admin-exit").addEventListener("click", () => { document.body.classList.remove("admin-mode"); renderTodo(); });
+qs("#admin-borrar-cache").addEventListener("click", () => {
+  if (!confirm("Esto borra lo guardado en ESTE navegador y recarga desde la última versión publicada. Si tenías cambios sin descargar, se pierden. ¿Seguir?")) return;
+  storage.removeItem("brasas_v2_state");
+  location.reload();
+});
 qs("#galeria-tam-slider").addEventListener("change", (e) => {
   TEXTOS.galeriaTamPx = Number(e.target.value);
   document.documentElement.style.setProperty("--galeria-tam", TEXTOS.galeriaTamPx + "px");
@@ -2729,12 +2745,6 @@ qs("#banners-animados-check").addEventListener("change", (e) => {
 qs("#galeria-inferior-check").addEventListener("change", (e) => {
   TEXTOS.mostrarGaleriaInferior = e.target.checked;
   document.body.classList.toggle("mostrar-galeria-inferior", TEXTOS.mostrarGaleriaInferior);
-  saveState();
-  ajustarEspaciosFijos();
-});
-qs("#galeria-inf-tam-slider").addEventListener("change", (e) => {
-  TEXTOS.galeriaInfTamPx = Number(e.target.value);
-  document.documentElement.style.setProperty("--galeria-inf-tam", TEXTOS.galeriaInfTamPx + "px");
   saveState();
   ajustarEspaciosFijos();
 });
@@ -2968,7 +2978,6 @@ function init() {
   if (TEXTOS.bannerMobilePct != null) { document.documentElement.style.setProperty("--banner-mobile-pct", TEXTOS.bannerMobilePct + "%"); qs("#banner-mobile-pct-slider").value = TEXTOS.bannerMobilePct; }
   qs("#banners-animados-check").checked = !!TEXTOS.bannersAnimados;
   qs("#galeria-inferior-check").checked = !!TEXTOS.mostrarGaleriaInferior;
-  if (TEXTOS.galeriaInfTamPx != null) { document.documentElement.style.setProperty("--galeria-inf-tam", TEXTOS.galeriaInfTamPx + "px"); qs("#galeria-inf-tam-slider").value = TEXTOS.galeriaInfTamPx; }
   document.body.classList.toggle("mostrar-galeria-inferior", !!TEXTOS.mostrarGaleriaInferior);
   TEXTOS.galeriaInferior = TEXTOS.galeriaInferior || [];
   if (TEXTOS.fotoTamPx) { document.documentElement.style.setProperty("--foto-tam", TEXTOS.fotoTamPx + "px"); qs("#foto-tam-slider").value = TEXTOS.fotoTamPx; }
