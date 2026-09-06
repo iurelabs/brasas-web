@@ -34,7 +34,7 @@
   #galeria-track.animar:hover{animation-play-state:paused;}
   @keyframes cinta{from{transform:translateX(0);}to{transform:translateX(-50%);}}
   @media(prefers-reduced-motion:reduce){#galeria-track.animar{animation:none;}}
-  #cart-galeria-wrap{flex:1;min-width:0;overflow-x:auto;overflow-y:hidden;display:none;align-self:stretch;
+  #cart-galeria-wrap{flex:1;min-width:0;overflow-x:auto;overflow-y:hidden;display:none;height:var(--galeria-inf-tam, 64px);
     scrollbar-width:none;-ms-overflow-style:none;}
   #cart-galeria-wrap::-webkit-scrollbar{display:none;}
   .admin-mode #cart-galeria-wrap{scrollbar-width:thin;-ms-overflow-style:auto;}
@@ -198,15 +198,15 @@
 
   #cart-bar{position:fixed;left:0;right:0;bottom:0;z-index:70;background:var(--negro);border-top:3px solid var(--hueso);
     box-shadow:0 -8px 26px rgba(0,0,0,.65);
-    padding:calc(16px * var(--cart-escala)) calc(24px * var(--cart-escala)) calc(16px * var(--cart-escala) + env(safe-area-inset-bottom));}
-  #cart-bar .row{display:flex;align-items:stretch;gap:16px;max-width:none;margin:0 auto;}
+    padding:16px calc(24px * var(--cart-escala)) calc(16px + env(safe-area-inset-bottom));}
+  #cart-bar .row{display:flex;align-items:center;gap:16px;max-width:none;margin:0 auto;}
   .cart-resumen{flex-shrink:0;display:flex;align-items:center;gap:16px;margin-left:auto;}
   #cart-bar .total{font-family:'Oswald',sans-serif;font-size:calc(1.35rem * var(--cart-escala));}
   #cart-bar .envio{font-size:calc(.78rem * var(--cart-escala));color:var(--wa);font-weight:700;}
   #cart-count-line{font-size:calc(.8rem * var(--cart-escala)) !important;}
   #cart-bar button.ver{background:var(--wa);color:#08210f;border:none;font-weight:700;
     border-radius:var(--radius);position:relative;overflow:hidden;
-    padding:calc(15px * var(--cart-escala)) calc(30px * var(--cart-escala));font-size:calc(1rem * var(--cart-escala));
+    padding:15px calc(30px * var(--cart-escala));font-size:calc(1rem * var(--cart-escala));
     animation:glow-pulso 2.4s ease-in-out infinite;}
   #cart-bar button.ver::after{content:"";position:absolute;inset:0;pointer-events:none;
     background:linear-gradient(120deg,transparent 30%,rgba(255,255,255,.55) 45%,transparent 60%);
@@ -262,7 +262,8 @@
     border-radius:50%;font-size:1.2rem;}
 
   #admin-toolbar{display:none;position:fixed;top:0;left:0;right:0;background:var(--admin);color:#08202e;z-index:90;
-    padding:9px 16px;align-items:center;justify-content:flex-start;font-size:.78rem;flex-wrap:wrap;gap:8px;}
+    padding:9px 16px;align-items:flex-start;justify-content:flex-start;font-size:.78rem;flex-wrap:wrap;gap:8px;
+    max-height:80vh;overflow-y:auto;}
   .admin-mode #admin-toolbar{display:flex;}
   .admin-mode #galeria{margin-top:var(--admin-toolbar-h, 42px);}
   #admin-toolbar.colapsado .right{display:none;}
@@ -295,6 +296,7 @@
     <div class="slider-mini"><span>Banner en mobile (%)</span><input type="number" id="banner-mobile-pct-slider" min="0" max="49" step="1" value="30"></div>
     <label class="slider-mini"><input type="checkbox" id="banners-animados-check"> Banners en movimiento</label>
     <label class="slider-mini"><input type="checkbox" id="galeria-inferior-check"> Galería inferior (abajo)</label>
+    <div class="slider-mini"><span>Tamaño galería inferior</span><input type="number" id="galeria-inf-tam-slider" min="20" max="400" value="64"></div>
     <div class="slider-mini"><span>Tamaño carrito (%)</span><input type="number" id="cart-escala-slider" min="60" max="300" value="115"></div>
     <button id="fondo-cambiar-btn">🎨 Fondo</button>
     <div class="slider-mini"><span>Transparencia fondo (%)</span><input type="number" id="fondo-opacidad-slider" min="0" max="100" value="10"></div>
@@ -2748,6 +2750,12 @@ qs("#galeria-inferior-check").addEventListener("change", (e) => {
   saveState();
   ajustarEspaciosFijos();
 });
+qs("#galeria-inf-tam-slider").addEventListener("change", (e) => {
+  TEXTOS.galeriaInfTamPx = Number(e.target.value);
+  document.documentElement.style.setProperty("--galeria-inf-tam", TEXTOS.galeriaInfTamPx + "px");
+  saveState();
+  ajustarEspaciosFijos();
+});
 qs("#cart-escala-slider").addEventListener("change", (e) => {
   TEXTOS.cartEscala = Number(e.target.value) / 100;
   document.documentElement.style.setProperty("--cart-escala", TEXTOS.cartEscala);
@@ -2978,6 +2986,7 @@ function init() {
   if (TEXTOS.bannerMobilePct != null) { document.documentElement.style.setProperty("--banner-mobile-pct", TEXTOS.bannerMobilePct + "%"); qs("#banner-mobile-pct-slider").value = TEXTOS.bannerMobilePct; }
   qs("#banners-animados-check").checked = !!TEXTOS.bannersAnimados;
   qs("#galeria-inferior-check").checked = !!TEXTOS.mostrarGaleriaInferior;
+  if (TEXTOS.galeriaInfTamPx != null) { document.documentElement.style.setProperty("--galeria-inf-tam", TEXTOS.galeriaInfTamPx + "px"); qs("#galeria-inf-tam-slider").value = TEXTOS.galeriaInfTamPx; }
   document.body.classList.toggle("mostrar-galeria-inferior", !!TEXTOS.mostrarGaleriaInferior);
   TEXTOS.galeriaInferior = TEXTOS.galeriaInferior || [];
   if (TEXTOS.fotoTamPx) { document.documentElement.style.setProperty("--foto-tam", TEXTOS.fotoTamPx + "px"); qs("#foto-tam-slider").value = TEXTOS.fotoTamPx; }
