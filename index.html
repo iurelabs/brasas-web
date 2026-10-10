@@ -3,7 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>BRASAS® — Asadores de acero inoxidable hechos a mano</title>
+<title>BRASAS® — Asadores y parrillas hechos a mano</title>
+<meta name="description" content="Diseñados y fabricados a mano en Olavarría, Argentina. Envío gratis a todo el país.">
+<meta property="og:title" content="BRASAS® — Asadores y parrillas hechos a mano">
+<meta property="og:description" content="Diseñados y fabricados a mano en Olavarría, Argentina. Envío gratis a todo el país.">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="BRASAS®">
+<meta property="og:url" content="https://brasasargentina.com/">
 <meta name="theme-color" content="#0a0a09">
 <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;600;700;800&family=Archivo:wght@400;500;600;700&family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400;1,500;1,600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
@@ -74,7 +80,7 @@
   .ficha-body{display:flex;gap:30px;}
 
   .galeria-col{display:flex;gap:14px;flex-shrink:0;}
-  .miniaturas{display:flex;flex-direction:column;gap:8px;width:78px;max-height:520px;overflow-y:auto;}
+  .miniaturas{display:flex;flex-direction:column;gap:8px;width:82px;padding:2px;max-height:520px;overflow-y:auto;overflow-x:hidden;scrollbar-width:thin;}
   .miniaturas::-webkit-scrollbar{width:5px;} .miniaturas::-webkit-scrollbar-thumb{background:var(--linea-fuerte);}
   .mini{width:78px;height:78px;border-radius:3px;border:2px solid transparent;position:relative;overflow:hidden;cursor:pointer;flex-shrink:0;background-size:cover;background-position:50% 50%;background-color:#2a2a28;}
   .mini.activa{border-color:var(--oro);}
@@ -396,7 +402,7 @@ body::after{content:"";position:fixed;inset:0;pointer-events:none;z-index:9998;o
 .breadcrumb{font-family:var(--mono);font-size:9.5px;letter-spacing:.2em;text-transform:uppercase;}
 .ficha h1{letter-spacing:.01em;font-size:28px;}
 .mini{transition:border-color .3s, transform .4s var(--ease-lujo);}
-.mini:hover{transform:translateX(2px);}
+.mini:hover{border-color:rgba(228,188,110,.5);}
 .foto-principal{box-shadow:inset 0 0 0 1px rgba(238,234,226,.05);}
 .zoom-panel{border-color:rgba(201,162,74,.35);animation:lujoFade .25s ease;}
 .lupa{border:1px solid rgba(230,200,122,.8);background:rgba(230,200,122,.06);box-shadow:0 0 0 9999px rgba(0,0,0,.18);}
@@ -1130,7 +1136,8 @@ body{top:0 !important;}
   .ficha{padding:20px 16px;}
   .ficha-body{flex-direction:column;}
   .galeria-col{flex-direction:column-reverse;}
-  .miniaturas{flex-direction:row;width:100%;max-height:none;overflow-x:auto;}
+  .miniaturas{flex-direction:row;width:100%;max-height:none;overflow-x:auto;overflow-y:hidden;scrollbar-width:none;}
+  .miniaturas::-webkit-scrollbar{display:none;}
   .mini{width:64px;height:64px;}
   .foto-principal-wrap{width:100%;}
   .zoom-panel{display:none !important;}
@@ -3280,7 +3287,7 @@ window.BRASAS_AJUSTES = {
     const m = MODELOS.find(x=>x.id===modeloId), f = m && m.fotos[idx];
     if(!esFoto(f)) return fotoPrev.apply(this, arguments);
     const p = fotosPos[`${modeloId}_${idx}`] || {x:50,y:50};
-    return `background-image:url("${f}"); background-size:cover; background-position:${p.x}% ${p.y}%;`;
+    return `background-image:url('${String(f).replace(/'/g, "%27")}'); background-color:#fff; background-size:contain; background-repeat:no-repeat; background-position:${p.x}% ${p.y}%;`;   // comillas simples: va dentro de style="…" en las miniaturas
   };
   pintarCine = function(){
     const el = $("#cine-foto"), f = modeloActual.fotos[cineIdx];
@@ -3292,7 +3299,7 @@ window.BRASAS_AJUSTES = {
     $$("#grid-modelos .modelo-card").forEach(card=>{
       const m = MODELOS.find(x=>x.id===card.dataset.modelo); if(!m) return;
       const f = m.fotos[cardIdx[m.id] || 0], el = $(".modelo-foto", card);
-      if(esFoto(f)){ el.style.background = `#0a0c0e url("${f}") center/cover no-repeat`; el.classList.add("con-foto"); }
+      if(esFoto(f)){ el.style.background = `#fff url("${f}") center/contain no-repeat`; el.classList.add("con-foto"); }
     });
   };
   const abrirPrev = abrirFicha;
@@ -4211,7 +4218,7 @@ window.BRASAS_AJUSTES = {
 .ck-s::after{content:"";flex:1;height:1px;background:var(--linea);}
 .ck-s:first-of-type{margin-top:0;}
 .ck-it{display:grid;grid-template-columns:64px 1fr auto;gap:14px;align-items:center;padding:14px 0;border-bottom:1px solid var(--linea);}
-.ck-it .th{width:64px;height:64px;background:#1a1a18 center/cover no-repeat;border:1px solid var(--linea);}
+.ck-it .th{width:64px;height:64px;background:#fff center/contain no-repeat;border:1px solid var(--linea);}
 .ck-it .n{font-size:16.5px;color:var(--hueso);}
 .ck-it .v{font-size:14px;color:var(--hueso-dim);margin-top:2px;}
 .ck-it .q{display:inline-flex;align-items:center;border:1px solid var(--linea-fuerte);margin-top:8px;}
@@ -5526,9 +5533,10 @@ body.intl .paso-pago-intl{display:block;}
       }
     }
     const ft = $("#ficha-tecnica"), partes = [];
-    if(v.armado) partes.push(["Armado", v.armado]);
+    if(v.armado){ const m = String(v.armado).trim().match(/^(\d+(?:[.,]\d+)?)\s*[x×*]\s*(\d+(?:[.,]\d+)?)\s*[x×*]\s*(\d+(?:[.,]\d+)?)\s*(cm|mm|m)?$/i);
+      partes.push(["Medidas armado", m ? `Alto ${m[1]} · Ancho ${m[2]} · Largo ${m[3]} ${(m[4]||"cm").toLowerCase()}` : v.armado]); }
     if(v.bulto) partes.push(["Embalaje", v.bulto.replace(/x/g,"×") + " cm"]);
-    if(v.peso) partes.push(["Peso", String(v.peso).replace(".", ",") + " kg"]);
+    if(v.peso) partes.push(["Peso aprox.", String(v.peso).replace(".", ",") + " kg"]);
     ft.innerHTML = partes.map(([k,x])=>`<span><b>${k}</b>${esc(x)}</span>`).join("");
     ft.classList.toggle("on", partes.length > 0);
   }
@@ -5887,6 +5895,114 @@ body.mayo-abierto .asist-fab,body.mayo-abierto .versiones{display:none !importan
 .ck-subir.enviando{opacity:.6;pointer-events:none;}
 @media (max-width:760px){ .mh-acc{justify-content:flex-start;grid-column:1 / -1;} .sr-f{flex-basis:100%;margin:2px 0 0;} }
 
+
+/* ===== mayorista v3: filas como la lista de precios, carrito y resumen ===== */
+.mayo-cards{grid-template-columns:repeat(4,1fr);}
+.mayo-row{grid-template-columns:112px minmax(0,1fr) 180px 236px;gap:20px;align-items:start;padding:20px 0;}
+.mayo-row .sr{flex-wrap:nowrap;gap:5px;}
+.mayo-row .th{width:112px;height:112px;}
+.mayo-row .n .cod{font-family:var(--mono);font-size:13px;letter-spacing:.1em;color:#e4bc6e;font-weight:600;}
+.mayo-row .n .cod .solo{margin-left:10px;}
+.mayo-row .n .nm{font-size:18px;color:#fff;font-weight:600;margin-top:4px;line-height:1.3;}
+.mayo-row .n .ds{font-size:15px;color:#cfcac0;line-height:1.5;margin-top:6px;white-space:pre-line;}
+.mayo-row .n .sp{display:flex;flex-wrap:wrap;gap:4px 18px;margin-top:8px;font-size:14px;color:#e9e4da;}
+.mayo-row .n .sp i{font-style:normal;color:#8f8a80;margin-right:4px;}
+.mayo-row .p{text-align:right;}
+.mayo-row .p .sug{font-size:13.5px;color:#a9a399;margin-bottom:10px;line-height:1.35;}
+.mayo-row .p .sug b{display:block;font-family:var(--mono);font-size:16px;color:#e9e4da;font-weight:500;}
+.mayo-row .p small{display:block;font-family:var(--mono);font-size:11px;letter-spacing:.18em;color:var(--hueso-dim);text-transform:uppercase;}
+.mayo-row .p .pu{font-family:var(--mono);font-size:24px;color:#fff;}
+.mayo-row .p .mg{font-size:13px;color:#7fd39a;margin-top:6px;font-family:var(--mono);}
+.mayo-row .q{display:flex;flex-direction:column;align-items:flex-end;gap:10px;}
+.mayo-row .q1{display:flex;align-items:center;gap:8px;}
+.mayo-q button{width:44px;height:46px;font-size:20px;}
+.mayo-q input{width:54px;height:46px;font-size:18px;}
+.tacho{background:none;border:1px solid var(--linea-fuerte);color:#a9a399;width:46px;height:46px;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;transition:color .2s,border-color .2s;}
+.tacho svg{width:19px;height:19px;}
+.tacho:hover{color:#f0a98f;border-color:#e08a6c;}
+.mayo-row .sr{justify-content:flex-end;margin:0;}
+.mayo-row .sr span{font-size:12px;padding:5px 7px;white-space:nowrap;}
+.mayo-row .sr-f{font-size:13.5px;margin:0;text-align:right;}
+.mayo-btn.rojo{border-color:rgba(224,138,108,.6);color:#f0a98f;}
+.mayo-btn:disabled{opacity:.4;cursor:default;}
+.mh-row.anulado{opacity:.55;}
+.mh-row.anulado b{text-decoration:line-through;}
+.mh-est.cancelado{border-color:#77726a;color:#a9a399;}
+.mayo-tk2{display:flex;justify-content:space-between;gap:14px;font-size:13px;color:#a9a399;}
+.mayo-tk2 span{display:inline-flex;align-items:center;gap:6px;}
+.mayo-tk2 span.ok{color:#8fe0ab;font-weight:600;}
+.mayo-tk2 svg{width:16px;height:16px;}
+.mayo-tk2 b{color:#fff;font-weight:600;}
+.mayo-bts{display:flex;gap:10px;align-items:center;}
+.mayo-bts .mayo-btn{padding:15px 16px;}
+/* totales de la barra: lista → descuento → final */
+.mayo-tot .mt-l{display:flex;justify-content:flex-end;gap:12px;font-size:13.5px;color:#a9a399;line-height:1.5;}
+.mayo-tot .mt-l s{font-family:var(--mono);color:#8f8a80;}
+.mayo-tot .mt-l.desc{color:#8fe0ab;}
+.mayo-tot .mt-l em{font-style:normal;font-family:var(--mono);font-weight:600;}
+.mayo-tot .mt-t{display:flex;justify-content:flex-end;align-items:baseline;gap:12px;margin:2px 0 8px;}
+.mayo-tot .mt-t span{font-size:12.5px;color:#cfcac0;}
+.mayo-tot .mt-t b{margin:0 !important;}
+@media (max-width:760px){ .mayo-tot{flex-direction:column;align-items:stretch;} .mayo-tot .mt-l,.mayo-tot .mt-t{justify-content:space-between;} }
+/* carrito */
+.mayo-modal .card:has(#mayo-carrito){width:780px;}
+.mc-lista{border-top:1px solid var(--linea);margin-bottom:18px;}
+.mc-it{display:grid;grid-template-columns:64px minmax(0,1fr) auto 120px;gap:14px;align-items:center;padding:12px 0;border-bottom:1px solid var(--linea);}
+.mc-th{width:64px;height:64px;background:#fff center/contain no-repeat;border:1px solid var(--linea);}
+.mc-n code{font-family:var(--mono);font-size:11.5px;color:#e4bc6e;letter-spacing:.08em;}
+.mc-n b{display:block;color:#fff;font-weight:500;font-size:15px;margin:2px 0 3px;}
+.mc-n span{font-size:14px;color:#cfcac0;}
+.mc-n em{font-style:normal;color:#8fe0ab;font-size:13px;}
+.mc-q{display:flex;gap:6px;align-items:center;}
+.mc-q .mayo-q button{width:36px;height:40px;font-size:17px;}
+.mc-q .mayo-q input{width:44px;height:40px;font-size:15px;}
+.mc-q .tacho{width:40px;height:40px;}
+.mc-s{text-align:right;font-family:var(--mono);font-size:16px;color:#fff;}
+.mc-vacio{color:var(--hueso-dim);font-size:16px;padding:20px 0;}
+.mc-aviso{color:#f0a98f;font-size:14.5px;margin:-6px 0 14px;}
+.mc-acc{display:flex;flex-wrap:wrap;gap:10px;justify-content:flex-end;align-items:center;}
+.mc-acc .cta{padding:15px 22px !important;}
+.mc-acc .cta:disabled{opacity:.4;cursor:default;}
+@media (max-width:980px){ .mayo-cards{grid-template-columns:1fr 1fr;} }
+@media (max-width:760px){
+  .mayo-cards{grid-template-columns:1fr;}
+  .mayo-row{grid-template-columns:84px minmax(0,1fr);gap:12px 14px;}
+  .mayo-row .th{width:84px;height:84px;grid-row:span 1;}
+  .mayo-row .p,.mayo-row .q{grid-column:1 / -1;}
+  .mayo-row .p{display:grid;grid-template-columns:1fr 1fr;align-items:end;text-align:left;gap:2px 12px;}
+  .mayo-row .p .sug{margin:0;grid-row:span 3;}
+  .mayo-row .q{align-items:stretch;}
+  .mayo-row .q1{justify-content:space-between;}
+  .mayo-row .sr{justify-content:flex-start;}
+  .mayo-row .sr-f{text-align:left;}
+  .mayo-bts{width:100%;}
+  .mayo-bts .cta{flex:1;}
+  .mayo-tk2{flex-direction:column;gap:4px;}
+  .mc-it{grid-template-columns:52px minmax(0,1fr);}
+  .mc-th{width:52px;height:52px;}
+  .mc-q{grid-column:1 / 2;grid-row:2;}
+  .mc-q{grid-column:2;justify-content:flex-start;}
+  .mc-s{grid-column:2;text-align:left;}
+}
+/* resumen del pedido (PDF) */
+@media print{
+  body.imp-resumen .mayo-print table.rs col.c-im{width:22mm;} body.imp-resumen .mayo-print table.rs col.c-n{width:18mm;} body.imp-resumen .mayo-print table.rs col.c-p{width:23mm;} body.imp-resumen .mayo-print table.rs col.c-d{width:19mm;} body.imp-resumen .mayo-print table.rs col.c-s{width:26mm;}
+  body.imp-resumen .mayo-print table.rs tbody td{height:auto;padding:8px 4px;}
+  body.imp-resumen .mayo-print table.rs .im img{width:20mm;height:20mm;}
+  body.imp-resumen .mayo-print .ex{font-size:8.5px;color:#2f7d4b;margin-top:4px;line-height:1.35;}
+  body.imp-resumen .mayo-print td.gr{font-size:13px;font-weight:700;color:#111;}
+  body.imp-resumen .mayo-print .rs-pie{display:flex;gap:14px;margin-top:14px;break-inside:avoid;}
+  body.imp-resumen .mayo-print .rs-izq{flex:1;display:grid;gap:8px;align-content:start;}
+  body.imp-resumen .mayo-print .rs-box{border:1px solid #ccc;padding:9px 11px;font-size:10.5px;line-height:1.5;color:#222;}
+  body.imp-resumen .mayo-print .rs-box small{display:block;font-size:8.5px;letter-spacing:.14em;text-transform:uppercase;color:#777;margin-bottom:3px;}
+  body.imp-resumen .mayo-print .rs-tot{width:78mm;border:1.5px solid #111;padding:8px 11px;}
+  body.imp-resumen .mayo-print .rs-tot div{display:flex;justify-content:space-between;gap:10px;font-size:11px;padding:3px 0;color:#222;}
+  body.imp-resumen .mayo-print .rs-tot div.vd{color:#2f7d4b;}
+  body.imp-resumen .mayo-print .rs-tot div.gris{color:#777;}
+  body.imp-resumen .mayo-print .rs-tot div.tt{border-top:1px solid #111;margin-top:4px;padding-top:6px;font-size:13px;font-weight:700;color:#000;}
+  body.imp-resumen .mayo-print .rs-tot div.tt b{font-size:16px;}
+}
+
 /* lista para imprimir / PDF */
 .mayo-print{display:none;}
 @media print{
@@ -6130,23 +6246,31 @@ body.mayo-abierto .asist-fab,body.mayo-abierto .versiones{display:none !importan
     return { lineas, unidades, subtotal, desc, total, peso, okU, okM, ok: okU && okM, envioGratis, empuje, mejor };
   }
 
+  const ICO_TACHO = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 12a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2l1-12M9 7V4h6v3"/></svg>`;
+  const TX = (k, def) => (M && M.textos && M.textos[k]) || def;
+  const armadoLinea = a => { const p = armadoPartes(a); return p ? `Alto ${p.alto} · Ancho ${p.ancho} · Largo ${p.largo} ${p.u}` : (a ? String(a) : ""); };
+  const estadoTxt = p => p.estado === "cancelado" ? "Cancelado" : p.estado === "despachado" ? "Despachado" : p.estado === "pagado" ? "Pago confirmado" : p.comprobante ? "Comprobante recibido" : "Esperando pago";
+  const estadoCls = p => p.estado === "recibido" ? (p.comprobante ? "pagado" : "espera") : p.estado;
+  const pendiente = p => p.estado === "recibido" && !p.comprobante;
+
   function pintarMayo(){
     const S = series(), G = M.envioGratis, propias = M.items.some(i=> i.escalas);
-    const estadoTxt = p => p.estado === "despachado" ? "Despachado" : p.estado === "pagado" ? "Pago confirmado" : p.comprobante ? "Comprobante recibido" : "Esperando pago";
-    const estadoCls = p => p.estado !== "recibido" ? p.estado : p.comprobante ? "pagado" : "espera";
     const hist = (M.pedidos||[]).length ? `
-      <details class="mayo-hist" id="mayo-hist" ${M.pedidos.some(p=> p.estado === "recibido" && !p.comprobante) ? "open" : ""}><summary>Tus pedidos <span>${M.pedidos.length} pedido${M.pedidos.length===1?"":"s"}</span></summary>
-        ${M.pedidos.slice(0,8).map((p,k)=>`<div class="mh-row"><code>${esc(p.orden)}</code><span>${new Date(p.fecha).toLocaleDateString("es-AR",{day:"numeric",month:"short",year:"numeric"})}</span>
+      <details class="mayo-hist" id="mayo-hist" ${M.pedidos.some(pendiente) ? "open" : ""}><summary>Tus pedidos <span>${M.pedidos.length} pedido${M.pedidos.length===1?"":"s"}</span></summary>
+        ${M.pedidos.slice(0,8).map((p,k)=>`<div class="mh-row ${p.estado === "cancelado" ? "anulado" : ""}"><code>${esc(p.orden)}</code><span>${new Date(p.fecha).toLocaleDateString("es-AR",{day:"numeric",month:"short",year:"numeric"})}</span>
           <span class="mh-u">${p.unidades} productos</span><b>${$$m(p.total)}</b>
           <span class="mh-acc"><span class="mh-est ${estadoCls(p)}">${estadoTxt(p)}</span>
-          ${p.estado === "recibido" && !p.comprobante ? `<button type="button" class="mayo-btn oro" data-pagar="${k}">Pagar / subir comprobante</button>` : ""}
-          <button type="button" class="mayo-btn" data-rep="${k}">Repetir</button></span></div>`).join("")}
+          ${pendiente(p) ? `<button type="button" class="mayo-btn oro" data-pagar="${k}">Pagar / subir comprobante</button>` : ""}
+          ${p.estado !== "cancelado" ? `<button type="button" class="mayo-btn" data-res="${k}">Resumen</button>` : ""}
+          <button type="button" class="mayo-btn" data-rep="${k}">Repetir</button>
+          ${pendiente(p) ? `<button type="button" class="mayo-btn rojo" data-cancelar="${k}">Cancelar</button>` : ""}</span></div>`).join("")}
       </details>` : "";
     $("#mayo-main").innerHTML = `
       <div class="mayo-cards">
         <div class="mayo-card"><small>Pedido mínimo</small><b>${M.minimo.unidades} productos</b><span>Combiná modelos y medidas como quieras</span></div>
         <div class="mayo-card envio ${G ? "gratis" : ""}"><small>Envío</small><b>${G ? `GRATIS desde ${$$m(G)}` : "A cotizar según destino"}</b><span>${G ? "Debajo de ese monto, se cotiza según destino" : "Por peso y volumen · te lo pasamos por WhatsApp"}</span></div>
         <div class="mayo-card"><small>Pago</small><b>Transferencia bancaria</b><span>Los datos te llegan por mail al confirmar</span></div>
+        <div class="mayo-card"><small>Embalaje</small><b>${esc(TX("embTitulo", "Embalaje individual"))}</b><span>${esc(TX("embTexto", "Cada producto viene en su embalaje individual, apto para conservarlo en óptimas condiciones por años si se guarda en un lugar seco."))}</span></div>
       </div>
       ${hist}
       ${S.length ? `<div class="mayo-esc-t"><h4>Descuento por serie</h4><span>${propias ? "Cuantas más unidades iguales, menos pagás cada una · algunos modelos tienen su propia serie (la ves en cada uno)" : "Cuantas más unidades iguales de un modelo, menos pagás cada una"}</span></div>
@@ -6155,22 +6279,32 @@ body.mayo-abierto .asist-fab,body.mayo-abierto .versiones{display:none !importan
       <div id="mayo-lista">${M.items.map(i=>`
         <div class="mayo-row" data-t="${esc(i.tag)}">
           <div class="th ${i.foto ? "" : "vacia"}" ${i.foto ? `style="background-image:url('${esc(i.foto)}')"` : ""}></div>
-          <div class="n">${esc(i.nombre)}<code>${esc(i.tag)}</code>${i.soloMayorista ? `<span class="solo">EXCLUSIVO MAYORISTA</span>` : ""}
-            <small>${[esc(i.medida), i.armado ? "Armado " + esc(armadoTxt(i.armado)) : "", i.peso ? `<span title="Peso de referencia con embalaje: puede variar">${pesoRef(i.peso)} (ref.)</span>` : ""].filter(Boolean).join(" · ")}</small>
-            <div class="ref"></div>${series(i).length ? `<div class="sr">${series(i).map((e,k)=>`<span data-k="${k}" style="--c:${colorSerie(k)}">${e.desde}+ <b>−${e.pct}%</b></span>`).join("")}<em class="sr-f"></em></div>` : ""}</div>
-          <div class="p"><small>Mayorista</small><s></s><span class="pu">${$$m(i.precio)}</span></div>
-          <div class="mayo-q"><button type="button" data-d="-1" aria-label="Menos">−</button><input type="number" min="0" max="500" inputmode="numeric" value="${cant[i.tag]||0}" aria-label="Cantidad"><button type="button" data-d="1" aria-label="Más">+</button></div>
+          <div class="n">
+            <div class="cod">${esc(i.tag)}${i.soloMayorista ? `<span class="solo">EXCLUSIVO MAYORISTA</span>` : ""}</div>
+            <div class="nm">${esc(i.nombre)}${i.medida ? ` · ${esc(i.medida)}` : ""}</div>
+            ${i.descripcion ? `<div class="ds">${esc(String(i.descripcion).trim())}</div>` : ""}
+            <div class="sp">${[i.armado ? `<span><i>Armado</i> ${esc(armadoLinea(i.armado))}</span>` : "", i.peso ? `<span><i>Peso aprox.</i> ${kg(i.peso)}</span>` : ""].filter(Boolean).join("")}</div>
+          </div>
+          <div class="p">${i.ml ? `<div class="sug">Precio sugerido ML <b>${$$m(i.ml)}</b></div>` : ""}<small>Tu precio</small><s></s><span class="pu">${$$m(i.precio)}</span><div class="mg"></div></div>
+          <div class="q">
+            <div class="q1"><div class="mayo-q"><button type="button" data-d="-1" aria-label="Menos">−</button><input type="number" min="0" max="500" inputmode="numeric" value="${cant[i.tag]||0}" aria-label="Cantidad"><button type="button" data-d="1" aria-label="Más">+</button></div>
+              <button type="button" class="tacho" aria-label="Quitar este producto" title="Quitar">${ICO_TACHO}</button></div>
+            ${series(i).length ? `<div class="sr">${series(i).map((e,k)=>`<span data-k="${k}" style="--c:${colorSerie(k)}">${e.desde}+ <b>−${e.pct}%</b></span>`).join("")}</div><em class="sr-f"></em>` : ""}
+          </div>
         </div>`).join("")}</div>
-      <p class="mayo-priv">🔒 ${esc((M.textos && M.textos.mayoPrivado) || "Este link es personal: tiene tus datos y tus pedidos. No lo reenvíes. ¿Otra persona u otro comercio necesita acceso?")} <a href="${waLink("Hola! Quiero pedir un acceso al canal mayorista de BRASAS.")}" target="_blank" rel="noopener">Que nos lo pida por WhatsApp</a>.</p>`;
+      <p class="mayo-priv">🔒 ${esc(TX("mayoPrivado", "Este link es personal: tiene tus datos y tus pedidos. No lo reenvíes."))}</p>`;
     $$(".mayo-row").forEach(row=>{
       const t = row.dataset.t, inp = $("input", row);
       const fijar = n => { cant[t] = Math.max(0, Math.min(500, Math.round(+n||0))); inp.value = cant[t]; guardar(); barra(); };
       $$(".mayo-q button", row).forEach(b=> b.addEventListener("click", ()=> fijar((cant[t]||0) + +b.dataset.d)));
       inp.addEventListener("input", ()=> fijar(inp.value));
+      $(".tacho", row).addEventListener("click", ()=> fijar(0));
       $$(".sr span", row).forEach(s=> s.addEventListener("click", ()=> fijar(series(M.items.find(x=> x.tag === t))[+s.dataset.k].desde)));   // tocar "12+" lleva a 12
     });
     $$("[data-rep]").forEach(b=> b.addEventListener("click", e=>{ e.preventDefault(); repetir(M.pedidos[+b.dataset.rep]); }));
     $$("[data-pagar]").forEach(b=> b.addEventListener("click", e=>{ e.preventDefault(); const p = M.pedidos[+b.dataset.pagar]; pantallaPago({ orden:p.orden, total:p.total, envioGratis:p.envio === "gratis", peso:0, d:Object.assign({}, M.cliente||{}), desdeHistorial:true }); }));
+    $$("[data-res]").forEach(b=> b.addEventListener("click", e=>{ e.preventDefault(); imprimirResumen(resumenDePedido(M.pedidos[+b.dataset.res])); }));
+    $$("[data-cancelar]").forEach(b=> b.addEventListener("click", e=>{ e.preventDefault(); cancelarPedido(M.pedidos[+b.dataset.cancelar]); }));
     $("#mayo-bar").hidden = false; barra();
   }
   function repetir(p){
@@ -6179,29 +6313,34 @@ body.mayo-abierto .asist-fab,body.mayo-abierto .versiones{display:none !importan
     guardar(); pintarMayo();
     toast(faltan ? `Cargamos tu pedido ${p.orden} (${faltan} producto${faltan===1?"":"s"} ya no está${faltan===1?"":"n"} en la lista)` : `Cargamos tu pedido ${p.orden}. Ajustá lo que quieras.`);
   }
+  function cancelarPedido(p){
+    if(!p || !pendiente(p)) return;
+    if(!confirm(`¿Cancelar el pedido ${p.orden}?\n\nSolo se puede cancelar si todavía no pagaste. No se puede deshacer.`)) return;
+    if(A.appsScript) fetch(A.appsScript, { method:"POST", mode:"no-cors", body:JSON.stringify({ tipo:"cancelar_mayorista", codigo, orden:p.orden }) }).catch(()=>{});
+    p.estado = "cancelado"; pintarMayo(); toast(`Pedido ${p.orden} cancelado. Te llega la confirmación por mail.`);
+  }
   const guardar = () => lsSet("brasas-mayo-" + codigo, JSON.stringify(cant));
 
   /* cada fila: precio con descuento, margen y cuánto le falta para el próximo escalón */
   function pintarFilas(c){
     $$(".mayo-row").forEach(row=>{
       const i = M.items.find(x=> x.tag === row.dataset.t); if(!i) return;
-      const S = series(i), n = cant[i.tag]||0, pct = pctDe(n, i), pu = Math.round(i.precio * (1 - pct/100)), ref = i.ml || i.web, mg = ref ? ref - pu : 0;
+      const S = series(i), n = cant[i.tag]||0, pct = pctDe(n, i), pu = Math.round(i.precio * (1 - pct/100)), mg = i.ml ? i.ml - pu : 0;
       row.classList.toggle("con", n > 0); row.style.setProperty("--c", pct ? colorSerie(S.findIndex(e=> e.pct === pct)) : "#e4bc6e");
       $(".pu", row).textContent = $$m(pu); $("s", row).textContent = pct ? $$m(i.precio) : "";
-      $(".ref", row).innerHTML = i.web || i.ml ? `Precio sugerido: ${[i.web ? `web ${$$m(i.web)}` : "", i.ml ? `MercadoLibre ${$$m(i.ml)}` : ""].filter(Boolean).join(" · ")}${mg > 0 ? ` · <span class="mg">tu margen +${$$m(mg)} (${Math.round(mg / pu * 100)}%)</span>` : ""}` : "";
+      $(".mg", row).textContent = mg > 0 ? `tu margen +${$$m(mg)} (${Math.round(mg / pu * 100)}%)` : "";
       $$(".sr span", row).forEach(s=> s.classList.toggle("on", n >= S[+s.dataset.k].desde));
       const prox = S.find(e=> n < e.desde), f = $(".sr-f", row);
-      if(f) f.textContent = n && prox ? `${prox.desde - n} más y baja a ${$$m(Math.round(i.precio * (1 - prox.pct/100)))}` : n && pct ? "máximo descuento ✓" : "";
+      if(f) f.textContent = n && prox ? `${prox.desde - n} más y baja a ${$$m(Math.round(i.precio * (1 - prox.pct/100)))} c/u` : n && pct ? "máximo descuento ✓" : "";
     });
   }
 
-  /* barra de abajo: mínimo → empujón por serie → envío gratis */
+  /* barra de abajo: mínimo → empujón por serie → envío gratis (una sola leyenda de envío) */
   function barra(){
     const c = cuentas(), m = M.minimo, G = M.envioGratis, S = series();
     pintarFilas(c);
     const nivel = (c.okU ? 1 : 0) + (c.mejor + 1) + (c.envioGratis ? 1 : 0);
     const color = !c.unidades ? "#9c7a35" : COLORES[Math.min(COLORES.length - 1, nivel)];
-    /* avance: primera mitad hasta el mínimo de productos; segunda, hasta el envío gratis */
     const a1 = Math.min(1, c.unidades / m.unidades), a2 = G ? Math.min(1, c.total / G) : (c.okU ? 1 : 0);
     const avance = G ? (c.okU ? 50 + a2 * 50 : a1 * 50) : a1 * 100;
     let msg, der;
@@ -6211,24 +6350,113 @@ body.mayo-abierto .asist-fab,body.mayo-abierto .versiones{display:none !importan
       msg = `Sumá <b>${e.falta} × ${esc(nombre)}</b> y ese modelo baja <b style="color:${colorSerie(e.l.k + 1)}">${e.l.prox.pct}%</b> <span class="ah">(${$$m(Math.round(e.l.i.precio * (1 - e.l.prox.pct/100)))} c/u)</span>`;
       der = `<b>${c.desc ? "Ahorrás " + $$m(c.desc) : "Mínimo cumplido ✓"}</b>`; }
     else { msg = c.desc ? `<b>Máximo descuento por serie</b> en todo tu pedido` : `Pedido mínimo cumplido`; der = `<b>${c.desc ? "Ahorrás " + $$m(c.desc) : "✓"}</b>`; }
-    const env = !G ? "" : c.envioGratis ? `<span class="env ok">${ICO_CAMION} Envío GRATIS</span>` : `<span class="env">${ICO_CAMION} Envío gratis: faltan <b>${$$m(G - c.total)}</b></span>`;
+    const env = !G ? "" : c.envioGratis ? `<span class="ok">${ICO_CAMION} Envío GRATIS ✓</span>` : `<span>${ICO_CAMION} Te faltan <b>${$$m(G - c.total)}</b> para el envío gratis</span>`;
     const prog = $("#mayo-prog");
     prog.style.setProperty("--tc", color);
     prog.innerHTML = `<div class="lbl"><span>${msg}</span>${der}</div>
       <div class="mayo-tr"><i style="width:${Math.max(c.unidades ? 2 : 0, avance)}%"></i>${G ? `<span class="tk" style="left:50%"></span>` : ""}</div>
-      <div class="mayo-tk"><span class="${c.okU ? "ok" : ""}" style="left:${G ? 50 : 100}%;--c:${COLORES[1]}">mínimo</span>${G ? `<span class="${c.envioGratis ? "ok" : ""}" style="left:100%;--c:${COLORES[COLORES.length-1]}">envío gratis</span>` : ""}</div>
-      ${env ? `<div class="mayo-env">${env}</div>` : ""}`;
-    $("#mayo-tot").innerHTML = `<div><small>${c.unidades} producto${c.unidades===1?"":"s"}${c.peso ? ` · ≈ ${Math.round(c.peso)} kg ref.` : ""}</small>${c.desc ? `<small class="desc">−${$$m(c.desc)} por serie</small>` : ""}<b>${$$m(c.total)}</b></div>
-      <button class="cta" type="button" id="mayo-enviar" ${c.ok ? "" : "disabled"}>Enviar pedido</button>`;
+      <div class="mayo-tk2"><span class="${c.okU ? "ok" : ""}">${c.okU ? "✓ " : ""}Mínimo ${m.unidades} productos</span>${env}</div>`;
+    $("#mayo-tot").innerHTML = `<div><small>${c.unidades} producto${c.unidades===1?"":"s"}${c.peso ? ` · ≈ ${Math.round(c.peso)} kg` : ""}</small>
+      ${c.desc ? `<div class="mt-l"><span>Sin descuento</span><s>${$$m(c.subtotal)}</s></div><div class="mt-l desc"><span>Descuento por serie</span><em>−${$$m(c.desc)}</em></div>` : ""}
+      <div class="mt-t"><span>${c.desc ? "Total con descuento" : "Total"}</span><b>${$$m(c.total)}</b></div></div>
+      <div class="mayo-bts"><button class="mayo-btn" type="button" id="mayo-ver" ${c.unidades ? "" : "disabled"}>Ver pedido${c.unidades ? ` (${c.unidades})` : ""}</button>
+      <button class="cta" type="button" id="mayo-enviar" ${c.ok ? "" : "disabled"}>Enviar pedido</button></div>`;
     $("#mayo-enviar").addEventListener("click", formulario);
-    /* escalera de arriba: se ilumina hasta el escalón más alto que alcanzó algún modelo */
+    $("#mayo-ver").addEventListener("click", verPedido);
     const sel = c.lineas.length ? Math.max(...c.lineas.map(l=> l.n)) : 0;
     $$("#mayo-ladder .esc-step").forEach(s=>{ const i = +s.dataset.i, e = S[i];
       s.classList.toggle("ok", i <= c.mejor); s.classList.toggle("cur", i === c.mejor); s.classList.toggle("next", i === c.mejor + 1 && sel > 0);
-      const falta = e.desde - sel;                                       // al modelo que más unidades lleva
+      const falta = e.desde - sel;
       $(".fa", s).textContent = i === c.mejor + 1 && sel > 0 && falta > 0 ? `te ${falta === 1 ? "falta" : "faltan"} ${falta} iguales` : ""; });
     if(nivel > nivelAntes && nivelAntes >= 0){ const b = $("#mayo-bar"); b.classList.remove("sube"); void b.offsetWidth; b.classList.add("sube"); }
     nivelAntes = nivel;
+    if(modal.classList.contains("on") && $("#mayo-carrito")) pintarCarrito();
+  }
+
+  /* carrito mayorista: el pedido claro, renglón por renglón */
+  function verPedido(){ $("#mayo-card").innerHTML = `<div id="mayo-carrito"></div>`; pintarCarrito(); modal.classList.add("on"); modal.scrollTop = 0; }
+  function pintarCarrito(){
+    const c = cuentas(), cont = $("#mayo-carrito"); if(!cont) return;
+    const G = M.envioGratis;
+    cont.innerHTML = `<button class="x" type="button" aria-label="Cerrar">✕</button><div class="ck-e">★★★★★★</div><h3>Tu pedido</h3>
+      ${!c.lineas.length ? `<p class="mc-vacio">Todavía no agregaste productos.</p>` : `
+      <div class="mc-lista">${c.lineas.map(l=>{ const pu = Math.round(l.i.precio * (1 - l.pct/100));
+        return `<div class="mc-it" data-t="${esc(l.i.tag)}"><div class="mc-th" ${l.i.foto ? `style="background-image:url('${esc(l.i.foto)}')"` : ""}></div>
+          <div class="mc-n"><code>${esc(l.i.tag)}</code><b>${esc(l.i.nombre)}${l.i.medida ? ` · ${esc(l.i.medida)}` : ""}</b>
+            <span>${l.n} × ${$$m(pu)} c/u${l.pct ? ` <em>(−${l.pct}% por serie, antes ${$$m(l.i.precio)})</em>` : ""}</span></div>
+          <div class="mc-q"><div class="mayo-q"><button type="button" data-d="-1" aria-label="Menos">−</button><input type="number" min="0" max="500" value="${l.n}" aria-label="Cantidad"><button type="button" data-d="1" aria-label="Más">+</button></div>
+            <button type="button" class="tacho" aria-label="Quitar" title="Quitar">${ICO_TACHO}</button></div>
+          <div class="mc-s">${$$m(l.neto)}</div></div>`; }).join("")}</div>
+      <div class="mayo-res">
+        ${c.desc ? `<div><span>Subtotal sin descuento</span><b>${$$m(c.subtotal)}</b></div><div class="vd"><span>Ahorrás por comprar en serie</span><b>−${$$m(c.desc)}</b></div>` : ""}
+        <div class="${c.envioGratis ? "vd" : ""}"><span>Envío</span><b>${c.envioGratis ? "GRATIS" : G ? `A cotizar · faltan ${$$m(G - c.total)} para envío gratis` : "A cotizar"}</b></div>
+        <div class="tt"><span>Total</span><b>${$$m(c.total)}</b></div></div>
+      ${!c.okU ? `<p class="mc-aviso">Te ${m1(c)} para el pedido mínimo de ${M.minimo.unidades} productos.</p>` : ""}`}
+      <div class="mc-acc">
+        ${c.lineas.length ? `<button type="button" class="mayo-btn rojo" id="mc-vaciar">${ICO_TACHO.replace("<svg", '<svg style="width:15px;height:15px;vertical-align:-3px;margin-right:6px"')}Vaciar pedido</button>
+        <button type="button" class="mayo-btn" id="mc-resumen">Resumen (PDF)</button>` : ""}
+        <button type="button" class="cta" id="mc-seguir" ${c.ok ? "" : "disabled"}>Enviar pedido · ${$$m(c.total)}</button>
+      </div>`;
+    $(".x", cont).addEventListener("click", cerrarModal);
+    $$(".mc-it", cont).forEach(it=>{
+      const t = it.dataset.t, inp = $("input", it);
+      const fijar = n => { cant[t] = Math.max(0, Math.min(500, Math.round(+n||0))); guardar(); pintarMayo(); verPedidoAbierto(); };
+      $$(".mayo-q button", it).forEach(b=> b.addEventListener("click", ()=> fijar((cant[t]||0) + +b.dataset.d)));
+      inp.addEventListener("change", ()=> fijar(inp.value));
+      $(".tacho", it).addEventListener("click", ()=> fijar(0));
+    });
+    const vac = $("#mc-vaciar", cont); if(vac) vac.addEventListener("click", ()=>{ if(!confirm("¿Vaciar todo el pedido?")) return; cant = {}; guardar(); pintarMayo(); verPedidoAbierto(); });
+    const rs = $("#mc-resumen", cont); if(rs) rs.addEventListener("click", ()=> imprimirResumen(resumenActual()));
+    $("#mc-seguir", cont).addEventListener("click", formulario);
+  }
+  const m1 = c => { const f = M.minimo.unidades - c.unidades; return `${f === 1 ? "falta" : "faltan"} ${f} producto${f===1?"":"s"}`; };
+  function verPedidoAbierto(){ if(!$("#mayo-carrito")) verPedido(); else pintarCarrito(); }
+
+  /* resumen del pedido (PDF), "para que se entienda todo" */
+  function resumenActual(){
+    const c = cuentas();
+    return { titulo:"Presupuesto", orden:"", fecha:Date.now(), envioGratis:c.envioGratis, envioFalta: M.envioGratis && !c.envioGratis ? M.envioGratis - c.total : 0,
+      lineas:c.lineas.map(l=>({ tag:l.i.tag, nombre:l.i.nombre, medida:l.i.medida, foto:l.i.foto, n:l.n, precio:l.i.precio, pct:l.pct })), subtotal:c.subtotal, desc:c.desc, total:c.total, pagar:false };
+  }
+  function resumenDePedido(p){
+    const lineas = (p.items||[]).map(it=>{ const i = M.items.find(x=> x.tag === it.tag) || {};
+      return { tag:it.tag, nombre:it.producto || i.nombre || it.tag, medida:it.variante || i.medida || "", foto:i.foto || null, n:it.cantidad, precio:it.precio || i.precio || 0, pct:it.pct || 0 }; });
+    const subtotal = p.subtotal || lineas.reduce((s,l)=> s + l.n * l.precio, 0);
+    return { titulo:"Resumen de pedido", orden:p.orden, fecha:p.fecha, envioGratis:p.envio === "gratis", envioFalta:0, lineas, subtotal, desc:p.descuento || Math.max(0, subtotal - p.total), total:p.total, pagar:pendiente(p) };
+  }
+  function imprimirResumen(R){
+    if(!R || !R.lineas.length) return toast("No hay productos en el pedido");
+    const hoy = new Date(R.fecha).toLocaleDateString("es-AR", { day:"numeric", month:"long", year:"numeric" }), B = M.banco || {}, cl = M.cliente || {};
+    const tam = u => /lh3\.googleusercontent\.com\/d\/[\w-]+=w\d+$/.test(u||"") ? u.replace(/=w\d+$/, "=w300") : u;
+    pr.innerHTML = `<div class="mp-cab"><div><h1>BRASAS®</h1><div class="s">${esc(R.titulo)}${R.orden ? ` · ${esc(R.orden)}` : ""}</div></div><div class="d"><b>${esc(cl.razon || M.nombre)}</b>${hoy}</div></div>
+      <table class="rs"><colgroup><col class="c-im"><col><col class="c-n"><col class="c-p"><col class="c-d"><col class="c-p"><col class="c-s"></colgroup>
+        <thead><tr><th></th><th>Producto<small>código y descripción</small></th><th class="c">Cantidad<small>unidades</small></th><th class="c">Precio<small>por unidad</small></th>
+          <th class="c">Descuento<small>por serie</small></th><th class="c pmh">Te queda<small>por unidad</small></th><th class="c">Subtotal<small>cantidad × precio</small></th></tr></thead><tbody>
+      ${R.lineas.map(l=>{ const pu = Math.round(l.precio * (1 - l.pct/100)), sub = l.n * pu;
+        return `<tr><td class="im">${l.foto ? `<img src="${esc(tam(l.foto))}" alt="">` : ""}</td>
+          <td class="pd"><div class="cod">${esc(l.tag)}</div><div class="ds">${esc(String(l.nombre||"").toUpperCase())}${l.medida ? ` · ${esc(String(l.medida).toUpperCase())}` : ""}</div>
+            ${l.pct ? `<div class="ex">Por llevar ${l.n} iguales: −${l.pct}%. Pagás ${$$m(pu)} cada uno en vez de ${$$m(l.precio)} (ahorrás ${$$m(l.precio - pu)} por unidad).</div>` : ""}</td>
+          <td class="c gr">${l.n}</td><td class="c">${$$m(l.precio)}</td><td class="c">${l.pct ? "−" + l.pct + "%" : "—"}</td><td class="c pr">${$$m(pu)}</td><td class="c gr">${$$m(sub)}</td></tr>`; }).join("")}
+      </tbody></table>
+      <div class="rs-pie">
+        <div class="rs-izq">
+          ${R.pagar && (B.alias || B.cbu) ? `<div class="rs-box"><small>Datos para transferir</small>Alias: <b>${esc(B.alias)}</b><br>CBU/CVU: <b>${esc(B.cbu)}</b><br>Titular: ${esc(B.titular || "")}${B.cuit ? ` · CUIT ${esc(B.cuit)}` : ""}${B.banco ? `<br>Banco: ${esc(B.banco)}` : ""}</div>` : ""}
+          <div class="rs-box"><small>${esc(TX("embTitulo", "Embalaje individual"))}</small>${esc(TX("embTexto", "Cada producto viene en su embalaje individual, apto para conservarlo en óptimas condiciones por años si se guarda en un lugar seco."))}</div>
+        </div>
+        <div class="rs-tot">
+          <div><span>Productos</span><b>${R.lineas.reduce((s,l)=> s + l.n, 0)} unidades</b></div>
+          ${R.desc ? `<div><span>Subtotal sin descuento</span><b>${$$m(R.subtotal)}</b></div><div class="vd"><span>Ahorro por comprar en serie</span><b>−${$$m(R.desc)}</b></div>` : ""}
+          <div><span>Envío</span><b>${R.envioGratis ? "GRATIS" : "A cotizar según destino"}</b></div>
+          ${R.envioFalta ? `<div class="gris"><span>Para envío gratis faltan</span><b>${$$m(R.envioFalta)}</b></div>` : ""}
+          <div class="tt"><span>${R.pagar || !R.orden ? "Total a transferir" : "Total"}</span><b>${$$m(R.total)}</b></div>
+        </div>
+      </div>
+      <div class="mp-pie"><span><b>${esc(TX("resumenAclara", "Documento no válido como factura."))}</b> ${R.orden ? "" : "Precios sujetos a cambio hasta confirmar el pedido."}</span><span>BRASAS® · WhatsApp +${esc(String(M.whatsapp || WHATSAPP_NUMERO).replace(/\D/g,""))}</span></div>`;
+    document.body.classList.add("imprimiendo", "imp-resumen");
+    const fin = () => { document.body.classList.remove("imprimiendo", "imp-resumen"); window.removeEventListener("afterprint", fin); };
+    window.addEventListener("afterprint", fin);
+    const imgs = $$("img", pr), listo = Promise.all(imgs.map(im=> im.complete ? 1 : new Promise(r=>{ im.onload = im.onerror = r; setTimeout(r, 4000); })));
+    listo.then(()=>{ window.print(); setTimeout(fin, 1500); });
   }
 
   const modal = $("#mayo-modal"), cerrarModal = () => modal.classList.remove("on");
@@ -6358,6 +6586,7 @@ body.mayo-abierto .asist-fab,body.mayo-abierto .versiones{display:none !importan
   const obs = new MutationObserver(()=>{ if(document.documentElement.dataset.brasasListo){ obs.disconnect(); revisarHash(); } });
   obs.observe(document.documentElement, { attributes:true, attributeFilter:["data-brasas-listo"] }); { const de = document.documentElement; if(de.dataset.brasasListo) de.dataset.brasasListo = de.dataset.brasasListo; }
   window.BRASAS_MAYORISTA = abrirMayo;
+  window.BRASAS_MAYO_ESTADO = () => M; window.BRASAS_MAYO_REPINTAR = () => pintarMayo();   // para las pruebas
 })();
 </script>
 
