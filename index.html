@@ -5717,7 +5717,7 @@ body.intl #btn-agregar-carrito{display:inline-flex !important;}
 .mayo.on{display:block;}
 body.mayo-abierto{overflow:hidden;}
 body.mayo-abierto .asist-fab,body.mayo-abierto .versiones{display:none !important;}
-.mayo-top{position:sticky;top:0;z-index:2;background:rgba(8,9,10,.94);backdrop-filter:blur(10px);border-bottom:1px solid var(--linea);}
+.mayo-top{position:sticky;top:0;z-index:4;background:rgba(8,9,10,.94);backdrop-filter:blur(10px);border-bottom:1px solid var(--linea);}
 .mayo-top .in{max-width:1180px;margin:0 auto;padding:16px 24px;display:flex;align-items:center;gap:18px;}
 .mayo-logo{font-family:'Archivo',sans-serif;font-weight:700;letter-spacing:.32em;font-size:18px;color:#fff;}
 .mayo-logo small{display:block;font-family:var(--mono);font-weight:400;font-size:10px;letter-spacing:.3em;color:#e4bc6e;margin-top:3px;}
@@ -5725,18 +5725,46 @@ body.mayo-abierto .asist-fab,body.mayo-abierto .versiones{display:none !importan
 .mayo-hola b{color:#fff;font-weight:500;}
 .mayo-btn{background:none;border:1px solid var(--linea-fuerte);color:var(--hueso);font-family:var(--mono);font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;padding:10px 14px;cursor:pointer;white-space:nowrap;}
 .mayo-btn:hover{border-color:rgba(228,188,110,.6);}
-.mayo-main{max-width:1180px;margin:0 auto;padding:30px 24px 220px;}
-.mayo-cond{display:flex;flex-wrap:wrap;gap:10px 28px;padding:16px 20px;border:1px solid rgba(228,188,110,.3);background:rgba(228,188,110,.04);font-size:14.5px;color:#d8d3c9;margin-bottom:26px;}
-.mayo-cond b{color:#fff;font-weight:500;}
-.mayo-esc{display:flex;flex-wrap:wrap;gap:8px;margin:-10px 0 26px;}
-.mayo-esc span{font-family:var(--mono);font-size:12px;letter-spacing:.06em;padding:7px 11px;border:1px solid var(--linea-fuerte);color:var(--hueso-dim);}
-.mayo-esc span.on{border-color:#e4bc6e;color:#fff;background:rgba(228,188,110,.1);}
-.mayo-row{display:grid;grid-template-columns:72px 1fr auto auto;gap:18px;align-items:center;padding:16px 0;border-bottom:1px solid var(--linea);}
-.mayo-row .th{width:72px;height:72px;background:#151513 center/cover no-repeat;border:1px solid var(--linea);}
-.mayo-row .n{font-size:16.5px;color:#fff;}
+.mayo-main{max-width:1180px;margin:0 auto;padding:30px 24px 230px;}
+
+/* condiciones: 3 tarjetas */
+.mayo-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:28px;}
+.mayo-card{border:1px solid var(--linea-fuerte);padding:16px 18px;background:rgba(255,255,255,.015);}
+.mayo-card small{display:block;font-family:var(--mono);font-size:10.5px;letter-spacing:.22em;text-transform:uppercase;color:var(--hueso-dim);}
+.mayo-card b{display:block;font-size:19px;font-weight:500;color:#fff;margin-top:6px;}
+.mayo-card span{display:block;font-size:13.5px;color:#a9a399;margin-top:3px;}
+.mayo-card.envio{border-color:rgba(228,188,110,.55);background:rgba(228,188,110,.06);}
+.mayo-card.envio.gratis{border-color:rgba(95,193,132,.6);background:rgba(95,193,132,.07);}
+.mayo-card.envio.gratis b{color:#8fe0ab;}
+
+/* escalera de descuentos */
+.mayo-esc-t{display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin-bottom:12px;}
+.mayo-esc-t h4{margin:0;font-family:'Archivo',sans-serif;font-size:20px;color:#fff;font-weight:600;}
+.mayo-esc-t span{font-size:13.5px;color:var(--hueso-dim);}
+.mayo-ladder{display:grid;grid-auto-flow:column;grid-auto-columns:1fr;gap:8px;margin-bottom:30px;}
+.esc-step{--c:#e4bc6e;position:relative;border:1px solid var(--linea-fuerte);padding:14px 12px 12px;text-align:center;background:rgba(255,255,255,.012);transition:border-color .4s,background .4s,box-shadow .4s,transform .4s;}
+.esc-step .ic{height:26px;display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:24px;font-weight:600;color:#8f8a80;transition:color .4s;}
+.esc-step .ic svg{width:26px;height:26px;}
+.esc-step .lb{font-family:var(--mono);font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:#8f8a80;margin-top:4px;}
+.esc-step .de{font-family:var(--mono);font-size:12px;color:#a9a399;margin-top:8px;white-space:nowrap;}
+.esc-step .fa{font-size:12px;color:var(--c);margin-top:6px;min-height:15px;font-weight:500;}
+.esc-step.ok{border-color:color-mix(in srgb,var(--c) 55%,transparent);background:color-mix(in srgb,var(--c) 9%,transparent);}
+.esc-step.ok .ic,.esc-step.ok .lb{color:var(--c);}
+.esc-step.cur{box-shadow:0 0 0 1px var(--c),0 0 26px -6px var(--c);transform:translateY(-2px);}
+.esc-step.cur::after{content:"TU NIVEL";position:absolute;top:-9px;left:50%;transform:translateX(-50%);background:var(--c);color:#0b0b0a;font-family:var(--mono);font-size:9px;font-weight:700;letter-spacing:.16em;padding:2px 7px;white-space:nowrap;}
+.esc-step.next{border-style:dashed;border-color:var(--c);animation:escNext 1.8s ease-in-out infinite;}
+@keyframes escNext{0%,100%{box-shadow:0 0 0 0 transparent;}50%{box-shadow:0 0 18px -4px var(--c);}}
+
+.mayo-filtro{display:flex;justify-content:space-between;align-items:center;gap:10px;margin:0 0 4px;font-family:var(--mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--hueso-dim);}
+.mayo-row{display:grid;grid-template-columns:84px 1fr auto auto;gap:18px;align-items:center;padding:14px 0;border-bottom:1px solid var(--linea);}
+.mayo-row .th{width:84px;height:84px;background:#fff center/contain no-repeat;border:1px solid var(--linea);}
+.mayo-row .th.vacia{background:linear-gradient(160deg,#3a3835,#111);}
+.mayo-row .n{font-size:16.5px;color:#fff;min-width:0;}
 .mayo-row .n small{display:block;color:var(--hueso-dim);font-size:13.5px;margin-top:3px;}
 .mayo-row .n code{font-family:var(--mono);font-size:11.5px;letter-spacing:.08em;color:#e4bc6e;margin-left:8px;}
-.mayo-row .ref{font-size:12.5px;color:#8f8a80;margin-top:4px;font-family:var(--mono);}
+.mayo-row .n .solo{display:inline-block;margin-left:8px;font-family:var(--mono);font-size:9.5px;letter-spacing:.14em;padding:2px 6px;border:1px solid rgba(228,188,110,.5);color:#e4bc6e;vertical-align:2px;}
+.mayo-row .ref{font-size:12.5px;color:#8f8a80;margin-top:5px;font-family:var(--mono);}
+.mayo-row .ref .mg{color:#7fd39a;}
 .mayo-row .p{text-align:right;font-family:var(--mono);font-size:19px;color:#fff;white-space:nowrap;}
 .mayo-row .p small{display:block;font-size:10.5px;letter-spacing:.18em;color:var(--hueso-dim);text-transform:uppercase;}
 .mayo-q{display:inline-flex;align-items:center;border:1px solid var(--linea-fuerte);}
@@ -5744,17 +5772,41 @@ body.mayo-abierto .asist-fab,body.mayo-abierto .versiones{display:none !importan
 .mayo-q input{width:46px;height:40px;background:transparent;border:none;color:#fff;text-align:center;font-family:var(--mono);font-size:16px;-moz-appearance:textfield;}
 .mayo-q input::-webkit-outer-spin-button,.mayo-q input::-webkit-inner-spin-button{-webkit-appearance:none;margin:0;}
 .mayo-row.con .mayo-q{border-color:#e4bc6e;box-shadow:0 0 14px -6px rgba(228,188,110,.8);}
-.mayo-bar{position:fixed;left:0;right:0;bottom:0;z-index:3;background:rgba(10,11,12,.97);border-top:1px solid rgba(228,188,110,.35);box-shadow:0 -20px 50px -20px rgba(0,0,0,.9);}
-.mayo-bar .in{max-width:1180px;margin:0 auto;padding:16px 24px 18px;display:grid;grid-template-columns:1fr auto;gap:10px 28px;align-items:center;}
-.mayo-prog{display:grid;gap:8px;}
-.mayo-prog .lbl{display:flex;justify-content:space-between;font-size:13.5px;color:#cfcac0;}
-.mayo-prog .lbl b{color:#fff;font-weight:500;}
-.mayo-prog .tr{height:6px;background:rgba(255,255,255,.07);position:relative;overflow:hidden;}
-.mayo-prog .tr i{position:absolute;left:0;top:0;bottom:0;background:linear-gradient(90deg,#9c7a35,#e4bc6e);box-shadow:0 0 12px rgba(228,188,110,.6);transition:width .5s var(--ease-lujo);}
-.mayo-prog .tr.ok i{background:linear-gradient(90deg,#2f7d4b,#5fc184);box-shadow:0 0 12px rgba(95,193,132,.5);}
+
+/* tus pedidos */
+.mayo-hist{border:1px solid var(--linea-fuerte);margin-bottom:28px;}
+.mayo-hist summary{cursor:pointer;list-style:none;display:flex;justify-content:space-between;align-items:center;padding:14px 18px;font-size:15px;color:#fff;}
+.mayo-hist summary::-webkit-details-marker{display:none;}
+.mayo-hist summary span{font-family:var(--mono);font-size:11px;letter-spacing:.18em;color:var(--hueso-dim);text-transform:uppercase;}
+.mayo-hist summary::after{content:"+";font-family:var(--mono);color:#e4bc6e;font-size:18px;margin-left:12px;}
+.mayo-hist[open] summary::after{content:"−";}
+.mh-row{display:grid;grid-template-columns:1.3fr .8fr .9fr 1fr auto;gap:12px;align-items:center;padding:12px 18px;border-top:1px solid var(--linea);font-size:14px;color:#cfcac0;}
+.mh-row code{font-family:var(--mono);font-size:12.5px;color:#fff;letter-spacing:.06em;}
+.mh-row b{font-family:var(--mono);font-weight:500;color:#fff;}
+.mh-est{justify-self:start;font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;padding:3px 7px;border:1px solid var(--linea-fuerte);}
+.mh-est.pagado{border-color:#e4bc6e;color:#e4bc6e;}
+.mh-est.despachado{border-color:#5fc184;color:#8fe0ab;}
+
+/* barra de abajo */
+.mayo-bar{position:fixed;left:0;right:0;bottom:0;z-index:3;background:#0a0b0c;border-top:1px solid rgba(228,188,110,.35);box-shadow:0 -20px 50px -20px rgba(0,0,0,.9);}
+.mayo-bar .in{max-width:1180px;margin:0 auto;padding:14px 24px 16px;display:grid;grid-template-columns:1fr auto;gap:10px 30px;align-items:center;}
+.mayo-prog{display:grid;gap:9px;min-width:0;}
+.mayo-prog .lbl{display:flex;justify-content:space-between;gap:12px;font-size:14px;color:#cfcac0;}
+.mayo-prog .lbl > span b{color:var(--tc,#e4bc6e);font-weight:600;}
+.mayo-prog .lbl > b{color:#fff;font-weight:500;white-space:nowrap;}
+.mayo-prog .lbl .ah{color:#8fe0ab;}
+.mayo-tr{position:relative;height:10px;background:rgba(255,255,255,.07);}
+.mayo-tr > i{position:absolute;left:0;top:0;bottom:0;background:var(--tc,#e4bc6e);box-shadow:0 0 16px var(--tc,#e4bc6e);transition:width .6s var(--ease-lujo),background .6s,box-shadow .6s;}
+.mayo-tr .tk{position:absolute;top:-3px;bottom:-3px;width:2px;background:#08090a;transform:translateX(-1px);}
+.mayo-tk{position:relative;height:14px;font-family:var(--mono);font-size:10px;color:#77726a;}
+.mayo-tk span{position:absolute;transform:translateX(-50%);white-space:nowrap;transition:color .4s;}
+.mayo-tk span.ok{color:var(--c);}
+.mayo-tk span:last-child{transform:translateX(-100%);}
+.mayo-bar.sube .mayo-tr > i{animation:mayoSube 1.1s ease-out;}
+@keyframes mayoSube{0%{filter:brightness(1);}30%{filter:brightness(1.9);box-shadow:0 0 30px var(--tc);}100%{filter:brightness(1);}}
 .mayo-tot{text-align:right;}
 .mayo-tot small{display:block;font-size:12.5px;color:var(--hueso-dim);}
-.mayo-tot small.desc{color:#e8cf8f;}
+.mayo-tot small.desc{color:#8fe0ab;}
 .mayo-tot b{display:block;font-family:var(--mono);font-size:26px;font-weight:500;color:#fff;margin:2px 0 8px;}
 .mayo-tot .cta{padding:15px 26px !important;}
 .mayo-tot .cta:disabled{opacity:.4;cursor:default;}
@@ -5765,32 +5817,127 @@ body.mayo-abierto .asist-fab,body.mayo-abierto .versiones{display:none !importan
 .mayo-modal .card{width:640px;max-width:100%;background:linear-gradient(180deg,#10100f,#0b0b0a);border:1px solid rgba(201,162,74,.3);padding:36px 38px;position:relative;}
 .mayo-modal h3{font-family:'Archivo',sans-serif;font-size:26px;color:#fff;margin:6px 0 20px;}
 .mayo-modal .x{position:absolute;top:12px;right:16px;background:none;border:none;color:var(--hueso-dim);font-size:22px;cursor:pointer;}
-.mayo-res{font-family:var(--mono);font-size:13.5px;line-height:1.8;color:#cfcac0;border:1px solid var(--linea);padding:14px 16px;margin-bottom:20px;white-space:pre-wrap;}
+.mayo-res{border:1px solid var(--linea);padding:6px 16px;margin-bottom:20px;}
+.mayo-res div{display:flex;justify-content:space-between;gap:14px;padding:8px 0;border-bottom:1px solid var(--linea);font-size:14.5px;color:#cfcac0;}
+.mayo-res div:last-child{border-bottom:none;}
+.mayo-res div b{font-family:var(--mono);font-weight:500;color:#fff;white-space:nowrap;}
+.mayo-res div.vd,.mayo-res div.vd b{color:#8fe0ab;}
+.mayo-res div.tt{font-size:16.5px;color:#fff;}
+.mayo-res div.tt b{font-size:19px;}
 .mayo-ok{text-align:center;}
-.mayo-ok .num{font-family:var(--mono);letter-spacing:.2em;color:#fff;font-size:15px;margin:10px 0 18px;}
+.mayo-ok .num{font-family:var(--mono);letter-spacing:.2em;color:#fff;font-size:15px;margin:10px 0 6px;}
 .mayo-ok p{color:#cfcac0;font-size:15.5px;line-height:1.6;}
+.mayo-ok .ck-banco,.mayo-ok .ck-pasos{text-align:left;}
+.mayo-envio{margin-top:16px;padding:12px 14px;border:1px solid var(--linea-fuerte);font-size:14.5px;color:#cfcac0;text-align:left;}
+.mayo-envio.gratis{border-color:rgba(95,193,132,.6);color:#8fe0ab;}
 @media (max-width:760px){
   .mayo-top .in{padding:12px 16px;gap:10px;flex-wrap:wrap;}
   .mayo-hola{order:3;flex-basis:100%;font-size:14px;}
-  .mayo-main{padding:20px 16px 270px;}
-  .mayo-row{grid-template-columns:56px 1fr;gap:10px 14px;}
-  .mayo-row .th{width:56px;height:56px;grid-row:span 2;}
+  .mayo-main{padding:20px 16px 290px;}
+  .mayo-cards{grid-template-columns:1fr;gap:8px;}
+  .mayo-card{display:flex;align-items:baseline;justify-content:space-between;gap:10px;padding:12px 14px;}
+  .mayo-card b{font-size:16px;margin:0;text-align:right;}
+  .mayo-card span{display:none;}
+  .mayo-esc-t{flex-direction:column;gap:2px;}
+  .mayo-ladder{grid-auto-columns:minmax(112px,1fr);overflow-x:auto;padding:12px 2px 6px;margin:-8px -16px 24px;padding-left:16px;padding-right:16px;scroll-snap-type:x mandatory;}
+  .esc-step{scroll-snap-align:start;padding:14px 8px 10px;}
+  .esc-step .de{white-space:normal;font-size:11px;line-height:1.35;}
+  .esc-step .fa{font-size:11px;}
+  .mayo-filtro span:last-child{display:none;}
+  .mayo-prog .lbl > span{line-height:1.45;}
+  .mayo-row{grid-template-columns:64px 1fr;gap:10px 14px;}
+  .mayo-row .th{width:64px;height:64px;grid-row:span 2;align-self:start;margin-top:4px;}
   .mayo-row .p{text-align:left;font-size:17px;}
   .mayo-row .p small{display:inline;margin-right:8px;}
   .mayo-row .mayo-q{justify-self:start;}
+  .mh-row{grid-template-columns:1fr auto;gap:4px 12px;padding:12px 14px;}
+  .mh-row .mh-u{display:none;}
   .mayo-bar .in{grid-template-columns:1fr;padding:12px 16px 14px;}
+  .mayo-prog .lbl{font-size:13px;}
   .mayo-tot{display:flex;align-items:center;justify-content:space-between;gap:12px;text-align:left;}
   .mayo-tot b{font-size:21px;margin:0;}
   .mayo-modal .card{padding:30px 18px;}
 }
+@media (prefers-reduced-motion:reduce){ .esc-step.next,.mayo-bar.sube .mayo-tr > i{animation:none;} }
+
+
+/* descuento por serie en cada fila */
+.mayo-row{--c:#e4bc6e;}
+.mayo-row.con .mayo-q{border-color:var(--c);box-shadow:0 0 14px -6px var(--c);}
+.mayo-row .p s{display:block;font-size:12.5px;color:#77726a;min-height:0;}
+.mayo-row .p s:empty{display:none;}
+.mayo-row.con .p .pu{color:var(--c);}
+.sr{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin-top:8px;}
+.sr span{--c:#e4bc6e;font-family:var(--mono);font-size:11px;padding:3px 7px;border:1px solid var(--linea-fuerte);color:#8f8a80;cursor:pointer;transition:all .3s;user-select:none;}
+.sr span b{font-weight:600;}
+.sr span:hover{border-color:var(--c);color:#d8d3c9;}
+.sr span.on{border-color:var(--c);color:#0b0b0a;background:var(--c);}
+.sr-f{font-style:normal;font-size:12.5px;color:var(--c);margin-left:4px;}
+.mayo-env{font-size:13px;color:#cfcac0;}
+.mayo-env .env{display:inline-flex;align-items:center;gap:6px;}
+.mayo-env .env svg{width:16px;height:16px;}
+.mayo-env .env.ok{color:#8fe0ab;font-weight:600;}
+.mayo-env .env b{color:#fff;font-weight:500;}
+.mayo-priv{margin:26px 0 0;font-size:13px;color:#8f8a80;line-height:1.6;}
+.mayo-priv a{color:#e4bc6e;}
+.mh-acc{display:flex;gap:10px;align-items:center;justify-content:flex-end;flex-wrap:wrap;}
+.mayo-btn.oro{border-color:#e4bc6e;color:#e4bc6e;}
+.mh-est.espera{border-color:#e08a6c;color:#f0a98f;}
+.mayo-res em{font-style:normal;font-size:12px;color:#8fe0ab;margin-left:4px;}
+.ck-subir.enviando{opacity:.6;pointer-events:none;}
+@media (max-width:760px){ .mh-acc{justify-content:flex-start;grid-column:1 / -1;} .sr-f{flex-basis:100%;margin:2px 0 0;} }
+
 /* lista para imprimir / PDF */
 .mayo-print{display:none;}
 @media print{
+  @page{size:A4;margin:8mm 7mm;}
   body.imprimiendo > *:not(.mayo-print){display:none !important;}
-  body.imprimiendo .mayo-print{display:block !important;color:#000;font:12px Arial,sans-serif;}
-  .mayo-print h1{font-size:20px;letter-spacing:.3em;margin:0;} .mayo-print .s{font-size:11px;color:#555;margin:4px 0 14px;}
-  .mayo-print table{width:100%;border-collapse:collapse;} .mayo-print th,.mayo-print td{border-bottom:1px solid #ccc;padding:6px 4px;text-align:left;}
-  .mayo-print td.r,.mayo-print th.r{text-align:right;} .mayo-print .pie{margin-top:14px;font-size:11px;color:#444;}
+  html:has(body.imprimiendo),body.imprimiendo{background:#fff !important;}
+  body.imprimiendo .mayo-print *{color:inherit;}
+  body.imprimiendo .mayo-print .gris,body.imprimiendo .mayo-print .tg,body.imprimiendo .mp-cab .s,body.imprimiendo .mp-pie{color:#666;}
+  body.imprimiendo .mayo-print{display:block !important;color:#111;font:11.5px/1.45 Arial,Helvetica,sans-serif;-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+  .mp-cab{display:flex;justify-content:space-between;align-items:flex-end;border-bottom:2px solid #111;padding-bottom:10px;}
+  .mp-cab h1{font-size:22px;letter-spacing:.32em;margin:0;}
+  .mp-cab .s{font-size:10.5px;color:#666;letter-spacing:.12em;text-transform:uppercase;margin-top:3px;}
+  .mp-cab .d{text-align:right;font-size:11px;color:#333;}
+  .mp-cab .d b{display:block;font-size:14px;color:#111;}
+  .mp-cond{display:grid;grid-template-columns:1fr 1.6fr 1fr;gap:10px;margin:14px 0 16px;}
+  .mp-cond > div{border:1px solid #ccc;padding:9px 11px;}
+  .mp-cond small{display:block;font-size:9px;letter-spacing:.18em;text-transform:uppercase;color:#777;margin-bottom:4px;}
+  .mp-cond b{font-size:13px;}
+  .mp-cond .gr{border-color:#2f8f55;background:#eef8f1;}
+  .mp-esc{display:flex;gap:4px;flex-wrap:wrap;}
+  .mp-esc span{border:1px solid #bbb;padding:2px 6px;font-size:10.5px;white-space:nowrap;}
+  .mp-esc span b{font-size:11px;}
+  body.imprimiendo .mayo-print table{width:100%;border-collapse:collapse;table-layout:fixed;}
+  body.imprimiendo .mayo-print col.c-im{width:28mm;} body.imprimiendo .mayo-print col.c-ar{width:19mm;} body.imprimiendo .mayo-print col.c-pe{width:12mm;} body.imprimiendo .mayo-print col.c-pm{width:22mm;} body.imprimiendo .mayo-print col.c-sg{width:20mm;} body.imprimiendo .mayo-print col.c-tu{width:18mm;}
+  body.imprimiendo .mayo-print th{font-size:8.5px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:#111;text-align:left;border-bottom:1.5px solid #111;padding:0 4px 7px;vertical-align:bottom;line-height:1.2;white-space:nowrap;}
+  body.imprimiendo .mayo-print th small{display:block;font-size:7.5px;font-weight:400;letter-spacing:.04em;color:#888;text-transform:none;margin-top:3px;}
+  body.imprimiendo .mayo-print th.r{text-align:right;}
+  body.imprimiendo .mayo-print th.c{text-align:center;}
+  body.imprimiendo .mayo-print th.pmh{background:#f3f3f3;padding-top:8px;text-align:center;}
+  body.imprimiendo .mayo-print td.pr{text-align:center;white-space:nowrap;}
+  body.imprimiendo .mayo-print .ar{white-space:nowrap;}
+  body.imprimiendo .mayo-print td{border-bottom:1px solid #ddd;padding:7px 4px;vertical-align:middle;}
+  body.imprimiendo .mayo-print tr{break-inside:avoid;}
+  body.imprimiendo .mayo-print .r{text-align:right;white-space:nowrap;}
+  body.imprimiendo .mayo-print .im img{display:block;width:27mm;height:27mm;object-fit:contain;background:#fff;margin:0 auto;}
+  body.imprimiendo .mayo-print tbody td{height:29mm;}
+  body.imprimiendo .mayo-print td.c{text-align:center;}
+  body.imprimiendo .mayo-print .tx{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:9;overflow:hidden;}
+  body.imprimiendo .mayo-print .dl{font-size:8px;font-weight:600;line-height:1.32;color:#222;letter-spacing:.02em;text-transform:uppercase;white-space:pre-line;}
+  body.imprimiendo .mayo-print .arg{display:inline-grid;text-align:left;grid-template-columns:max-content max-content;column-gap:5px;row-gap:1px;font-size:10px;line-height:1.4;}
+  body.imprimiendo .mayo-print .arg i{font-style:normal;color:#777;text-align:right;}
+  body.imprimiendo .mayo-print .arg b{font-weight:600;color:#111;text-align:left;font-variant-numeric:tabular-nums;}
+  body.imprimiendo .mayo-print .tu span{display:block;height:auto;border:none;border-bottom:1px solid #777;border-radius:0;margin:14px 4px 0;font-size:11px;color:#555;padding:0 0 2px;line-height:1;}
+  body.imprimiendo .mayo-print .cod{font-family:"Courier New",monospace;font-size:12px;font-weight:700;letter-spacing:.06em;color:#111;}
+  body.imprimiendo .mayo-print .ds{font-size:8px;font-weight:600;line-height:1.32;color:#222;margin-top:3px;letter-spacing:.02em;}
+  body.imprimiendo .mayo-print .md{font-size:9.5px;color:#555;margin-top:1px;}
+  body.imprimiendo .mayo-print .ar{font-size:10.5px;color:#222;}
+  body.imprimiendo .mayo-print .pe{font-size:11px;color:#222;}
+  body.imprimiendo .mayo-print .pr{font-size:15px;font-weight:700;color:#000;background:#f3f3f3;}
+  body.imprimiendo .mayo-print .sgv{font-size:11.5px;color:#333;}
+  .mp-pie{margin-top:14px;display:flex;justify-content:space-between;gap:16px;font-size:10.5px;color:#444;border-top:1px solid #ccc;padding-top:8px;}
 }
 </style>
 
@@ -5925,8 +6072,10 @@ body.mayo-abierto .asist-fab,body.mayo-abierto .versiones{display:none !importan
   document.body.appendChild(mayo);
   const pr = document.createElement("div"); pr.className = "mayo-print"; pr.id = "mayo-print"; document.body.appendChild(pr);
 
-  let M = null, codigo = "", cant = {};
+  let M = null, codigo = "", cant = {}, nivelAntes = -1;
   const codigoHash = () => { const m = location.hash.match(/^#mayoristas?-([A-Za-z0-9]{4,12})$/); return m ? m[1].toUpperCase() : null; };
+  const kg = n => (Math.round(n * 10) / 10).toLocaleString("es-AR") + " kg";
+  const ICO_CAMION = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h11v9H3zM14 9h4l3 3v3h-7z"/><circle cx="7" cy="17" r="1.8"/><circle cx="17.5" cy="17" r="1.8"/></svg>`;
 
   async function abrirMayo(cod){
     codigo = cod; mayo.classList.add("on"); document.body.classList.add("mayo-abierto");
@@ -5934,8 +6083,10 @@ body.mayo-abierto .asist-fab,body.mayo-abierto .versiones{display:none !importan
     try{ cant = JSON.parse(lsGet("brasas-mayo-" + cod) || "{}") || {}; }catch(e){ cant = {}; }
     M = await traerMayo(cod);
     if(!M || !M.ok){ $("#mayo-main").innerHTML = `<div class="mayo-error"><b>Este acceso no está activo</b>Pedinos uno nuevo por WhatsApp.<br><br><a class="cta" href="${waLink("Hola! Necesito acceso al canal mayorista de BRASAS.")}" target="_blank" rel="noopener">Escribir por WhatsApp</a></div>`; return; }
+    M.pedidos = M.pedidos || []; M.items = M.items || [];
+    Object.keys(cant).forEach(t=>{ if(!M.items.some(i=> i.tag === t)) delete cant[t]; });
     $("#mayo-hola").innerHTML = `Hola, <b>${esc(M.nombre)}</b>`;
-    pintarMayo();
+    nivelAntes = -1; pintarMayo();
   }
   async function traerMayo(cod){
     if(!A.appsScript){
@@ -5944,7 +6095,7 @@ body.mayo-abierto .asist-fab,body.mayo-abierto .versiones{display:none !importan
       MODELOS.forEach(m=> Object.entries(m.variantes).forEach(([tag,v])=>{ const ml = (v.ml && +v.ml.precio) || 0; if(!ml) return;
         const f = (m.fotos||[]).find(x=> typeof x === "string" && x.length > 4);
         items.push({ tag, nombre:m.nombre, medida:v.label, precio: Math.round(ml/1.55/1000)*1000, web: Math.round(precioTransfer(v)/1000)*1000, ml, peso:v.peso||null, foto:f||null }); }));
-      return { ok:true, nombre:"Vista previa", minimo:{ unidades:6, monto:1000000 }, escalas:[{desde:1500000,pct:3},{desde:2500000,pct:5},{desde:4000000,pct:7},{desde:6000000,pct:9},{desde:10000000,pct:12}], especial:15000000, items };
+      return { ok:true, nombre:"Vista previa", minimo:{ unidades:6, monto:0 }, escalas:[{desde:6,pct:3},{desde:12,pct:5},{desde:24,pct:8}], envioGratis:1500000, banco:{ alias:"brasas.argentina", cbu:"0000000000000000000000", titular:"BRASAS", cuit:"", banco:"" }, items, pedidos:[], cliente:{} };
     }
     try{
       const ctl = new AbortController(); const to = setTimeout(()=>ctl.abort(), 20000);
@@ -5952,119 +6103,252 @@ body.mayo-abierto .asist-fab,body.mayo-abierto .versiones{display:none !importan
       clearTimeout(to); return await r.json();
     }catch(e){ return null; }
   }
+
+  /* descuento POR SERIE: unidades iguales del mismo modelo → % en ese modelo */
+  const COLORES = ["#e4bc6e","#d9d454","#a9d35c","#6cc96c","#36b981","#1fa3a0"];
+  const series = i => ((i && i.escalas) || M.escalas || []).slice().sort((a,b)=> a.desde - b.desde);   // cada modelo puede tener su propia serie
+  const pctDe = (n, i) => series(i).filter(e=> n >= e.desde).map(e=> e.pct).pop() || 0;
+  const colorSerie = i => COLORES[Math.min(COLORES.length - 1, i + 1)];
+  const armadoTxt = a => { const t = String(a||"").trim(); if(!t) return ""; const m = t.match(/^(\d+(?:[.,]\d+)?)\s*[x×*]\s*(\d+(?:[.,]\d+)?)(?:\s*[x×*]\s*(\d+(?:[.,]\d+)?))?\s*(cm|mm|m)?$/i);
+    return m ? [m[1],m[2],m[3]].filter(Boolean).join(" × ") + " " + (m[4] || "cm").toLowerCase() : t; };
+  /* "50x35x50" → { alto:"50", ancho:"35", largo:"50", u:"cm" } (orden de la planilla: alto x ancho x largo) */
+  const armadoPartes = a => { const m = String(a||"").trim().match(/^(\d+(?:[.,]\d+)?)\s*[x×*]\s*(\d+(?:[.,]\d+)?)\s*[x×*]\s*(\d+(?:[.,]\d+)?)\s*(cm|mm|m)?$/i);
+    return m ? { alto:m[1], ancho:m[2], largo:m[3], u:(m[4]||"cm").toLowerCase() } : null; };
+  const pesoRef = p => `≈ ${kg(p)}`;
+  const altoFila = i => { const d = String(i.descripcion||"").trim(), n = d ? d.split(/\n/).filter(Boolean).length + Math.floor(d.length / 90) : 0; return n >= 5 ? "alto3" : n >= 3 ? "alto2" : ""; };   // descripción larga → foto más grande
   function cuentas(){
-    const sel = M.items.filter(i=> (cant[i.tag]||0) > 0);
-    const unidades = sel.reduce((s,i)=> s + cant[i.tag], 0), subtotal = sel.reduce((s,i)=> s + cant[i.tag]*i.precio, 0);
-    const pct = (M.escalas||[]).filter(e=> subtotal >= e.desde).map(e=>e.pct).pop() || 0;
-    const desc = Math.round(subtotal*pct/100), total = subtotal - desc;
-    const prox = (M.escalas||[]).find(e=> subtotal < e.desde) || null;
-    const peso = sel.reduce((s,i)=> s + cant[i.tag]*(i.peso||0), 0);
-    const okU = unidades >= M.minimo.unidades, okM = subtotal >= M.minimo.monto;
-    return { sel, unidades, subtotal, pct, desc, total, prox, peso, okU, okM, ok: okU && okM };
+    const lineas = M.items.filter(i=> (cant[i.tag]||0) > 0).map(i=>{ const S = series(i), n = cant[i.tag], pct = pctDe(n, i), bruto = n * i.precio, desc = Math.round(bruto * pct / 100);
+      const prox = S.find(e=> n < e.desde) || null; return { i, n, pct, bruto, desc, neto: bruto - desc, prox, k: S.filter(e=> n >= e.desde).length - 1 }; });
+    const unidades = lineas.reduce((s,l)=> s + l.n, 0), subtotal = lineas.reduce((s,l)=> s + l.bruto, 0);
+    const desc = lineas.reduce((s,l)=> s + l.desc, 0), total = subtotal - desc;
+    const peso = lineas.reduce((s,l)=> s + l.n * (l.i.peso||0), 0);
+    const okU = unidades >= M.minimo.unidades, okM = !M.minimo.monto || total >= M.minimo.monto;
+    const envioGratis = !!(M.envioGratis && total >= M.envioGratis);
+    /* el empujón: el modelo al que menos le falta para bajar de precio */
+    const empuje = lineas.filter(l=> l.prox).map(l=> ({ l, falta: l.prox.desde - l.n })).sort((a,b)=> a.falta - b.falta || b.l.n - a.l.n)[0] || null;
+    const mejor = lineas.reduce((m,l)=> Math.max(m, l.k), -1);              // escalón más alto alcanzado por algún modelo
+    return { lineas, unidades, subtotal, desc, total, peso, okU, okM, ok: okU && okM, envioGratis, empuje, mejor };
   }
+
   function pintarMayo(){
-    const esc0 = (M.escalas||[]);
+    const S = series(), G = M.envioGratis, propias = M.items.some(i=> i.escalas);
+    const estadoTxt = p => p.estado === "despachado" ? "Despachado" : p.estado === "pagado" ? "Pago confirmado" : p.comprobante ? "Comprobante recibido" : "Esperando pago";
+    const estadoCls = p => p.estado !== "recibido" ? p.estado : p.comprobante ? "pagado" : "espera";
+    const hist = (M.pedidos||[]).length ? `
+      <details class="mayo-hist" id="mayo-hist" ${M.pedidos.some(p=> p.estado === "recibido" && !p.comprobante) ? "open" : ""}><summary>Tus pedidos <span>${M.pedidos.length} pedido${M.pedidos.length===1?"":"s"}</span></summary>
+        ${M.pedidos.slice(0,8).map((p,k)=>`<div class="mh-row"><code>${esc(p.orden)}</code><span>${new Date(p.fecha).toLocaleDateString("es-AR",{day:"numeric",month:"short",year:"numeric"})}</span>
+          <span class="mh-u">${p.unidades} productos</span><b>${$$m(p.total)}</b>
+          <span class="mh-acc"><span class="mh-est ${estadoCls(p)}">${estadoTxt(p)}</span>
+          ${p.estado === "recibido" && !p.comprobante ? `<button type="button" class="mayo-btn oro" data-pagar="${k}">Pagar / subir comprobante</button>` : ""}
+          <button type="button" class="mayo-btn" data-rep="${k}">Repetir</button></span></div>`).join("")}
+      </details>` : "";
     $("#mayo-main").innerHTML = `
-      <div class="mayo-cond"><span>Pedido mínimo: <b>${M.minimo.unidades} productos</b> y <b>${$$m(M.minimo.monto)}</b></span><span>Precios <b>sin envío</b> · lo cotizamos según destino</span><span>Pago por <b>transferencia</b></span></div>
-      ${esc0.length ? `<div class="mayo-esc" id="mayo-esc">${esc0.map(e=>`<span data-p="${e.pct}">Desde ${$$m(e.desde)} · ${e.pct}% extra</span>`).join("")}${M.especial ? `<span data-p="esp">Desde ${$$m(M.especial)} · condiciones especiales</span>` : ""}</div>` : ""}
+      <div class="mayo-cards">
+        <div class="mayo-card"><small>Pedido mínimo</small><b>${M.minimo.unidades} productos</b><span>Combiná modelos y medidas como quieras</span></div>
+        <div class="mayo-card envio ${G ? "gratis" : ""}"><small>Envío</small><b>${G ? `GRATIS desde ${$$m(G)}` : "A cotizar según destino"}</b><span>${G ? "Debajo de ese monto, se cotiza según destino" : "Por peso y volumen · te lo pasamos por WhatsApp"}</span></div>
+        <div class="mayo-card"><small>Pago</small><b>Transferencia bancaria</b><span>Los datos te llegan por mail al confirmar</span></div>
+      </div>
+      ${hist}
+      ${S.length ? `<div class="mayo-esc-t"><h4>Descuento por serie</h4><span>${propias ? "Cuantas más unidades iguales, menos pagás cada una · algunos modelos tienen su propia serie (la ves en cada uno)" : "Cuantas más unidades iguales de un modelo, menos pagás cada una"}</span></div>
+      <div class="mayo-ladder" id="mayo-ladder">${S.map((e,i)=>`<div class="esc-step" data-i="${i}" style="--c:${colorSerie(i)}"><div class="ic">−${e.pct}%</div><div class="lb">en ese modelo</div><div class="de">${e.desde} o más iguales</div><div class="fa"></div></div>`).join("")}</div>` : ""}
+      <div class="mayo-filtro"><span>${M.items.length} productos</span><span>Precio por unidad · sin envío</span></div>
       <div id="mayo-lista">${M.items.map(i=>`
         <div class="mayo-row" data-t="${esc(i.tag)}">
-          <div class="th" style="${i.foto ? `background-image:url('${esc(i.foto)}')` : "background:linear-gradient(160deg,#3a3835,#111)"}"></div>
-          <div class="n">${esc(i.nombre)}<code>${esc(i.tag)}</code><small>${esc(i.medida)}</small>
-            <div class="ref">Público: web ${i.web ? $$m(i.web) : "—"} · MercadoLibre ${i.ml ? $$m(i.ml) : "—"}</div></div>
-          <div class="p"><small>Mayorista</small>${$$m(i.precio)}</div>
+          <div class="th ${i.foto ? "" : "vacia"}" ${i.foto ? `style="background-image:url('${esc(i.foto)}')"` : ""}></div>
+          <div class="n">${esc(i.nombre)}<code>${esc(i.tag)}</code>${i.soloMayorista ? `<span class="solo">EXCLUSIVO MAYORISTA</span>` : ""}
+            <small>${[esc(i.medida), i.armado ? "Armado " + esc(armadoTxt(i.armado)) : "", i.peso ? `<span title="Peso de referencia con embalaje: puede variar">${pesoRef(i.peso)} (ref.)</span>` : ""].filter(Boolean).join(" · ")}</small>
+            <div class="ref"></div>${series(i).length ? `<div class="sr">${series(i).map((e,k)=>`<span data-k="${k}" style="--c:${colorSerie(k)}">${e.desde}+ <b>−${e.pct}%</b></span>`).join("")}<em class="sr-f"></em></div>` : ""}</div>
+          <div class="p"><small>Mayorista</small><s></s><span class="pu">${$$m(i.precio)}</span></div>
           <div class="mayo-q"><button type="button" data-d="-1" aria-label="Menos">−</button><input type="number" min="0" max="500" inputmode="numeric" value="${cant[i.tag]||0}" aria-label="Cantidad"><button type="button" data-d="1" aria-label="Más">+</button></div>
-        </div>`).join("")}</div>`;
+        </div>`).join("")}</div>
+      <p class="mayo-priv">🔒 ${esc((M.textos && M.textos.mayoPrivado) || "Este link es personal: tiene tus datos y tus pedidos. No lo reenvíes. ¿Otra persona u otro comercio necesita acceso?")} <a href="${waLink("Hola! Quiero pedir un acceso al canal mayorista de BRASAS.")}" target="_blank" rel="noopener">Que nos lo pida por WhatsApp</a>.</p>`;
     $$(".mayo-row").forEach(row=>{
       const t = row.dataset.t, inp = $("input", row);
-      const fijar = n => { cant[t] = Math.max(0, Math.min(500, Math.round(+n||0))); inp.value = cant[t]; row.classList.toggle("con", cant[t] > 0); guardar(); barra(); };
-      $$("button", row).forEach(b=> b.addEventListener("click", ()=> fijar((cant[t]||0) + +b.dataset.d)));
+      const fijar = n => { cant[t] = Math.max(0, Math.min(500, Math.round(+n||0))); inp.value = cant[t]; guardar(); barra(); };
+      $$(".mayo-q button", row).forEach(b=> b.addEventListener("click", ()=> fijar((cant[t]||0) + +b.dataset.d)));
       inp.addEventListener("input", ()=> fijar(inp.value));
-      row.classList.toggle("con", (cant[t]||0) > 0);
+      $$(".sr span", row).forEach(s=> s.addEventListener("click", ()=> fijar(series(M.items.find(x=> x.tag === t))[+s.dataset.k].desde)));   // tocar "12+" lleva a 12
     });
+    $$("[data-rep]").forEach(b=> b.addEventListener("click", e=>{ e.preventDefault(); repetir(M.pedidos[+b.dataset.rep]); }));
+    $$("[data-pagar]").forEach(b=> b.addEventListener("click", e=>{ e.preventDefault(); const p = M.pedidos[+b.dataset.pagar]; pantallaPago({ orden:p.orden, total:p.total, envioGratis:p.envio === "gratis", peso:0, d:Object.assign({}, M.cliente||{}), desdeHistorial:true }); }));
     $("#mayo-bar").hidden = false; barra();
   }
+  function repetir(p){
+    if(!p) return; cant = {}; let faltan = 0;
+    (p.items||[]).forEach(i=>{ if(M.items.some(x=> x.tag === i.tag)) cant[i.tag] = (cant[i.tag]||0) + i.cantidad; else faltan++; });
+    guardar(); pintarMayo();
+    toast(faltan ? `Cargamos tu pedido ${p.orden} (${faltan} producto${faltan===1?"":"s"} ya no está${faltan===1?"":"n"} en la lista)` : `Cargamos tu pedido ${p.orden}. Ajustá lo que quieras.`);
+  }
   const guardar = () => lsSet("brasas-mayo-" + codigo, JSON.stringify(cant));
+
+  /* cada fila: precio con descuento, margen y cuánto le falta para el próximo escalón */
+  function pintarFilas(c){
+    $$(".mayo-row").forEach(row=>{
+      const i = M.items.find(x=> x.tag === row.dataset.t); if(!i) return;
+      const S = series(i), n = cant[i.tag]||0, pct = pctDe(n, i), pu = Math.round(i.precio * (1 - pct/100)), ref = i.ml || i.web, mg = ref ? ref - pu : 0;
+      row.classList.toggle("con", n > 0); row.style.setProperty("--c", pct ? colorSerie(S.findIndex(e=> e.pct === pct)) : "#e4bc6e");
+      $(".pu", row).textContent = $$m(pu); $("s", row).textContent = pct ? $$m(i.precio) : "";
+      $(".ref", row).innerHTML = i.web || i.ml ? `Precio sugerido: ${[i.web ? `web ${$$m(i.web)}` : "", i.ml ? `MercadoLibre ${$$m(i.ml)}` : ""].filter(Boolean).join(" · ")}${mg > 0 ? ` · <span class="mg">tu margen +${$$m(mg)} (${Math.round(mg / pu * 100)}%)</span>` : ""}` : "";
+      $$(".sr span", row).forEach(s=> s.classList.toggle("on", n >= S[+s.dataset.k].desde));
+      const prox = S.find(e=> n < e.desde), f = $(".sr-f", row);
+      if(f) f.textContent = n && prox ? `${prox.desde - n} más y baja a ${$$m(Math.round(i.precio * (1 - prox.pct/100)))}` : n && pct ? "máximo descuento ✓" : "";
+    });
+  }
+
+  /* barra de abajo: mínimo → empujón por serie → envío gratis */
   function barra(){
-    const c = cuentas(), m = M.minimo;
-    const pU = Math.min(100, c.unidades / m.unidades * 100), pM = Math.min(100, c.subtotal / m.monto * 100);
-    let html;
-    if(!c.ok){
-      html = `<div class="lbl"><span>Productos</span><b>${c.unidades} / ${m.unidades}</b></div><div class="tr ${c.okU?"ok":""}"><i style="width:${pU}%"></i></div>
-        <div class="lbl"><span>Monto</span><b>${$$m(c.subtotal)} / ${$$m(m.monto)}</b></div><div class="tr ${c.okM?"ok":""}"><i style="width:${pM}%"></i></div>`;
-    } else if(c.prox){
-      const base = (M.escalas.filter(e=> c.subtotal >= e.desde).pop() || { desde: m.monto }).desde;
-      const p = Math.max(4, Math.min(100, (c.subtotal - base) / (c.prox.desde - base) * 100));
-      html = `<div class="lbl"><span>Sumá <b>${$$m(c.prox.desde - c.subtotal)}</b> y accedé a <b>${c.prox.pct}% extra</b></span><b>${c.pct ? c.pct + "% aplicado" : "Mínimo cumplido ✓"}</b></div><div class="tr"><i style="width:${p}%"></i></div>`;
-    } else if(M.especial && c.subtotal >= M.especial){
-      html = `<div class="lbl"><span>Pedido especial: <b>acordamos condiciones a medida</b> por WhatsApp</span><b>${c.pct}% aplicado ✓</b></div><div class="tr ok"><i style="width:100%"></i></div>`;
-    } else if(M.especial){
-      const base = (M.escalas.filter(e=> c.subtotal >= e.desde).pop() || { desde: m.monto }).desde;
-      html = `<div class="lbl"><span>Sumá <b>${$$m(M.especial - c.subtotal)}</b> y accedé a <b>condiciones especiales</b></span><b>${c.pct}% aplicado ✓</b></div><div class="tr"><i style="width:${Math.max(4, Math.min(100,(c.subtotal-base)/(M.especial-base)*100))}%"></i></div>`;
-    } else html = `<div class="lbl"><span>Máximo descuento por volumen</span><b>${c.pct}% aplicado ✓</b></div><div class="tr ok"><i style="width:100%"></i></div>`;
-    $("#mayo-prog").innerHTML = html;
-    $("#mayo-tot").innerHTML = `<div><small>${c.unidades} producto${c.unidades===1?"":"s"}${c.peso ? ` · ${Math.round(c.peso)} kg` : ""}</small>${c.pct ? `<small class="desc">−${c.pct}% por volumen: −${$$m(c.desc)}</small>` : ""}<b>${$$m(c.total)}</b></div>
+    const c = cuentas(), m = M.minimo, G = M.envioGratis, S = series();
+    pintarFilas(c);
+    const nivel = (c.okU ? 1 : 0) + (c.mejor + 1) + (c.envioGratis ? 1 : 0);
+    const color = !c.unidades ? "#9c7a35" : COLORES[Math.min(COLORES.length - 1, nivel)];
+    /* avance: primera mitad hasta el mínimo de productos; segunda, hasta el envío gratis */
+    const a1 = Math.min(1, c.unidades / m.unidades), a2 = G ? Math.min(1, c.total / G) : (c.okU ? 1 : 0);
+    const avance = G ? (c.okU ? 50 + a2 * 50 : a1 * 50) : a1 * 100;
+    let msg, der;
+    if(!c.okU){ const f = m.unidades - c.unidades; msg = `Te ${f === 1 ? "falta" : "faltan"} <b>${f} producto${f===1?"":"s"}</b> para el pedido mínimo`; der = `<b>${c.unidades} / ${m.unidades}</b>`; }
+    else if(!c.okM){ msg = `Te faltan <b>${$$m(m.monto - c.total)}</b> para el pedido mínimo`; der = `<b>${c.unidades} productos</b>`; }
+    else if(c.empuje){ const e = c.empuje, nombre = `${e.l.i.nombre}${e.l.i.medida ? " " + e.l.i.medida : ""}`;
+      msg = `Sumá <b>${e.falta} × ${esc(nombre)}</b> y ese modelo baja <b style="color:${colorSerie(e.l.k + 1)}">${e.l.prox.pct}%</b> <span class="ah">(${$$m(Math.round(e.l.i.precio * (1 - e.l.prox.pct/100)))} c/u)</span>`;
+      der = `<b>${c.desc ? "Ahorrás " + $$m(c.desc) : "Mínimo cumplido ✓"}</b>`; }
+    else { msg = c.desc ? `<b>Máximo descuento por serie</b> en todo tu pedido` : `Pedido mínimo cumplido`; der = `<b>${c.desc ? "Ahorrás " + $$m(c.desc) : "✓"}</b>`; }
+    const env = !G ? "" : c.envioGratis ? `<span class="env ok">${ICO_CAMION} Envío GRATIS</span>` : `<span class="env">${ICO_CAMION} Envío gratis: faltan <b>${$$m(G - c.total)}</b></span>`;
+    const prog = $("#mayo-prog");
+    prog.style.setProperty("--tc", color);
+    prog.innerHTML = `<div class="lbl"><span>${msg}</span>${der}</div>
+      <div class="mayo-tr"><i style="width:${Math.max(c.unidades ? 2 : 0, avance)}%"></i>${G ? `<span class="tk" style="left:50%"></span>` : ""}</div>
+      <div class="mayo-tk"><span class="${c.okU ? "ok" : ""}" style="left:${G ? 50 : 100}%;--c:${COLORES[1]}">mínimo</span>${G ? `<span class="${c.envioGratis ? "ok" : ""}" style="left:100%;--c:${COLORES[COLORES.length-1]}">envío gratis</span>` : ""}</div>
+      ${env ? `<div class="mayo-env">${env}</div>` : ""}`;
+    $("#mayo-tot").innerHTML = `<div><small>${c.unidades} producto${c.unidades===1?"":"s"}${c.peso ? ` · ≈ ${Math.round(c.peso)} kg ref.` : ""}</small>${c.desc ? `<small class="desc">−${$$m(c.desc)} por serie</small>` : ""}<b>${$$m(c.total)}</b></div>
       <button class="cta" type="button" id="mayo-enviar" ${c.ok ? "" : "disabled"}>Enviar pedido</button>`;
-    $$("#mayo-esc span").forEach(s=> s.classList.toggle("on", s.dataset.p === "esp" ? !!(M.especial && c.subtotal >= M.especial) : +s.dataset.p === c.pct));
     $("#mayo-enviar").addEventListener("click", formulario);
+    /* escalera de arriba: se ilumina hasta el escalón más alto que alcanzó algún modelo */
+    const sel = c.lineas.length ? Math.max(...c.lineas.map(l=> l.n)) : 0;
+    $$("#mayo-ladder .esc-step").forEach(s=>{ const i = +s.dataset.i, e = S[i];
+      s.classList.toggle("ok", i <= c.mejor); s.classList.toggle("cur", i === c.mejor); s.classList.toggle("next", i === c.mejor + 1 && sel > 0);
+      const falta = e.desde - sel;                                       // al modelo que más unidades lleva
+      $(".fa", s).textContent = i === c.mejor + 1 && sel > 0 && falta > 0 ? `te ${falta === 1 ? "falta" : "faltan"} ${falta} iguales` : ""; });
+    if(nivel > nivelAntes && nivelAntes >= 0){ const b = $("#mayo-bar"); b.classList.remove("sube"); void b.offsetWidth; b.classList.add("sube"); }
+    nivelAntes = nivel;
   }
 
   const modal = $("#mayo-modal"), cerrarModal = () => modal.classList.remove("on");
-  modal.addEventListener("click", e=>{ if(e.target === modal) cerrarModal(); });
+  modal.addEventListener("click", e=>{ if(e.target === modal && !$(".mayo-ok", modal)) cerrarModal(); });   // con los datos de pago a la vista, no se cierra con un clic afuera
   function formulario(){
     const c = cuentas(); if(!c.ok) return;
     let d = {}; try{ d = JSON.parse(lsGet("brasas-mayo-datos") || "{}") || {}; }catch(e){}
+    d = Object.assign({}, d, M.cliente || {});
     const v = k => esc(d[k] || "");
     $("#mayo-card").innerHTML = `<button class="x" type="button" aria-label="Cerrar">✕</button><div class="ck-e">★★★★★★</div><h3>Confirmar pedido mayorista</h3>
-      <div class="mayo-res">${c.sel.map(i=>`${cant[i.tag]} × ${esc(i.tag)} · ${esc(i.nombre)} (${esc(i.medida)})`).join("\n")}\n\n${c.unidades} productos · ${c.pct ? `−${c.pct}% por volumen · ` : ""}Total ${$$m(c.total)}\nEnvío: a cotizar</div>
+      <div class="mayo-res">${c.lineas.map(l=>`<div><span>${l.n} × ${esc(l.i.nombre)} · ${esc(l.i.medida)}${l.pct ? ` <em>−${l.pct}% serie</em>` : ""}</span><b>${$$m(l.neto)}</b></div>`).join("")}
+        ${c.desc ? `<div class="vd"><span>Ahorrás por comprar en serie</span><b>${$$m(c.desc)}</b></div>` : ""}
+        <div class="${c.envioGratis ? "vd" : ""}"><span>Envío${c.peso ? ` · ${Math.round(c.peso)} kg aprox.` : ""}</span><b>${c.envioGratis ? "GRATIS" : "A cotizar"}</b></div>
+        <div class="tt"><span>Total a transferir</span><b>${$$m(c.total)}</b></div></div>
       <form class="ck-f" id="mayo-form" novalidate>
         <label class="w"><span>Comercio / razón social</span><input name="razon" value="${v("razon")}" required></label>
         <label><span>CUIT</span><input name="cuit" inputmode="numeric" value="${v("cuit")}" required></label>
         <label><span>Nombre de contacto</span><input name="nombre" autocomplete="name" value="${v("nombre")}" required></label>
         <label><span>WhatsApp</span><input name="telefono" type="tel" inputmode="tel" value="${v("telefono")}" required></label>
         <label><span>Email</span><input name="email" type="email" autocomplete="email" value="${v("email")}" required></label>
-        <label class="w"><span>Dirección de entrega</span><input name="direccion" value="${v("direccion")}" required></label>
-        <label><span>Localidad</span><input name="localidad" value="${v("localidad")}" required></label>
-        <label><span>Provincia</span><input name="provincia" value="${v("provincia")}" required></label>
-        <label class="w"><span>Notas (opcional)</span><textarea name="notas">${v("notas")}</textarea></label>
+        <label class="w"><span>Dirección de entrega</span><input name="direccion" autocomplete="street-address" value="${v("direccion")}" required></label>
+        <label><span>Localidad</span><input name="localidad" autocomplete="address-level2" value="${v("localidad")}" required></label>
+        <label><span>Provincia</span><input name="provincia" autocomplete="address-level1" value="${v("provincia")}" required></label>
+        <label><span>Código postal</span><input name="cp" inputmode="numeric" autocomplete="postal-code" value="${v("cp")}"></label>
+        <label class="w"><span>Notas (opcional)</span><textarea name="notas"></textarea></label>
       </form>
-      <button class="cta ck-go" id="mayo-confirmar">Enviar pedido · ${$$m(c.total)}</button>
-      <div class="ck-legal">Te llega el detalle por mail con los datos para transferir. El envío lo coordinamos por WhatsApp.</div>`;
+      <button class="cta ck-go" id="mayo-confirmar">Confirmar pedido · ${$$m(c.total)}</button>
+      <div class="ck-legal">Al confirmar te mostramos los datos para transferir y te llega todo por mail.${c.envioGratis ? "" : " El costo del envío te lo pasamos por WhatsApp."}</div>`;
     $(".x", modal).addEventListener("click", cerrarModal);
     $("#mayo-confirmar").addEventListener("click", enviar);
     modal.classList.add("on"); modal.scrollTop = 0;
   }
   function nuevaOrden(){ const d = new Date(), p = n=>String(n).padStart(2,"0"); return `BRM-${String(d.getFullYear()).slice(2)}${p(d.getMonth()+1)}${p(d.getDate())}-${Math.floor(1000+Math.random()*9000)}`; }
+  let enviando = false;
   function enviar(){
+    if(enviando) return;
     const f = $("#mayo-form"), d = Object.fromEntries(new FormData(f).entries()); let primero = null;
     ["razon","nombre","direccion","localidad","provincia"].forEach(n=>{ const el = $(`[name=${n}]`, f), ok = String(d[n]||"").trim().length > 1; el.classList.toggle("err", !ok); if(!ok) primero = primero || el; });
     [["cuit", String(d.cuit||"").replace(/\D/g,"").length >= 10], ["telefono", String(d.telefono||"").replace(/\D/g,"").length >= 8], ["email", /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(String(d.email||"").trim())]]
       .forEach(([n,ok])=>{ const el = $(`[name=${n}]`, f); el.classList.toggle("err", !ok); if(!ok) primero = primero || el; });
     if(primero){ primero.focus(); toast("Revisá los datos marcados"); return; }
-    lsSet("brasas-mayo-datos", JSON.stringify(d));
+    enviando = true; const bt = $("#mayo-confirmar"); bt.disabled = true; bt.textContent = "Enviando…";      // un solo pedido aunque toquen dos veces
+    const guardables = Object.assign({}, d); delete guardables.notas;
+    lsSet("brasas-mayo-datos", JSON.stringify(guardables)); M.cliente = Object.assign({}, M.cliente || {}, guardables);
     const c = cuentas(), orden = nuevaOrden();
-    const pedido = { tipo:"pedido_mayorista", codigo, orden, items:c.sel.map(i=>({ tag:i.tag, cantidad:cant[i.tag] })), cliente:d, fecha:new Date().toISOString() };
+    const pedido = { tipo:"pedido_mayorista", codigo, orden, items:c.lineas.map(l=>({ tag:l.i.tag, cantidad:l.n })), cliente:d, fecha:new Date().toISOString() };
     if(A.appsScript) fetch(A.appsScript, { method:"POST", mode:"no-cors", body:JSON.stringify(pedido) }).catch(()=>{});
-    const resumen = `Hola! Soy ${d.nombre.trim()} de ${d.razon.trim()}. Hice el pedido mayorista ${orden} por la web.\n\n${c.sel.map(i=>`${cant[i.tag]}× ${i.tag}`).join(" · ")}\n${c.unidades} productos · Total productos ${$$m(c.total)}${c.pct ? ` (−${c.pct}% por volumen)` : ""}\nPeso aprox.: ${Math.round(c.peso)} kg\nDestino: ${d.localidad.trim()}, ${d.provincia.trim()}\n\n¿Coordinamos el envío?`;
-    $("#mayo-card").innerHTML = `<div class="mayo-ok"><div class="sello" style="font-size:26px;color:#e4bc6e">★★★★★★</div><div class="num">PEDIDO ${orden}</div>
-      <p>Listo, ${esc(d.nombre.trim().split(" ")[0])}. Te enviamos el detalle a <b>${esc(d.email.trim())}</b> con los datos para transferir.<br>Ahora coordinemos el envío:</p>
-      <a class="ck-wa-btn" id="mayo-wa" href="${waLink(resumen)}" target="_blank" rel="noopener">Coordinar envío por WhatsApp</a>
-      <button class="cta ck-go" type="button" id="mayo-listo" style="margin-top:12px">Listo</button></div>`;
-    $("#mayo-listo").addEventListener("click", ()=>{ cerrarModal(); cant = {}; guardar(); pintarMayo(); });
+    M.pedidos.unshift({ orden, fecha:Date.now(), unidades:c.unidades, total:c.total, envio:c.envioGratis ? "gratis" : "cotizar", estado:"recibido", comprobante:false, items:pedido.items });
+    cant = {}; guardar();                                                   // el carrito ya es un pedido: si cierran, no queda cargado
+    enviando = false;
+    pantallaPago({ orden, total:c.total, envioGratis:c.envioGratis, peso:c.peso, d, resumen:`${c.lineas.map(l=>`${l.n}× ${l.i.tag}`).join(" · ")}\n${c.unidades} productos · Total ${$$m(c.total)}${c.desc ? ` (ahorro por serie ${$$m(c.desc)})` : ""}\nPeso aprox.: ${Math.round(c.peso)} kg` });
   }
+  /* datos de pago + comprobante: al confirmar y también desde "Tus pedidos" */
+  function pantallaPago(o){
+    const B = M.banco || {}, d = o.d || {}, p = M.pedidos.find(x=> x.orden === o.orden) || {};
+    const fila = (n, val) => val ? `<div><span>${n}</span><b class="notranslate" translate="no">${esc(val)}</b><button type="button" class="ck-copiar" data-c="${esc(val)}">Copiar</button></div>` : "";
+    const nombre = String(d.nombre || M.nombre || "").trim();
+    const wa = `Hola! ${nombre ? `Soy ${nombre}${d.razon ? ` de ${String(d.razon).trim()}` : ""}. ` : ""}Te escribo por el pedido mayorista ${o.orden}.${o.resumen ? `\n\n${o.resumen}\nDestino: ${String(d.localidad||"").trim()}, ${String(d.provincia||"").trim()}${d.cp ? ` (CP ${String(d.cp).trim()})` : ""}` : ""}\n\n${o.envioGratis ? "¡Gracias!" : "¿Me pasás el costo del envío?"}`;
+    $("#mayo-card").innerHTML = `<button class="x" type="button" aria-label="Cerrar">✕</button><div class="mayo-ok"><div class="sello" style="font-size:26px;color:#e4bc6e">★★★★★★</div><div class="num">PEDIDO ${esc(o.orden)}</div>
+      <p>${o.desdeHistorial ? "Datos para pagar este pedido." : `Listo${nombre ? ", " + esc(nombre.split(" ")[0]) : ""}. Te enviamos el detalle a <b>${esc(String(d.email||"").trim())}</b>.`}</p>
+      ${B.alias || B.cbu ? `<div class="ck-monto"><small>Transferí</small><b class="notranslate" translate="no">${$$m(o.total)}</b><button type="button" class="ck-copiar" data-c="${Math.round(o.total)}" style="margin-top:10px">Copiar monto</button></div>
+      <div class="ck-banco">${fila("Alias", B.alias)}${fila("CBU / CVU", B.cbu)}${fila("Titular", B.titular)}${fila("CUIT", B.cuit)}${fila("Banco", B.banco)}</div>` : ""}
+      <div class="mayo-envio ${o.envioGratis ? "gratis" : ""}">${o.envioGratis ? `${ICO_CAMION.replace("<svg", '<svg style="width:18px;height:18px;vertical-align:-4px;margin-right:6px"')}Envío GRATIS: corre por nuestra cuenta.` : `Envío: lo cotizamos según destino${o.peso ? ` (${Math.round(o.peso)} kg aprox.)` : ""} y te pasamos el costo por WhatsApp. Se abona aparte.`}</div>
+      ${A.appsScript ? (p.comprobante ? `<div class="ck-subir listo"><b>Comprobante recibido ✓</b><small>Si mandaste otro por error, avisanos por WhatsApp.</small></div>`
+        : `<label class="ck-subir" id="mayo-subir"><input type="file" accept="image/*,application/pdf" hidden><b>Subir comprobante</b><small>Foto o PDF · nos llega directo. Si preferís, respondé el mail del pedido adjuntándolo (una sola de las dos).</small></label>`) : ""}
+      <a class="${o.envioGratis ? "mayo-btn" : "ck-wa-btn"}" id="mayo-wa" href="${waLink(wa)}" target="_blank" rel="noopener" style="display:${o.envioGratis ? "inline-block;margin-top:16px;text-decoration:none" : "block"}">${o.envioGratis ? "¿Algún problema con el pago? Escribinos" : "Coordinar envío por WhatsApp"}</a>
+      <button class="cta ck-go" type="button" id="mayo-listo" style="margin-top:14px">${o.desdeHistorial ? "Cerrar" : "Listo"}</button></div>`;
+    const card = $("#mayo-card");
+    $(".x", card).addEventListener("click", terminar);
+    $("#mayo-listo").addEventListener("click", terminar);
+    $$(".ck-copiar", card).forEach(bt=> bt.addEventListener("click", async ()=>{
+      const t = bt.dataset.c, txt0 = bt.textContent; let ok = false;
+      try{ await navigator.clipboard.writeText(t); ok = true; }catch(e){
+        const ta = document.createElement("textarea"); ta.value = t; ta.style.position = "fixed"; ta.style.opacity = "0"; document.body.appendChild(ta); ta.select();
+        try{ ok = document.execCommand("copy"); }catch(x){} ta.remove(); }
+      bt.textContent = ok ? "Copiado ✓" : "Copiá a mano"; bt.classList.toggle("ok", ok); setTimeout(()=>{ bt.textContent = txt0; bt.classList.remove("ok"); }, 2200);
+    }));
+    const sub = $("#mayo-subir", card);
+    if(sub){ const inp = $("input", sub);
+      inp.addEventListener("change", async ()=>{
+        const file = inp.files && inp.files[0]; inp.value = ""; if(!file) return;
+        if(!/^(image\/(jpeg|png|webp)|application\/pdf)$/.test(file.type)) return toast("Subí una foto (JPG o PNG) o un PDF");
+        if(file.size > 12e6) return toast("El archivo es muy pesado (máx. 12 MB)");
+        if(sub.classList.contains("enviando")) return;
+        sub.classList.add("enviando"); $("b", sub).textContent = "Enviando…";
+        try{
+          const data = await new Promise((ok,mal)=>{ const r = new FileReader(); r.onload = ()=> ok(r.result); r.onerror = mal; r.readAsDataURL(file); });
+          await fetch(A.appsScript, { method:"POST", mode:"no-cors", body:JSON.stringify({ tipo:"comprobante", orden:o.orden, nombre:`${nombre}${d.razon ? ` (${d.razon})` : ""}`, email:d.email || "", total:o.total, archivo:String(data).split(",")[1], mime:file.type, archivoNombre:file.name, fecha:new Date().toISOString() }) });
+          if(p.orden) p.comprobante = true;
+          sub.classList.add("listo"); $("b", sub).textContent = "Comprobante recibido ✓"; $("small", sub).textContent = "Te avisamos apenas confirmemos el pago. Si te llega el mail pidiéndolo, desestimalo.";
+        }catch(e){ $("b", sub).textContent = "No se pudo enviar"; $("small", sub).textContent = "Probá de nuevo, o respondé el mail del pedido con el comprobante adjunto."; }
+        sub.classList.remove("enviando");
+      });
+    }
+    modal.classList.add("on"); modal.scrollTop = 0;
+  }
+  function terminar(){ cerrarModal(); pintarMayo(); }
 
+  /* lista para imprimir / PDF: limpia, solo lo que el revendedor necesita tener a mano */
   function imprimir(){
     if(!M || !M.ok) return;
     const hoy = new Date().toLocaleDateString("es-AR", { day:"numeric", month:"long", year:"numeric" });
-    pr.innerHTML = `<h1>BRASAS®</h1><div class="s">Lista de precios mayorista · ${esc(M.nombre)} · ${hoy}</div>
-      <table><thead><tr><th>Código</th><th>Producto</th><th>Medida</th><th class="r">Mayorista</th><th class="r">Público web</th><th class="r">MercadoLibre</th></tr></thead><tbody>
-      ${M.items.map(i=>`<tr><td>${esc(i.tag)}</td><td>${esc(i.nombre)}</td><td>${esc(i.medida)}</td><td class="r"><b>${$$m(i.precio)}</b></td><td class="r">${i.web ? $$m(i.web) : "—"}</td><td class="r">${i.ml ? $$m(i.ml) : "—"}</td></tr>`).join("")}
+    const tam = u => /lh3\.googleusercontent\.com\/d\/[\w-]+=w\d+$/.test(u) ? u.replace(/=w\d+$/, "=w300") : u;
+    const T = (k, def) => String((M.textos && M.textos[k]) || def).replace(/\{fecha\}/g, hoy);
+    pr.innerHTML = `<div class="mp-cab"><div><h1>BRASAS®</h1><div class="s">${esc(T("pdfTitulo", "Lista de precios mayorista"))}</div></div><div class="d"><b>${esc(M.nombre)}</b>${hoy}</div></div>
+      <table><colgroup><col class="c-im"><col><col class="c-ar"><col class="c-pe"><col class="c-pm"><col class="c-sg"><col class="c-sg"><col class="c-tu"></colgroup>
+        <thead><tr><th></th><th>Producto<small>código y descripción</small></th><th class="c">Armado<small>en cm</small></th><th class="c">Peso<small>kg aprox.</small></th>
+          <th class="c pmh">Mayorista<small>precio por unidad</small></th><th class="c">Web<small>sugerido</small></th><th class="c">MercadoLibre<small>sugerido</small></th><th class="c">Tu precio<small>de venta</small></th></tr></thead><tbody>
+      ${M.items.map(i=>`<tr><td class="im">${i.foto ? `<img src="${esc(tam(i.foto))}" alt="">` : ""}</td>
+        <td class="pd"><div class="cod">${esc(i.tag)}</div><div class="tx"><div class="ds">${esc(String(i.nombre||"").toUpperCase())}${i.medida ? ` · ${esc(String(i.medida).toUpperCase())}` : ""}</div>${i.descripcion ? `<div class="dl">${esc(String(i.descripcion).trim())}</div>` : ""}</div></td>
+        <td class="c ar">${(p => p ? `<div class="arg"><i>Alto:</i><b>${esc(p.alto)}</b><i>Ancho:</i><b>${esc(p.ancho)}</b><i>Largo:</i><b>${esc(p.largo)}${p.u !== "cm" ? " " + p.u : ""}</b></div>` : i.armado ? esc(i.armado) : "—")(armadoPartes(i.armado))}</td>
+        <td class="c pe">${i.peso ? kg(i.peso) : "—"}</td><td class="c pr">${$$m(i.precio)}</td>
+        <td class="c sgv">${i.web ? $$m(i.web) : "—"}</td><td class="c sgv">${i.ml ? $$m(i.ml) : "—"}</td><td class="tu"><span>$</span></td></tr>`).join("")}
       </tbody></table>
-      <div class="pie">Pedido mínimo: ${M.minimo.unidades} productos y ${$$m(M.minimo.monto)}. ${(M.escalas||[]).map(e=>`Desde ${$$m(e.desde)}: ${e.pct}% extra.`).join(" ")} Precios sin envío, pago por transferencia, sujetos a cambio sin previo aviso.<br>Pedidos: ${esc(location.origin + location.pathname)}#mayoristas-${esc(codigo)} · WhatsApp +54 9 2284 21-6738</div>`;
+      <div class="mp-pie"><span>${esc(T("pdfPie", "Precios por unidad. Válidos al {fecha}; sujetos a cambio sin previo aviso."))}<br>${esc(T("pdfPeso", "El peso es de referencia y puede variar levemente."))}</span><span>${esc(T("pdfContacto", "BRASAS® · Olavarría, Buenos Aires"))} · WhatsApp +${esc(String(M.whatsapp || WHATSAPP_NUMERO).replace(/\D/g,""))}</span></div>`;
     document.body.classList.add("imprimiendo");
     const fin = () => { document.body.classList.remove("imprimiendo"); window.removeEventListener("afterprint", fin); };
     window.addEventListener("afterprint", fin);
-    window.print(); setTimeout(fin, 1500);
+    const imgs = $$("img", pr), listo = Promise.all(imgs.map(im=> im.complete ? 1 : new Promise(r=>{ im.onload = im.onerror = r; setTimeout(r, 4000); })));
+    listo.then(()=>{ window.print(); setTimeout(fin, 1500); });
   }
   $("#mayo-pdf").addEventListener("click", imprimir);
   function cerrarMayo(){ mayo.classList.remove("on"); document.body.classList.remove("mayo-abierto"); if(codigoHash()) history.replaceState(null, "", location.pathname + location.search); }
