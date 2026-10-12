@@ -1776,7 +1776,7 @@ function renderLanding(){
     const avg = promedioReviews(m.id); const cant = cantReviews(m.id);
     return `<div class="modelo-card" data-modelo="${m.id}">
       <div class="modelo-foto" style="background:linear-gradient(160deg,${color},#1a1918);">
-        FOTO ${idx+1}/${m.fotos.length}
+
         ${m.fotos.length>1?'<div class="card-arrow prev" data-modelo="'+m.id+'" data-dir="-1">‹</div><div class="card-arrow next" data-modelo="'+m.id+'" data-dir="1">›</div>':''}
       </div>
       <div class="modelo-info">
@@ -7887,9 +7887,8 @@ body:not(.intl) .ficha .envio-block{display:none;}
     else { const pg = $("#precio-grande"), w = pg && document.createTreeWalker(pg, NodeFilter.SHOW_TEXT); let n, fin;
       while(w && (n = w.nextNode())){ if(n._rkFin !== undefined){ fin = n._rkFin; break; } }
       unit = fin !== undefined ? +fin : num(pg && pg.textContent); }
-    $("#v31-bn").textContent = `${v.nombre || m.nombre} · ${v.label}`;
-    const chip = $("#stock-chip");
-    $("#v31-bs").textContent = chip && chip.style.display !== "none" ? chip.textContent.trim() : "";
+    $("#v31-bn").textContent = v.nombre || m.nombre;
+    $("#v31-bs").textContent = v.label || "";
     /* envío */
     const cpF = $(".cp-fila", env);
     if(cpF) cpF.style.display = ml ? "none" : "";
@@ -7972,7 +7971,7 @@ body:not(.intl) .ficha .envio-block{display:none;}
 #stock-chip,#cant-nota{display:none !important;}
 /* opiniones sin fecha */
 .re-fecha{display:none !important;}
-.v31-bar .b-prod small{color:#8fd0a3 !important;}
+.v31-bar .b-prod small{color:var(--hueso-dim) !important;}
 </style>
 <script id="v34-js">
 (function(){
@@ -7998,13 +7997,17 @@ body:not(.intl) .ficha .envio-block{display:none;}
     return r ? { exacta: false, txt: `Llega aprox. ${corta(r.desde)} – ${corta(r.hasta)}` } : null;
   }
   function aplicar(){
-    const f = fecha(); if(!f) return;
-    const bs = $("#v31-bs"); if(bs && bs.textContent !== f.txt) bs.textContent = f.txt;
-    const g = $("#v31-gratis");
-    if(g){ const html = `✓ Envío gratis a todo el país<small>Poné tu CP para la fecha exacta</small>`; if(!f.exacta && g.innerHTML !== html) g.innerHTML = html; }
+    const g = $("#v31-gratis"); if(!g) return;
+    if(document.body.classList.contains("intl")){
+      const html = `Envío internacional · DHL o FedEx<small>El costo y la fecha se cotizan según tu país</small>`;
+      if(g.innerHTML !== html) g.innerHTML = html; return;
+    }
+    const f = fecha(); if(!f || f.exacta) return;
+    const html = `✓ Envío gratis · ${f.txt.replace(/^Llega aprox\. /, "llega aprox. ")}<small>Poné tu CP para la fecha exacta</small>`;
+    if(g.innerHTML !== html) g.innerHTML = html;
   }
   let t = 0; const luego = () => { clearTimeout(t); t = setTimeout(aplicar, 30); };
-  ["#v31-bs", "#llega-ar", "#precio-grande"].forEach(s => { const el = $(s); if(el) new MutationObserver(luego).observe(el, { childList:true, characterData:true, subtree:true, attributes:true }); });
+  ["#v31-bn", "#llega-ar", "#precio-grande"].forEach(s => { const el = $(s); if(el) new MutationObserver(luego).observe(el, { childList:true, characterData:true, subtree:true, attributes:true }); });
   const cp = $("#cp-v18"); if(cp) cp.addEventListener("input", luego);
   const cant = $("#cant-v25"); if(cant) cant.addEventListener("input", luego);
   document.addEventListener("click", luego, true);
@@ -8038,21 +8041,29 @@ body.v35-port .h2-foto-img{background-size:contain !important;background-repeat:
 /* ===== comunidad: entregas recientes en lugar de los cuadros de Instagram ===== */
 #circulo .circ-posts,#circulo #circ-redes,#circulo .circ-redes{display:none !important;}
 .v35-ent .ent-bar{position:static !important;margin:0 0 18px !important;}
-.v35-ent .grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;}
-.v35-ent .it{all:unset;cursor:pointer;position:relative;aspect-ratio:4/5;background:#0d0c0b center/cover no-repeat;overflow:hidden;display:block;}
-.v35-ent .it::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 45%,rgba(0,0,0,.85));transition:opacity .3s;}
-.v35-ent .it span{position:absolute;left:14px;right:14px;bottom:12px;z-index:1;font-size:13px;line-height:1.35;color:#ece6da;}
-.v35-ent .it span b{display:block;font-weight:500;color:#fff;font-size:14px;}
-.v35-ent .it:hover{filter:brightness(1.1);}
-.v35-ent .ver{all:unset;cursor:pointer;margin-top:16px;display:inline-block;font-family:var(--mono,monospace);font-size:11.5px;letter-spacing:.2em;text-transform:uppercase;color:#e4bc6e;}
-@media (max-width:640px){ .v35-ent .grid{grid-template-columns:repeat(2,minmax(0,1fr));} }
+.v35-show{position:relative;aspect-ratio:4/5;max-height:640px;width:100%;background:#0b0b0a;overflow:hidden;}
+.v35-show .sl{position:absolute;inset:0;background:#0b0b0a center/cover no-repeat;opacity:0;transform:scale(1.04);transition:opacity 1.4s ease,transform 7s ease-out;}
+.v35-show .sl.on{opacity:1;transform:none;}
+.v35-show::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 60%,rgba(0,0,0,.8));pointer-events:none;}
+.v35-show .cap{position:absolute;left:20px;right:20px;bottom:18px;z-index:2;font-size:14px;color:#cfc9bd;line-height:1.4;transition:opacity .6s;}
+.v35-show .cap b{display:block;color:#fff;font-weight:500;font-size:16px;}
+.v35-show .ctl{position:absolute;right:16px;top:16px;z-index:2;font-family:var(--mono,monospace);font-size:11px;letter-spacing:.15em;color:rgba(255,255,255,.7);}
+.v35-show button.ir{all:unset;cursor:pointer;position:absolute;inset:0;z-index:1;}
+.v35-ig{display:inline-flex;align-items:center;gap:10px;margin-top:16px;color:#cfc9bd;text-decoration:none;font-size:14px;transition:color .2s;}
+.v35-ig svg{width:20px;height:20px;}
+.v35-ig:hover{color:#e4bc6e;}
+.v35-ent .ent-bar{position:static !important;margin:0 0 16px !important;}
+#circulo .circ-fuego .circ-sub,.v35-ent #ent-gal{display:none !important;}
+.v35-show,.v35-ent .ent-bar{width:90% !important;}
+.v35-ent .ent-cab .v35-ig{margin:0 0 0 14px;color:#a8a296;}
+.v35-ent .ent-cab .v35-ig svg{width:18px;height:18px;}
 #circulo .circ-invita h3 em{color:#e4bc6e !important;font-style:normal;}
 #circulo .circ-invita p.v35-sub{margin:-6px 0 22px;color:#a8a296;font-size:15.5px;line-height:1.6;max-width:420px;}
 #btn-unirme-circulo{display:inline-flex !important;align-items:center;gap:12px;background:transparent !important;color:#ece6da !important;border:1px solid rgba(228,188,110,.6) !important;box-shadow:none !important;padding:15px 24px !important;font-family:'Jost','Archivo',system-ui,sans-serif !important;font-weight:400 !important;font-size:12.5px !important;letter-spacing:.2em !important;text-transform:uppercase;border-radius:0 !important;transition:background .25s,border-color .25s;}
 #btn-unirme-circulo:hover{background:rgba(228,188,110,.08) !important;border-color:#e4bc6e !important;}
 #btn-unirme-circulo svg{width:18px;height:18px;flex:0 0 auto;}
 /* ===== redes al pie, solo íconos ===== */
-.v35-redes{display:flex;gap:18px;align-items:center;}
+.v35-redes{display:none !important;}
 .v35-redes a{color:#8a8478;display:flex;transition:color .2s;}
 .v35-redes a:hover{color:#e4bc6e;}
 .v35-redes svg{width:20px;height:20px;}
@@ -8062,7 +8073,7 @@ body.v35-port .h2-foto-img{background-size:contain !important;background-repeat:
   "use strict";
   const $ = (s, r=document) => r.querySelector(s), $$ = (s, r=document) => [...r.querySelectorAll(s)];
   const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
-  let CAT = {};
+  let CAT = {}; try{ CAT = JSON.parse(localStorage.getItem("brasas-catalogo") || "{}") || {}; }catch(e){}
 
   /* ---------- barra superior ---------- */
   const top = $(".topbar");
@@ -8104,29 +8115,50 @@ body.v35-port .h2-foto-img{background-size:contain !important;background-repeat:
   if(fuego){
     const sub = $(".circ-sub", fuego); if(sub) sub.textContent = "Entregas recientes";
     entWrap = document.createElement("div"); entWrap.className = "v35-ent"; fuego.appendChild(entWrap);
-    entWrap.innerHTML = `<div class="grid" id="v35-grid"></div>`;
+    entWrap.innerHTML = `<div class="v35-show" id="v35-show" hidden><button type="button" class="ir" aria-label="Ver todas las entregas"></button><div class="cap" id="v35-cap"></div><div class="ctl" id="v35-ctl"></div></div><a class="v35-ig" id="v35-ig" target="_blank" rel="noopener" hidden></a>`;
     const bar = $("#ent-bar"); if(bar) entWrap.prepend(bar);
   }
+  let lista = [], idx = 0, reloj = 0;
+  const grande = u => /googleusercontent\.com\/d\/[^=]+$/.test(u) ? u + "=w1400" : u;
+  function mostrar(k){
+    const sh = $("#v35-show"); if(!sh || !lista.length) return;
+    idx = (k + lista.length) % lista.length;
+    const e = lista[idx], nueva = document.createElement("div"); nueva.className = "sl";
+    const im = new Image(); im.onload = () => {
+      nueva.style.backgroundImage = `url("${grande(e.foto)}")`; sh.prepend(nueva);
+      requestAnimationFrame(() => requestAnimationFrame(() => nueva.classList.add("on")));
+      $$(".sl", sh).slice(1).forEach(o => { o.classList.remove("on"); setTimeout(() => o.remove(), 1500); });
+      $("#v35-cap").innerHTML = (e.modelo ? `<b>${esc(e.modelo)}</b>` : "") + esc([e.localidad, e.pais && e.pais !== "Argentina" ? e.pais : ""].filter(Boolean).join(", "));
+      $("#v35-ctl").textContent = `${idx + 1} / ${lista.length}`;
+      const sig = lista[(idx + 1) % lista.length]; if(sig) (new Image()).src = grande(sig.foto);   // precarga la que sigue
+    };
+    im.src = grande(e.foto);
+  }
   function entregas(){
-    const g = $("#v35-grid"); if(!g) return;
-    const l = (CAT.entregas || []).filter(e => e && e.foto).slice(0, 6);
-    g.innerHTML = l.map((e, i) => `<button type="button" class="it" data-i="${i}" style="background-image:url('${esc(e.foto)}')" aria-label="${esc([e.modelo, e.localidad].filter(Boolean).join(" · ") || "Entrega")}"><span>${e.modelo ? `<b>${esc(e.modelo)}</b>` : ""}${esc([e.localidad, e.pais && e.pais !== "Argentina" ? e.pais : ""].filter(Boolean).join(", "))}</span></button>`).join("");
-    $$(".it", g).forEach(b => b.addEventListener("click", () => { const v = $("#ent-gal"); if(v) v.click(); }));
-    g.style.display = l.length ? "" : "none";
+    const sh = $("#v35-show"); if(!sh) return;
+    const nueva = (CAT.entregas || []).filter(e => e && e.foto);
+    if(nueva.map(e => e.foto).join() === lista.map(e => e.foto).join()) return;
+    lista = nueva; sh.hidden = !lista.length; if(!lista.length) return;
+    const ir = $(".ir", sh); if(ir && !ir.dataset.ok){ ir.dataset.ok = "1"; ir.addEventListener("click", () => { const v = $("#ent-gal"); if(v) v.click(); }); }
+    clearInterval(reloj); mostrar(Math.floor(Math.random() * lista.length));
+    reloj = setInterval(() => { if(!document.hidden) mostrar(idx + 1); }, 5000);
   }
 
   /* ---------- redes al pie, solo íconos ---------- */
   const IG = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg>`;
   const FB = `<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M14 8.5V6.8c0-.8.5-1 .9-1H17V2.2L14.1 2.2C10.9 2.2 10.2 4.6 10.2 6.1v2.4H8v3.7h2.2V22H14v-9.8h2.8l.4-3.7H14z"/></svg>`;
   function redes(){
-    const base = $(".lujo-footer .base > div"); if(!base) return;
-    let r = $(".v35-redes", base); if(!r){ r = document.createElement("div"); r.className = "v35-redes"; base.appendChild(r); }
-    const w = CAT.web || {}, ig = "instagram" in w ? w.instagram : "https://www.instagram.com/brasas.argentina/", fb = "facebook" in w ? w.facebook : "https://www.facebook.com/brasas.arg";
-    r.innerHTML = (ig ? `<a href="${esc(ig)}" target="_blank" rel="noopener" aria-label="Instagram">${IG}</a>` : "") + (fb ? `<a href="${esc(fb)}" target="_blank" rel="noopener" aria-label="Facebook">${FB}</a>` : "");
+    $$(".v35-redes").forEach(x => x.remove());
+    const a = $("#v35-ig"); if(!a) return;
+    const w = CAT.web || {}, ig = "instagram" in w ? w.instagram : "https://www.instagram.com/brasas.argentina/";
+    if(!ig){ a.hidden = true; return; }
+    const user = (String(ig).match(/instagram\.com\/([^/?#]+)/) || [])[1];
+    a.href = ig; a.hidden = false; a.innerHTML = IG; a.title = "BRASAS® en Instagram" + (user ? " · @" + user : ""); a.setAttribute("aria-label", a.title);
+    const cab = $(".v35-ent .ent-cab"); if(cab && a.parentNode !== cab) cab.appendChild(a);
   }
 
   document.addEventListener("brasas-catalogo", e => { CAT = e.detail || {}; portada(); entregas(); redes(); textosAcciones(); });
-  redes();
+  redes(); portada(); entregas();
 })();
 </script>
 
@@ -8139,7 +8171,7 @@ body.v35-port .h2-foto-img{background-size:contain !important;background-repeat:
 /* ===== portada a todo el ancho: la foto manda, el texto sobre el negro ===== */
 body.v35-port .lujo-hero2{background:#000;min-height:100vh;}
 body.v35-port .lujo-hero2 .h2-bg{display:none;}
-body.v35-port .h2-foto{display:none !important;}
+.lujo-hero2 .h2-foto{display:none !important;}   /* la portada es solo tu foto: nunca la galería vieja */
 .v36-foto{position:absolute;inset:0;pointer-events:none;background:#000 no-repeat;background-size:auto 100%;background-position:66% 50%;
   -webkit-mask:radial-gradient(ellipse 62% 80% at 66% 50%,#000 58%,transparent 100%);mask:radial-gradient(ellipse 62% 80% at 66% 50%,#000 58%,transparent 100%);
   opacity:0;transform:scale(1.04);transition:opacity 1.6s ease,transform 3s cubic-bezier(.2,.7,.2,1);}
@@ -8167,7 +8199,22 @@ body.v35-port .h2-datos{z-index:2;}
 .stars-clickable:hover #cant-resenas::after{transform:translateX(3px);}
 /* MercadoLibre en amarillo con su logo */
 .precio-box .medios-box .pago-op[data-m="ml"] .nm b{color:#ffe600 !important;}
-.precio-box .medios-box .pago-op[data-m="ml"] .ml-logo{all:unset;display:inline-flex;}
+.pago-op[data-m="ml"] .ml-logo,.medio-op .ml-logo{all:unset !important;display:inline-block !important;width:26px !important;height:18px !important;font-size:0 !important;color:transparent !important;vertical-align:middle;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 26 18'%3E%3Cellipse cx='13' cy='9' rx='12.2' ry='8.2' fill='%23ffe600' stroke='%232d3277' stroke-width='1.2'/%3E%3Cpath d='M5.5 8.6c1.6-.4 2.6-1.5 4.3-1.5 1.1 0 1.9.7 3 .7s2-.8 3.2-.8c1.6 0 2.4 1 4.1 1.6' fill='none' stroke='%232d3277' stroke-width='1.1' stroke-linecap='round'/%3E%3Cpath d='M9.4 10.2l1.4 1.3m.4-2.2l1.6 1.5m.5-2.1l1.6 1.4' stroke='%232d3277' stroke-width='1' stroke-linecap='round'/%3E%3C/svg%3E") center/contain no-repeat !important;}
+.precio-extra .unidad,.precio-box .unidad{white-space:nowrap !important;}
+body.intl .v36-conf{display:none !important;}
+.precio-box.v31{grid-template-columns:repeat(auto-fit,minmax(230px,1fr)) !important;}
+body.intl .v31-bar .b-envio .cp-fila,body.intl .v31-bar .b-envio .llega{display:none !important;}
+.v31-bar .b-prod{flex:0 1 210px !important;}
+@media (min-width:761px){ .v31-bar .b-envio{flex:1 1 380px !important;} .v31-bar .b-envio .cp-fila{flex:0 0 118px !important;} .v31-bar .b-envio .v31-gratis{min-width:200px;} }
+@media (max-width:760px){ .v31-bar .b-envio .v31-gratis{font-size:12px !important;min-width:0;} }
+.v31-bar .b-prod b{white-space:normal !important;line-height:1.35;display:-webkit-box !important;-webkit-line-clamp:2;-webkit-box-orient:vertical;}
+.v36-pais{position:fixed;inset:0;z-index:600;background:rgba(0,0,0,.78);display:flex;align-items:center;justify-content:center;padding:20px;}
+.v36-pais .bx{max-width:440px;width:100%;background:#0b0b0a;border:1px solid #1f1d1a;border-top:1px solid #e4bc6e;padding:30px 28px;color:#cfc9bd;font-size:15.5px;line-height:1.6;}
+.v36-pais h3{margin:0 0 12px;color:#fff;font-weight:400;font-size:24px;font-family:var(--serif,Georgia,serif);}
+.v36-pais ul{margin:10px 0 20px;padding-left:18px;color:#a8a296;font-size:14.5px;}
+.v36-pais .bt{display:flex;gap:10px;flex-wrap:wrap;}
+.v36-pais button{all:unset;cursor:pointer;padding:13px 18px;font-size:12px;letter-spacing:.18em;text-transform:uppercase;border:1px solid rgba(228,188,110,.55);color:#ece6da;}
+.v36-pais button.si{background:linear-gradient(180deg,#f2d699,#e4bc6e 45%,#c9a24a);color:#14100a;border-color:transparent;}
 .v36-ml{width:26px;height:18px;display:block;}
 /* devolución y compra protegida */
 .v36-conf{margin:14px 0 22px;display:grid;gap:10px;font-size:13.5px;line-height:1.45;color:#a8a296;}
@@ -8187,7 +8234,8 @@ body.v35-port .h2-datos{z-index:2;}
 (function(){
   "use strict";
   const $ = (s, r=document) => r.querySelector(s), $$ = (s, r=document) => [...r.querySelectorAll(s)];
-  let CAT = {};
+  let CAT = {}; try{ CAT = JSON.parse(localStorage.getItem("brasas-catalogo") || "{}") || {}; }catch(e){}
+  const intl = () => document.body.classList.contains("intl");
 
   /* ---------- portada ---------- */
   const hero = $(".lujo-hero2");
@@ -8203,7 +8251,6 @@ body.v35-port .h2-datos{z-index:2;}
   /* ---------- ficha: textos de pago, logo ML, devolución ---------- */
   const ML = `<svg class="v36-ml" viewBox="0 0 26 18" aria-hidden="true"><ellipse cx="13" cy="9" rx="12.2" ry="8.2" fill="#ffe600" stroke="#2d3277" stroke-width="1.2"/><path d="M5.5 8.6c1.6-.4 2.6-1.5 4.3-1.5 1.1 0 1.9.7 3 .7s2-.8 3.2-.8c1.6 0 2.4 1 4.1 1.6" fill="none" stroke="#2d3277" stroke-width="1.1" stroke-linecap="round"/><path d="M9.4 10.2l1.4 1.3m.4-2.2l1.6 1.5m.5-2.1l1.6 1.4" stroke="#2d3277" stroke-width="1" stroke-linecap="round"/></svg>`;
   function ficha(){
-    $$('.pago-op[data-m="ml"] .ml-logo').forEach(l => { if(!$(".v36-ml", l)) l.innerHTML = ML; });
     const pe = $("#precio-medio-elegido"); if(pe && /^Pagando con Transferencia/i.test(pe.textContent)) pe.textContent = "Pagando por transferencia";
     const pb = $(".precio-box");
     if(pb && !$(".v36-conf")){
@@ -8219,17 +8266,24 @@ body.v35-port .h2-datos{z-index:2;}
   const chipsBox = $("#as-chips");
   const waN = () => String(typeof WHATSAPP_NUMERO !== "undefined" ? WHATSAPP_NUMERO : "").replace(/\D/g, "");
   const bur = (h, q, a) => window.BRASAS_BURBUJA && window.BRASAS_BURBUJA(h, q, a);
-  const RESP = [
+  const RESP_INT = [
+    ["Envíos internacionales", "Enviamos a todo el mundo con <b>DHL o FedEx</b>, puerta a puerta y con seguimiento. El costo depende del país y del peso: pedí la cotización desde la ficha del modelo y te la mandamos por mail."],
+    ["¿Cómo comprar?", `<ol class="pasos"><li>Elegí el modelo, la medida y la cantidad.</li><li>Tocá <b>Solicitar cotización</b> y completá tus datos.</li><li>En menos de 24 h hábiles te mandamos el total con envío y las formas de pago.</li><li>Con el pago confirmado, fabricamos y despachamos con seguimiento.</li></ol>`],
+    ["Impuestos y aduana", "Los impuestos de importación dependen de tu país. Si corresponden, la empresa de courier te los informa y cobra antes de la entrega."],
+    ["Garantía", "Cada BRASAS® tiene <b>6 meses de garantía</b> por defectos de fabricación, también en el exterior. Si llega con un problema, lo resolvemos con vos."]
+  ];
+  const RESP_AR = [
     ["Información de envío", "El envío es <b>gratis a todo el país</b>, a tu domicilio y con número de seguimiento. Para ver la fecha exacta, poné tu código postal en la ficha del modelo."],
     ["¿Cómo comprar?", `Todo desde la web:<ol class="pasos"><li>Elegí el modelo, la medida y la cantidad.</li><li>Poné tu código postal y mirá cuándo llega.</li><li>Pagá por transferencia (el mejor precio) o comprá en MercadoLibre.</li><li>Te llegan los datos y el seguimiento por mail.</li></ol>`],
     ["Garantía", "Cada BRASAS® tiene <b>6 meses de garantía</b> por defectos de fabricación. Si entrás con Google, queda registrada a tu nombre."],
     ["Compra protegida", "Si no te llega o no es lo que esperabas, <b>te devolvemos el dinero</b>. Tenés 10 días desde que lo recibís para arrepentirte, y el envío de vuelta lo pagamos nosotros."]
   ];
+  let RESP = RESP_AR;
   const WA = `<svg viewBox="0 0 32 32" aria-hidden="true"><path d="M16 3C8.8 3 3 8.7 3 15.8c0 2.5.7 4.9 2 7L3 29l6.4-2c2 1.1 4.3 1.7 6.6 1.7 7.2 0 13-5.7 13-12.8C29 8.7 23.2 3 16 3zm6 15.5c-.3-.2-2-1-2.3-1.1-.3-.1-.5-.2-.8.2-.2.3-.9 1.1-1.1 1.3-.2.2-.4.2-.7.1-.3-.2-1.4-.5-2.7-1.6-1-.9-1.7-2-1.9-2.3-.2-.3 0-.5.1-.7l.5-.6c.2-.2.2-.4.3-.6.1-.2 0-.4 0-.6l-1-2.5c-.3-.7-.6-.6-.8-.6h-.7c-.2 0-.6.1-.9.4-.3.3-1.2 1.1-1.2 2.8s1.2 3.2 1.4 3.5c.2.2 2.4 3.6 5.8 5 .8.3 1.4.5 1.9.7.8.3 1.6.2 2.2.1.7-.1 2-.8 2.3-1.6.3-.8.3-1.5.2-1.6-.1-.1-.3-.2-.6-.4z"/></svg>`;
   function chips(){
     if(!chipsBox || chipsBox.dataset.v36 === "1") return;
     const m = typeof modeloActual !== "undefined" && modeloActual ? ` Estoy mirando el ${modeloActual.nombre}.` : "";
-    chipsBox.dataset.v36 = "1"; chipsBox.dataset.v26 = "1";
+    chipsBox.dataset.v36 = "1"; chipsBox.dataset.v26 = "1"; RESP = intl() ? RESP_INT : RESP_AR;
     chipsBox.innerHTML = RESP.map((r, i) => `<button type="button" data-r="${i}">${r[0]}</button>`).join("") +
       `<a class="as-wa" href="https://wa.me/${waN()}?text=${encodeURIComponent("Hola! Quería hacer una consulta." + m)}" target="_blank" rel="noopener">${WA}Hablar con alguien del taller</a>`;
     $$("[data-r]", chipsBox).forEach(b => b.addEventListener("click", () => { const r = RESP[+b.dataset.r]; bur(r[0], "yo"); bur(r[1], "bot"); }));
@@ -8241,6 +8295,41 @@ body.v35-port .h2-datos{z-index:2;}
   const fab = $("#asist-fab"); if(fab){ fab.innerHTML = "<i></i>Consultas"; fab.setAttribute("aria-label", "Abrir consultas"); }
   const hp = $("#asist .as-head p"); if(hp) hp.textContent = "Elegí una opción o hablá con el taller";
   const h3 = $("#asist .as-head h3"); if(h3) h3.textContent = "Consultas";
+
+  /* ---------- exterior: preguntas frecuentes que tengan sentido ---------- */
+  const FAQ_INT = [
+    ["¿Hacen envíos a mi país?", "Sí. Enviamos a todo el mundo con DHL o FedEx, puerta a puerta y con número de seguimiento."],
+    ["¿Cuánto cuesta el envío?", "Depende del país y del peso del paquete. Pedí la cotización desde esta ficha y te mandamos el total exacto por mail en menos de 24 horas hábiles."],
+    ["¿Cuánto tarda en llegar?", "Lo despachamos cuando se confirma el pago. El courier suele tardar entre 5 y 10 días hábiles según el destino; en la cotización te pasamos el plazo para tu país."],
+    ["¿Cómo pago?", "Junto con la cotización te mandamos las formas de pago disponibles para tu país."],
+    ["¿Tengo que pagar impuestos de importación?", "Depende de tu país. Si corresponden, la empresa de courier te los informa y cobra antes de la entrega."],
+    ["¿Tiene garantía?", "Sí, 6 meses por defectos de fabricación. Si llega con un problema, escribinos con fotos y lo resolvemos."]
+  ];
+  function faqIntl(){
+    const f = $("#asesor .faq"); if(!f) return;
+    const enInt = intl(), ya = f.dataset.v36 === "int";
+    if(enInt && !ya){ f.dataset.v36 = "int"; f.innerHTML = FAQ_INT.map(([p, r]) => `<details><summary>${p}</summary><div class="r">${r}</div></details>`).join(""); }
+  }
+  const ases = $("#asesor"); if(ases) new MutationObserver(faqIntl).observe(ases, { childList:true, subtree:true });
+  document.addEventListener("brasas-pais", () => setTimeout(() => { if(typeof modeloActual !== "undefined" && modeloActual) abrirFicha(modeloActual.id); faqIntl(); }, 50));
+
+  /* ---------- banderas: avisar antes de pasar a compra internacional ---------- */
+  document.addEventListener("click", e => {
+    const b = e.target.closest && e.target.closest(".banderas .lista .bandera[data-p]");
+    if(!b || b.dataset.p === "AR" || (window.BRASAS_PAIS && window.BRASAS_PAIS() !== "AR")) return;
+    e.preventDefault(); e.stopPropagation(); e.stopImmediatePropagation();
+    $$(".banderas.abierto").forEach(x => x.classList.remove("abierto"));
+    const p = b.dataset.p, nombre = b.getAttribute("title") || p;
+    const m = document.createElement("div"); m.className = "v36-pais notranslate"; m.setAttribute("role", "dialog"); m.setAttribute("aria-modal", "true");
+    m.innerHTML = `<div class="bx"><h3>¿Comprás desde fuera de Argentina?</h3>Vas a pasar a <b>compra internacional</b> (${esc(nombre)}):<ul><li>Precios de exportación y envío con DHL o FedEx.</li><li>No aplican el envío ni la devolución gratis, que son solo para Argentina.</li><li>Pedís una cotización y te mandamos el total por mail.</li></ul><div class="bt"><button type="button" class="si">Sí, compro desde afuera</button><button type="button" class="no">Seguir en Argentina</button></div></div>`;
+    document.body.appendChild(m);
+    const cerrar = () => m.remove();
+    $(".no", m).addEventListener("click", cerrar);
+    m.addEventListener("click", ev => { if(ev.target === m) cerrar(); });
+    $(".si", m).addEventListener("click", () => { cerrar(); window.BRASAS_ELEGIR_PAIS && window.BRASAS_ELEGIR_PAIS(p); });
+    $(".si", m).focus();
+  }, true);
+  const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 
   /* ---------- ® en la marca ---------- */
   const SALTAR = /^(SCRIPT|STYLE|TEXTAREA|INPUT|SELECT|OPTION|NOSCRIPT|CODE)$/;
@@ -8262,6 +8351,7 @@ body.v35-port .h2-datos{z-index:2;}
   /* ---------- pie: aclaración de marca registrada ---------- */
   const cop = $(".lujo-footer .base > div > span"); if(cop && !/marca registrada/i.test(cop.textContent)) cop.textContent = cop.textContent.trim() + " · Marca registrada";
   document.addEventListener("brasas-catalogo", e => { CAT = e.detail || {}; portada(); });
+  portada();
 })();
 </script>
 
@@ -8361,6 +8451,103 @@ body.v35-port .h2-datos{z-index:2;}
   }
   document.addEventListener("brasas-catalogo", () => setTimeout(datosGoogle, 500));
   setTimeout(datosGoogle, 3000);
+})();
+</script>
+
+<script id="v38-js">
+/* PDF de mayoristas en el celular: los celulares (y los navegadores de WhatsApp/Instagram) no imprimen,
+   así que ahí armamos un PDF de verdad y se descarga o se comparte. En la compu sigue la impresión de siempre. */
+(function(){
+  "use strict";
+  const movil = () => (window.matchMedia && window.matchMedia("(pointer:coarse)").matches) || /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+  const cargar = src => new Promise((ok, mal) => { const s = document.createElement("script"); s.src = src; s.onload = ok; s.onerror = mal; document.head.appendChild(s); });
+  let libs = null;
+  const LIBS = () => libs || (libs = cargar("https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js")
+    .then(() => cargar("https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js")));
+  const limpia = x => String(x).replace(/[\u2212\u2013\u2014]/g, "-").replace(/[★☆✓✔]/g, "").replace(/[\u2009\u202f]/g, " ").replace(/[^\x00-\xff€•…“”‘’–]/g, "");
+  const t = el => el ? limpia(el.textContent.replace(/\s+/g, " ").trim()) : "";
+  const aviso = m => { try{ toast(m); }catch(e){} };
+
+  async function aDataURL(src){
+    try{
+      const r = await fetch(src, { mode:"cors" }); if(!r.ok) return null;
+      const b = await r.blob();
+      const url = await new Promise(ok => { const f = new FileReader(); f.onload = () => ok(f.result); f.onerror = () => ok(null); f.readAsDataURL(b); });
+      if(!url) return null;
+      return await new Promise(ok => { const im = new Image(); im.onload = () => { try{ const c = document.createElement("canvas"), k = 240 / Math.max(im.width, im.height, 1); c.width = Math.round(im.width * k); c.height = Math.round(im.height * k); c.getContext("2d").drawImage(im, 0, 0, c.width, c.height); ok(c.toDataURL("image/jpeg", .85)); }catch(e){ ok(null); } }; im.onerror = () => ok(null); im.src = url; });
+    }catch(e){ return null; }
+  }
+
+  async function generar(){
+    const pr = document.getElementById("mayo-print"); if(!pr) return;
+    aviso("Armando el PDF…");
+    try{ await LIBS(); }catch(e){ aviso("No se pudo armar el PDF. Probá desde la compu."); return; }
+    const { jsPDF } = window.jspdf, doc = new jsPDF({ unit:"mm", format:"a4" }), W = 210, M = 10;
+    /* encabezado */
+    const cab = pr.querySelector(".mp-cab");
+    doc.setFont("helvetica", "bold"); doc.setFontSize(18); doc.text("BRASAS®", M, 16);
+    doc.setFont("helvetica", "normal"); doc.setFontSize(8.5); doc.setTextColor(110); doc.text(t(cab && cab.querySelector(".s")).toUpperCase(), M, 21);
+    const d = cab && cab.querySelector(".d");
+    if(d){ const b = t(d.querySelector("b")); doc.setTextColor(17); doc.setFontSize(11); doc.setFont("helvetica", "bold"); doc.text(b, W - M, 15, { align:"right" });
+      doc.setFont("helvetica", "normal"); doc.setFontSize(8.5); doc.setTextColor(80); doc.text(t(d).replace(b, "").trim(), W - M, 20, { align:"right" }); }
+    doc.setDrawColor(17); doc.setLineWidth(.5); doc.line(M, 24, W - M, 24);
+    let y = 29;
+    /* condiciones / cajas de texto antes de la tabla */
+    const bloque = (el, ancho) => {
+      const txt = t(el); if(!txt) return;
+      doc.setFontSize(8.5); doc.setTextColor(40);
+      const l = doc.splitTextToSize(txt, ancho || W - 2 * M);
+      if(y + l.length * 4 > 285){ doc.addPage(); y = 14; }
+      doc.text(l, M, y); y += l.length * 4 + 3;
+    };
+    pr.querySelectorAll(".mp-cond > div").forEach(x => bloque(x));
+    /* tablas */
+    for(const tb of pr.querySelectorAll("table")){
+      const imgs = await Promise.all([...tb.querySelectorAll("tbody tr")].map(tr => { const im = tr.querySelector("img"); return im ? aDataURL(im.currentSrc || im.src) : Promise.resolve(null); }));
+      const conImg = tb.querySelector("img") !== null;
+      doc.autoTable({ html: tb, startY: y, margin:{ left:M, right:M }, theme:"grid", useCss:false,
+        styles:{ fontSize:7.5, cellPadding:1.6, textColor:20, lineColor:200, lineWidth:.1, valign:"middle", overflow:"linebreak" },
+        headStyles:{ fillColor:[17,17,17], textColor:255, fontSize:7, halign:"center" },
+        columnStyles: conImg ? { 0:{ cellWidth:18, minCellHeight:18 } } : {},
+        didParseCell: h => { h.cell.text = (h.cell.text || []).map(limpia); if(h.section === "head" && h.cell.raw && h.cell.raw.childNodes){ const n = h.cell.raw.childNodes[0]; h.cell.text = [limpia((n && n.textContent || "").trim())]; } if(h.section === "head" && h.cell.raw && h.cell.raw.childNodes){ const n = h.cell.raw.childNodes[0]; h.cell.text = [limpia((n && n.textContent || "").trim())]; } if(conImg && h.section === "body" && h.column.index === 0) h.cell.text = []; },
+        didDrawCell: h => { if(conImg && h.section === "body" && h.column.index === 0){ const u = imgs[h.row.index]; if(u) try{ doc.addImage(u, "JPEG", h.cell.x + 1, h.cell.y + 1, 16, 16); }catch(e){} } }
+      });
+      y = doc.lastAutoTable.finalY + 6;
+    }
+    /* totales y aclaraciones del resumen */
+    const tot = pr.querySelector(".rs-tot");
+    if(tot){
+      const filas = [...tot.children].map(r => [t(r.firstElementChild), t(r.lastElementChild)]);
+      doc.autoTable({ body: filas, startY: y, margin:{ left: W - M - 85, right:M }, theme:"plain", styles:{ fontSize:9, cellPadding:1.4 },
+        columnStyles:{ 1:{ halign:"right", fontStyle:"bold" } },
+        didParseCell: h => { if(h.row.index === filas.length - 1){ h.cell.styles.fontSize = 11; h.cell.styles.fontStyle = "bold"; } } });
+      y = doc.lastAutoTable.finalY + 5;
+    }
+    pr.querySelectorAll(".rs-izq .rs-box").forEach(x => bloque(x));
+    const pie = pr.querySelector(".mp-pie");
+    if(pie){ doc.setDrawColor(200); doc.line(M, y, W - M, y); y += 4; [...pie.children].forEach(x => bloque(x)); }
+    /* nombre del archivo */
+    const nom = ("BRASAS " + t(cab && cab.querySelector(".s")) + " " + t(d && d.querySelector("b"))).replace(/[^\w\sáéíóúñ·-]/gi, "").trim().replace(/\s+/g, " ") + ".pdf";
+    const blob = doc.output("blob");
+    try{
+      const f = new File([blob], nom, { type:"application/pdf" });
+      if(navigator.canShare && navigator.canShare({ files:[f] })){ await navigator.share({ files:[f], title: nom }); return; }
+    }catch(e){ if(e && e.name === "AbortError") return; }
+    const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = nom; document.body.appendChild(a); a.click();
+    setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 4000);
+    aviso("PDF descargado");
+  }
+  window.BRASAS_PDF_MOVIL = generar;
+
+  /* en el celular, el "imprimir" de la lista y del resumen pasa a ser un PDF descargable */
+  document.addEventListener("click", e => {
+    const b = e.target.closest && e.target.closest("#mayo-pdf, #mc-resumen, [data-res]");
+    if(!b || !movil()) return;
+    LIBS().catch(() => {});                                  // se empieza a bajar ya
+    const orig = window.print;
+    window.print = function(){ window.print = orig; generar(); };
+    setTimeout(() => { if(window.print !== orig) window.print = orig; }, 8000);
+  }, true);
 })();
 </script>
 </body>
