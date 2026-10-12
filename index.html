@@ -1666,6 +1666,8 @@ let CARRITO = [];
 
 /* ===================== HELPERS ===================== */
 function roundK(n){ return Math.round(n/1000)*1000; }
+/* nombre que se muestra: NOMBRE WEB de la medida (o su TAG si está vacío); si no tiene, el del producto */
+function nombreDe(m, tag){ return (m && m.variantes && m.variantes[tag] && m.variantes[tag].nombre) || (m ? m.nombre : ""); }
 function money(n){ return "$ " + roundK(n).toLocaleString("es-AR"); }
 function toast(msg){ const t=document.getElementById("toast"); t.textContent=msg; t.style.display="block";
   clearTimeout(window._toastT); window._toastT=setTimeout(()=>t.style.display="none",2200); }
@@ -2118,7 +2120,7 @@ document.getElementById("modal-compras").addEventListener("click", e=>{ if(e.tar
 function itemActualResumen(){
   const tag = tagActivo(); const v = modeloActual.variantes[tag]; const total = totalPesos(tag);
   return {
-    modelo: modeloActual.nombre, variante: v.label, medio: NOMBRES_MEDIO[medioActivo],
+    modelo: ((modeloActual.variantes[tagActivo()]||{}).nombre||modeloActual.nombre), variante: v.label, medio: NOMBRES_MEDIO[medioActivo],
     envio: envioDetalle.texto, total, internacional: envioTipo==="internacional"
   };
 }
@@ -2167,13 +2169,13 @@ document.getElementById("vendidos-menos").addEventListener("click", ()=>{ modelo
 document.getElementById("btn-enviar-pregunta").addEventListener("click", ()=>{
   const txt = document.getElementById("pregunta-texto").value.trim();
   if(!txt){ toast("Escribí tu pregunta primero"); return; }
-  window.open(`https://wa.me/${WHATSAPP_NUMERO}?text=${encodeURIComponent(`Hola! Tengo una consulta sobre ${modeloActual.nombre}: ${txt}`)}`, "_blank");
+  window.open(`https://wa.me/${WHATSAPP_NUMERO}?text=${encodeURIComponent(`Hola! Tengo una consulta sobre ${((modeloActual.variantes[tagActivo()]||{}).nombre||modeloActual.nombre)}: ${txt}`)}`, "_blank");
 });
 document.getElementById("btn-wa-directo").addEventListener("click", ()=>{
-  window.open(`https://wa.me/${WHATSAPP_NUMERO}?text=${encodeURIComponent(`Hola! Me interesa el ${modeloActual.nombre}, ¿me pasás más info?`)}`, "_blank");
+  window.open(`https://wa.me/${WHATSAPP_NUMERO}?text=${encodeURIComponent(`Hola! Me interesa el ${((modeloActual.variantes[tagActivo()]||{}).nombre||modeloActual.nombre)}, ¿me pasás más info?`)}`, "_blank");
 });
 document.getElementById("btn-wa-comprobante").addEventListener("click", ()=>{
-  window.open(`https://wa.me/${WHATSAPP_NUMERO}?text=${encodeURIComponent(`Hola! Te paso mi número de pedido y el comprobante de pago de mi compra de ${modeloActual.nombre}.`)}`, "_blank");
+  window.open(`https://wa.me/${WHATSAPP_NUMERO}?text=${encodeURIComponent(`Hola! Te paso mi número de pedido y el comprobante de pago de mi compra de ${((modeloActual.variantes[tagActivo()]||{}).nombre||modeloActual.nombre)}.`)}`, "_blank");
 });
 
 renderConfigCuotas();
@@ -3889,7 +3891,7 @@ window.BRASAS_AJUSTES = {
   const ultimaOrden = () => lsGet("brasas-ultima-orden");
   const mo = document.getElementById("modal-orden");
   if(mo) new MutationObserver(()=>{ const n = $(".orden-num", mo); const m = n && n.textContent.match(/BR-[\w-]+/); if(m) lsSet("brasas-ultima-orden", m[0]); }).observe(mo, { childList:true, subtree:true });
-  const ctx = () => modeloActual ? `${modeloActual.nombre} (${(modeloActual.variantes[tagActivo()]||{}).label||""})` : "";
+  const ctx = () => modeloActual ? `${((modeloActual.variantes[tagActivo()]||{}).nombre||modeloActual.nombre)} (${(modeloActual.variantes[tagActivo()]||{}).label||""})` : "";
 
   function burbuja(html, quien="bot", acciones){
     const d = document.createElement("div"); d.className = "as-m " + quien; d.innerHTML = html;
@@ -4460,9 +4462,9 @@ body:has(.ck.abierto) .asist-fab{opacity:0;pointer-events:none;}
   function comprar(){
     if(!modeloActual) return;
     const tag = tagActivo(), v = modeloActual.variantes[tag];
-    if(!mediosFicha(v).length) return window.open(waLink(`Hola! Me interesa el ${modeloActual.nombre} (${v.label}).`), "_blank");
+    if(!mediosFicha(v).length) return window.open(waLink(`Hola! Me interesa el ${v.nombre||modeloActual.nombre} (${v.label}).`), "_blank");
     if(medioActivo === "ml"){
-      if(A.appsScript) fetch(A.appsScript, { method:"POST", mode:"no-cors", body:JSON.stringify({ tipo:"click_ml", producto:`${modeloActual.nombre} (${v.label})`, tag, fecha:new Date().toISOString() }) }).catch(()=>{});
+      if(A.appsScript) fetch(A.appsScript, { method:"POST", mode:"no-cors", body:JSON.stringify({ tipo:"click_ml", producto:`${v.nombre||modeloActual.nombre} (${v.label})`, tag, fecha:new Date().toISOString() }) }).catch(()=>{});
       return window.open(mlUrl(v), "_blank", "noopener");
     }
     abrirCheckout([{ mid:modeloActual.id, tag, qty:1 }], "ahora");
@@ -4476,7 +4478,7 @@ body:has(.ck.abierto) .asist-fab{opacity:0;pointer-events:none;}
     const tag = tagActivo(), ex = CARRITO.find(x=>x.mid===modeloActual.id && x.tag===tag);
     if(ex) ex.qty++; else CARRITO.push({ mid:modeloActual.id, tag, qty:1 });
     guardarCarrito(); renderAccionesUsuario();
-    toast(`Agregado al carrito · ${modeloActual.nombre} ${modeloActual.variantes[tag].label}`);
+    toast(`Agregado al carrito · ${nombreDe(modeloActual, tag)} ${modeloActual.variantes[tag].label}`);
   });
   abrirCarrito = function(){ abrirCheckout(CARRITO, "carrito"); };
 
@@ -4533,7 +4535,7 @@ body:has(.ck.abierto) .asist-fab{opacity:0;pointer-events:none;}
       ${ckQuitado ? `<div class="ck-quitado"><span>Quitaste <b>${esc(ckQuitado.txt)}</b></span><button type="button" class="ck-undo">Deshacer</button></div>` : ""}
       <div class="ck-items">${c.items.map((x,i)=>`
         <div class="ck-it" data-i="${i}" data-k="${esc(x.it.mid+"|"+x.it.tag)}"><div class="th" style='${fotoDe(x.m)}'></div>
-          <div><div class="n">${esc(x.m.nombre)}</div><div class="v">${esc(x.v.label)} · ${money(unitTransfer(x.v))} c/u</div>
+          <div><div class="n">${esc(x.v.nombre || x.m.nombre)}</div><div class="v">${esc(x.v.label)} · ${money(unitTransfer(x.v))} c/u</div>
             <div style="display:flex;align-items:center"><div class="q"><button type="button" data-q="-1" aria-label="Quitar uno">−</button><span>${x.it.qty}</span><button type="button" data-q="1" aria-label="Agregar uno">+</button></div><button type="button" class="del" aria-label="Eliminar del carrito" title="Eliminar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16"/><path d="M9 7V4.8c0-.4.4-.8.8-.8h4.4c.4 0 .8.4.8.8V7"/><path d="M6.5 7l.9 12.2c.1.9.8 1.6 1.7 1.6h5.8c.9 0 1.6-.7 1.7-1.6L17.5 7"/><path d="M10.2 11v6M13.8 11v6"/></svg></button></div></div>
           <div class="p notranslate" translate="no">${money(unitTransfer(x.v) * x.it.qty)}</div></div>`).join("")}</div>
       <div class="ck-tot notranslate" translate="no">
@@ -4578,7 +4580,7 @@ body:has(.ck.abierto) .asist-fab{opacity:0;pointer-events:none;}
       $$("[data-q]", row).forEach(b=> b.addEventListener("click", ()=>{ ckQuitado = null; it.qty = Math.max(1, Math.min(20, it.qty + +b.dataset.q)); sincronizar(); }));
       $(".del", row).addEventListener("click", ()=>{
         const i = +row.dataset.i, inf = itemInfo(it);
-        ckQuitado = { it:{ ...it }, i, txt: inf ? `${inf.m.nombre} · ${inf.v.label}${it.qty > 1 ? ` × ${it.qty}` : ""}` : "el producto" };
+        ckQuitado = { it:{ ...it }, i, txt: inf ? `${inf.v.nombre || inf.m.nombre} · ${inf.v.label}${it.qty > 1 ? ` × ${it.qty}` : ""}` : "el producto" };
         ckItems.splice(i, 1); sincronizar();
       });
     });
@@ -4634,7 +4636,7 @@ body:has(.ck.abierto) .asist-fab{opacity:0;pointer-events:none;}
     const pedido = {
       tipo:"pedido", orden, fecha:new Date().toISOString(),
       medio:c.medio.n, subtotal:c.sub, descuento:c.desc, recargo:c.rec, total:c.total,
-      items:c.items.map(x=>({ tag:x.it.tag, producto:x.m.nombre, variante:x.v.label, cantidad:x.it.qty, unitario:unitTransfer(x.v) })),
+      items:c.items.map(x=>({ tag:x.it.tag, producto:x.v.nombre || x.m.nombre, variante:x.v.label, cantidad:x.it.qty, unitario:unitTransfer(x.v) })),
       cliente:{ nombre:d.nombre.trim(), email:d.email.trim(), telefono:d.telefono.trim(),
         calle:d.calle.trim(), numero:String(d.numero).trim(), piso:(d.piso||"").trim(), depto:(d.depto||"").trim(),
         direccion:[`${d.calle.trim()} ${String(d.numero).trim()}`, d.piso && d.piso.trim() ? `piso ${d.piso.trim()}` : "", d.depto && d.depto.trim() ? `depto ${d.depto.trim()}` : ""].filter(Boolean).join(", "),
@@ -4744,8 +4746,8 @@ body:has(.ck.abierto) .asist-fab{opacity:0;pointer-events:none;}
     bt.addEventListener("click", ()=>{
       const q = ta.value.trim(); if(!q) return;
       const v = modeloActual.variantes[tagActivo()];
-      window.open(waLink(`Hola! Consulta sobre ${modeloActual.nombre} (${v ? v.label : ""}):\n\n${q}`), "_blank");
-      if(A.appsScript) fetch(A.appsScript, { method:"POST", mode:"no-cors", body:JSON.stringify({ tipo:"pregunta", producto:`${modeloActual.nombre} (${v ? v.label : ""})`, consulta:q, fecha:new Date().toISOString() }) }).catch(()=>{});
+      window.open(waLink(`Hola! Consulta sobre ${(v && v.nombre) || modeloActual.nombre} (${v ? v.label : ""}):\n\n${q}`), "_blank");
+      if(A.appsScript) fetch(A.appsScript, { method:"POST", mode:"no-cors", body:JSON.stringify({ tipo:"pregunta", producto:`${(v && v.nombre) || modeloActual.nombre} (${v ? v.label : ""})`, consulta:q, fecha:new Date().toISOString() }) }).catch(()=>{});
       ta.value = ""; bt.disabled = true;
     });
   }
@@ -5317,7 +5319,7 @@ body.intl .paso-pago-intl{display:block;}
     const d = dest.value.trim() || PAIS_N[p] || "";
     return `Hola! Quiero cotizar un envío internacional${d ? " a " + d : ""}.\n\n${items.map(x=>`• ${x}`).join("\n")}\n\n¿Me pasan el total con envío (DHL / FedEx) y las formas de pago?`;
   }
-  const itemTexto = (m, tag, qty=1) => `${m.nombre} (${(m.variantes[tag]||{}).label||tag})${qty>1 ? " × " + qty : ""}`;
+  const itemTexto = (m, tag, qty=1) => `${((m.variantes[tag]||{}).nombre||m.nombre)} (${(m.variantes[tag]||{}).label||tag})${qty>1 ? " × " + qty : ""}`;
 
   /* la compra al exterior la maneja la capa v25 (cotización por mail) */
   function ajustarFicha(){
@@ -5417,6 +5419,10 @@ body.intl .paso-pago-intl{display:block;}
 .ficha-tecnica span{color:#fff;font-family:var(--mono);font-size:14px;}
 .pn-planilla{border:1px solid rgba(228,188,110,.4);background:rgba(228,188,110,.06);padding:12px 14px;margin-bottom:16px;font-size:14px;line-height:1.55;color:#e9e4da;}
 .pn-planilla b{color:#e8cf8f;}
+#grid-modelos.oculta{display:none !important;}
+.grilla-aviso{max-width:1180px;margin:30px auto;padding:46px 24px;text-align:center;border:1px solid var(--linea);color:var(--hueso-dim);font-size:17px;line-height:1.7;}
+.grilla-aviso a{color:#e8cf8f;}
+.ga-punto{display:inline-block;width:9px;height:9px;border-radius:50%;background:#e4bc6e;margin-right:10px;animation:entPulso 1.8s infinite;vertical-align:1px;}
 </style>
 
 <script id="v22-js">
@@ -5447,7 +5453,7 @@ body.intl .paso-pago-intl{display:block;}
   let catalogoActivo = false;
 
   function construir(cat){
-    if(!cat || !cat.ok || !Array.isArray(cat.grupos) || !cat.grupos.length) return false;
+    if(!cat || !cat.ok || !Array.isArray(cat.grupos)) return false;
     const prev = Object.fromEntries(MODELOS.map(m=>[m.id, m]));
     const nuevos = cat.grupos.filter(g=> g && g.variantes && g.variantes.length).map(g=>{
       const id = "g-" + slug(g.id), viejo = prev[id] || {};
@@ -5456,7 +5462,7 @@ body.intl .paso-pago-intl{display:block;}
       fotos.filter(f=>f.tag).forEach(f=> (porTag[f.tag] = porTag[f.tag] || []).push(f.u));
       const variantes = {};
       g.variantes.forEach(v=>{ variantes[v.tag] = { label:v.medida || v.tag, transfer:+v.transferencia || 0, ml:{ precio:+v.ml || 0, url:"" }, mla:v.mla || "",
-        peso:v.peso, bulto:v.bulto || "", armado:v.armado || "", stockTag: v.stock === undefined ? null : +v.stock, plazo: +v.plazo || 0, particulares:+v.particulares || 0, producto:0, envio:0, iva:0, otros:0 }; });
+        peso:v.peso, bulto:v.bulto || "", armado:v.armado || "", stockTag: v.stock === undefined ? null : +v.stock, plazo: +v.plazo || 0, particulares:+v.particulares || 0, tag:v.tag, nombre:v.nombre || "", descripcion:v.descripcion || "", consejo:v.consejo || "", producto:0, envio:0, iva:0, otros:0 }; });
       const part = g.variantes.reduce((s,v)=> s + (+v.particulares || 0), 0);
       const mlv = g.ml && g.ml.vendidos != null ? +g.ml.vendidos : null;
       const t0 = g.variantes[0].tag;
@@ -5465,7 +5471,14 @@ body.intl .paso-pago-intl{display:block;}
         variantes, vendidos: mlv ?? (viejo.vendidos || 0), vendidosFinal: mlv != null ? mlv + part : (part ? part : null),
         stock: variantes[t0].stockTag, grupo:g.id, rating:g.rating || null, opinionesTotal:+g.opinionesTotal || 0, opinionesSrv: g.opiniones || [] };
     });
-    if(!nuevos.length) return false;
+    if(!nuevos.length){                                   // la planilla no publica nada: NUNCA mostrar los de ejemplo
+      MODELOS.splice(0, MODELOS.length); catalogoActivo = true;
+      if(modeloActual) cerrarFicha();
+      renderLanding(); avisoGrilla("vacio");
+      document.dispatchEvent(new CustomEvent("brasas-catalogo", { detail:cat }));
+      return true;
+    }
+    avisoGrilla(null);
     const abierto = modeloActual && modeloActual.id;
     MODELOS.splice(0, MODELOS.length, ...nuevos);
     nuevos.forEach(m=>{
@@ -5480,6 +5493,18 @@ body.intl .paso-pago-intl{display:block;}
     return true;
   }
   window.BRASAS_CATALOGO = construir;
+  /* mientras no llega la planilla (o si no hay productos), la grilla no muestra los modelos de ejemplo */
+  function avisoGrilla(estado){
+    const grid = document.getElementById("grid-modelos"); if(!grid) return;
+    let av = document.getElementById("grilla-aviso");
+    grid.classList.toggle("oculta", !!estado);
+    if(!estado){ if(av) av.remove(); return; }
+    if(!av){ grid.insertAdjacentHTML("beforebegin", `<div class="grilla-aviso" id="grilla-aviso"></div>`); av = document.getElementById("grilla-aviso"); }
+    const wa = `https://wa.me/${String(WHATSAPP_NUMERO).replace(/\D/g,"")}?text=${encodeURIComponent("Hola! Quiero consultar por los asadores BRASAS.")}`;
+    av.innerHTML = estado === "cargando" ? `<span class="ga-punto"></span>Cargando la colección…`
+      : estado === "vacio" ? `Estamos actualizando la colección.<br><a href="${wa}" target="_blank" rel="noopener">Consultanos por WhatsApp</a>`
+      : `No pudimos cargar los productos. <a href="#" onclick="location.reload();return false">Recargá la página</a> o <a href="${wa}" target="_blank" rel="noopener">escribinos por WhatsApp</a>.`;
+  }
   /* opiniones anónimas, como en MercadoLibre: solo dice de dónde viene la compra */
   window.BRASAS_OPINION = o => ({ id:`srv-${o.id}`, autor: o.origen === "web" ? "Compra verificada · brasasargentina.com" : "Compra verificada · MercadoLibre",
     estrellas: Math.max(1, Math.min(5, +o.estrellas || 5)), texto: String(o.texto || ""), fecha: Date.parse((o.fecha || "") + "T12:00:00") || Date.now(), fotos:[], aprobado:true, deCliente:false, ml:true });
@@ -5494,6 +5519,7 @@ body.intl .paso-pago-intl{display:block;}
       const j = await r.json();
       if(construir(j)){ lsSet("brasas-catalogo", JSON.stringify(j)); return true; }
     }catch(e){}
+    if(!catalogoActivo) avisoGrilla("error");
     return false;
   }
   window.BRASAS_TRAER_CATALOGO = traer;
@@ -5555,8 +5581,8 @@ body.intl .paso-pago-intl{display:block;}
      ========================================================= */
   const apPrev = window.BRASAS_APLICAR_AJUSTES;
   window.BRASAS_APLICAR_AJUSTES = function(){ if(apPrev) apPrev.apply(this, arguments); completarBanco(); };
-  desdeCache();
-  const obs = new MutationObserver(()=>{ if(document.documentElement.dataset.brasasListo){ obs.disconnect(); desdeCache(); traer(); } });
+  if(!desdeCache() && A.appsScript) avisoGrilla("cargando");      // primera visita: "Cargando…" en vez de los de ejemplo
+  const obs = new MutationObserver(()=>{ if(document.documentElement.dataset.brasasListo){ obs.disconnect(); if(!desdeCache() && A.appsScript) avisoGrilla("cargando"); traer(); } });
   obs.observe(document.documentElement, { attributes:true, attributeFilter:["data-brasas-listo"] }); { const de = document.documentElement; if(de.dataset.brasasListo) de.dataset.brasasListo = de.dataset.brasasListo; }
 })();
 </script>
@@ -5890,6 +5916,7 @@ body.mayo-abierto .asist-fab,body.mayo-abierto .versiones{display:none !importan
 .mayo-priv a{color:#e4bc6e;}
 .mh-acc{display:flex;gap:10px;align-items:center;justify-content:flex-end;flex-wrap:wrap;}
 .mayo-btn.oro{border-color:#e4bc6e;color:#e4bc6e;}
+a.mayo-btn{text-decoration:none;display:inline-block;}
 .mh-est.espera{border-color:#e08a6c;color:#f0a98f;}
 .mayo-res em{font-style:normal;font-size:12px;color:#8fe0ab;margin-left:4px;}
 .ck-subir.enviando{opacity:.6;pointer-events:none;}
@@ -6249,9 +6276,9 @@ body.mayo-abierto .asist-fab,body.mayo-abierto .versiones{display:none !importan
   const ICO_TACHO = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 12a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2l1-12M9 7V4h6v3"/></svg>`;
   const TX = (k, def) => (M && M.textos && M.textos[k]) || def;
   const armadoLinea = a => { const p = armadoPartes(a); return p ? `Alto ${p.alto} · Ancho ${p.ancho} · Largo ${p.largo} ${p.u}` : (a ? String(a) : ""); };
-  const estadoTxt = p => p.estado === "cancelado" ? "Cancelado" : p.estado === "despachado" ? "Despachado" : p.estado === "pagado" ? "Pago confirmado" : p.comprobante ? "Comprobante recibido" : "Esperando pago";
+  const estadoTxt = p => p.estado === "cancelado" ? "Cancelado" : p.estado === "despachado" ? "Despachado" : p.seguimiento ? "Envío contratado" : p.estado === "pagado" ? "Pago confirmado" : p.comprobante ? "Comprobante recibido" : "Esperando pago";
   const estadoCls = p => p.estado === "recibido" ? (p.comprobante ? "pagado" : "espera") : p.estado;
-  const pendiente = p => p.estado === "recibido" && !p.comprobante;
+  const pendiente = p => p.estado === "recibido" && !p.comprobante && !p.seguimiento;
 
   function pintarMayo(){
     const S = series(), G = M.envioGratis, propias = M.items.some(i=> i.escalas);
@@ -6261,6 +6288,7 @@ body.mayo-abierto .asist-fab,body.mayo-abierto .versiones{display:none !importan
           <span class="mh-u">${p.unidades} productos</span><b>${$$m(p.total)}</b>
           <span class="mh-acc"><span class="mh-est ${estadoCls(p)}">${estadoTxt(p)}</span>
           ${pendiente(p) ? `<button type="button" class="mayo-btn oro" data-pagar="${k}">Pagar / subir comprobante</button>` : ""}
+          ${p.seguimiento && p.estado !== "cancelado" ? `<a class="mayo-btn oro" href="${esc(p.seguimientoUrl || "")}" target="_blank" rel="noopener" title="Andreani · ${esc(p.seguimiento)}">Seguir envío</a>` : ""}
           ${p.estado !== "cancelado" ? `<button type="button" class="mayo-btn" data-res="${k}">Resumen</button>` : ""}
           <button type="button" class="mayo-btn" data-rep="${k}">Repetir</button>
           ${pendiente(p) ? `<button type="button" class="mayo-btn rojo" data-cancelar="${k}">Cancelar</button>` : ""}</span></div>`).join("")}
@@ -6726,7 +6754,7 @@ body:has(.agregado.on) .asist-fab{opacity:0;pointer-events:none;}
   let tAg = null, deshacer = null;
   function avisoAgregado(m, tag, q){
     const v = m.variantes[tag], total = CARRITO.reduce((s,x)=> s + (+x.qty||1), 0);
-    ag.innerHTML = `<div class="t">✓ Agregado al carrito<button type="button" class="deshacer">Deshacer</button></div><div class="n">${esc(m.nombre)} · ${esc(v ? v.label : tag)}${q>1 ? ` × ${q}` : ""}<small>Tenés ${total} producto${total===1?"":"s"} en el carrito</small></div>
+    ag.innerHTML = `<div class="t">✓ Agregado al carrito<button type="button" class="deshacer">Deshacer</button></div><div class="n">${esc((v && v.nombre) || m.nombre)} · ${esc(v ? v.label : tag)}${q>1 ? ` × ${q}` : ""}<small>Tenés ${total} producto${total===1?"":"s"} en el carrito</small></div>
       <div class="b"><button type="button" class="seguir">Seguir mirando</button><button type="button" class="ver">Ver carrito →</button></div>`;
     $(".seguir", ag).addEventListener("click", ()=> ag.classList.remove("on"));
     $(".deshacer", ag).addEventListener("click", ()=>{ if(deshacer) deshacer(); deshacer = null; ag.classList.remove("on"); guardarCarrito(); renderAccionesUsuario(); toast("Listo, lo sacamos del carrito"); });
@@ -6799,7 +6827,7 @@ body:has(.agregado.on) .asist-fab{opacity:0;pointer-events:none;}
     const d = datosCx(), u = (typeof currentUser !== "undefined" && currentUser) || {}, v = (k, def="") => esc(d[k] || def);
     const filas = cxItems.map((x,i)=>{ const m = MODELOS.find(y=>y.id===x.mid), va = m && m.variantes[x.tag]; if(!va) return "";
       const ars = Math.round(precioTransfer(va)/1000)*1000 * x.qty;
-      return `<div class="cx-it" data-i="${i}" data-k="${esc(x.mid+"|"+x.tag)}"><div class="n">${esc(m.nombre)}<small>${esc(va.label)} · ${esc(x.tag)}</small></div><div class="p">${$$m(ars)} ARS<small>${aprox(ars, mon)}</small></div>
+      return `<div class="cx-it" data-i="${i}" data-k="${esc(x.mid+"|"+x.tag)}"><div class="n">${esc(va.nombre || m.nombre)}<small>${esc(va.label)}</small></div><div class="p">${$$m(ars)} ARS<small>${aprox(ars, mon)}</small></div>
         <div class="q"><div class="cant"><button type="button" data-q="-1" aria-label="Menos">−</button><input value="${x.qty}" readonly aria-label="Cantidad"><button type="button" data-q="1" aria-label="Más">+</button></div><button type="button" class="del" aria-label="Eliminar" title="Eliminar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16"/><path d="M9 7V4.8c0-.4.4-.8.8-.8h4.4c.4 0 .8.4.8.8V7"/><path d="M6.5 7l.9 12.2c.1.9.8 1.6 1.7 1.6h5.8c.9 0 1.6-.7 1.7-1.6L17.5 7"/><path d="M10.2 11v6M13.8 11v6"/></svg></button></div></div>`; }).join("");
     const total = cxItems.reduce((s,x)=>{ const m = MODELOS.find(y=>y.id===x.mid), va = m && m.variantes[x.tag]; return s + (va ? Math.round(precioTransfer(va)/1000)*1000 * x.qty : 0); }, 0);
     const medio = d.medio || (mon === "EUR" ? MEDIOS[0][0] : MEDIOS[1][0]);
@@ -6897,7 +6925,7 @@ body.panel-abierto .flot,body:has(.asist.abierto) .flot,body.mayo-abierto .flot,
   const waLink = t => `https://wa.me/${String(WHATSAPP_NUMERO).replace(/\D/g,"")}?text=${encodeURIComponent(t)}`;
   const WA = `<svg viewBox="0 0 32 32" aria-hidden="true"><path d="M16 3C8.8 3 3 8.7 3 15.8c0 2.5.7 4.9 2 7L3 29l6.4-2c2 1.1 4.3 1.7 6.6 1.7 7.2 0 13-5.7 13-12.8C29 8.7 23.2 3 16 3zm0 23.4c-2.1 0-4.1-.6-5.9-1.6l-.4-.3-3.8 1.2 1.2-3.7-.3-.4c-1.2-1.8-1.8-3.8-1.8-5.9C5 9.8 10 4.9 16 4.9s11 4.9 11 10.9-5 10.6-11 10.6zm6-7.9c-.3-.2-2-1-2.3-1.1-.3-.1-.5-.2-.8.2-.2.3-.9 1.1-1.1 1.3-.2.2-.4.2-.7.1-.3-.2-1.4-.5-2.7-1.6-1-.9-1.7-2-1.9-2.3-.2-.3 0-.5.1-.7l.5-.6c.2-.2.2-.4.3-.6.1-.2 0-.4 0-.6l-1-2.5c-.3-.7-.6-.6-.8-.6h-.7c-.2 0-.6.1-.9.4-.3.3-1.2 1.1-1.2 2.8s1.2 3.2 1.4 3.5c.2.2 2.4 3.6 5.8 5 .8.3 1.4.5 1.9.7.8.3 1.6.2 2.2.1.7-.1 2-.8 2.3-1.6.3-.8.3-1.5.2-1.6-.1-.1-.3-.2-.6-.4z"/></svg>`;
   const CART = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 4h2l2.4 11.2a1.5 1.5 0 0 0 1.5 1.2h8.6a1.5 1.5 0 0 0 1.5-1.1L21 8H6.2"/><circle cx="9.5" cy="20" r="1.3"/><circle cx="17.5" cy="20" r="1.3"/></svg>`;
-  const ctx = () => modeloActual ? `${modeloActual.nombre} (${(modeloActual.variantes[tagActivo()]||{}).label||""})` : "";
+  const ctx = () => modeloActual ? `${((modeloActual.variantes[tagActivo()]||{}).nombre||modeloActual.nombre)} (${(modeloActual.variantes[tagActivo()]||{}).label||""})` : "";
 
   /* =========================================================
      1. BOTONES FLOTANTES
@@ -7174,6 +7202,10 @@ body:has(.modal-compras.abierto) .flot,body:has(.modal-resenas.abierto) .flot,bo
 .mc-orden .cab{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;font-family:var(--mono);font-size:12.5px;letter-spacing:.12em;color:var(--hueso-dim);text-transform:uppercase;margin-bottom:10px;}
 .mc-orden .cab .est{color:#7fd6a0;}
 .mc-orden .cab .est.pend{color:#e8cf8f;}
+.mc-seg{display:flex;flex-wrap:wrap;justify-content:space-between;gap:6px 14px;align-items:center;margin:2px 0 12px;padding:11px 14px;border:1px solid rgba(228,188,110,.4);background:rgba(228,188,110,.06);color:var(--hueso);text-decoration:none;font-size:13.5px;}
+.mc-seg b{color:#fff;letter-spacing:.06em;font-weight:600;}
+.mc-seg i{font-style:normal;color:#e8cf8f;font-weight:600;}
+.mc-seg:hover{border-color:#e4bc6e;}
 .mc-it{padding:12px 0;border-top:1px solid var(--linea);}
 .mc-it:first-of-type{border-top:none;}
 .mc-it .n{color:#fff;font-size:16px;}
@@ -7241,7 +7273,8 @@ body:has(.modal-compras.abierto) .flot,body:has(.modal-resenas.abierto) .flot,bo
     if(!compras.length){ lista.innerHTML = `<div class="mc-vacio">No encontramos compras hechas con esta cuenta de Google.<br>Si compraste sin entrar con Google, escribinos por WhatsApp y te ayudamos.</div>`; return; }
     lista.innerHTML = compras.map(c=>`
       <div class="mc-orden" data-o="${esc(c.orden)}">
-        <div class="cab"><span>Orden ${esc(c.orden)} · ${fFecha(c.fecha)}</span><span class="est ${c.despachado ? "" : "pend"}">${c.despachado ? `Despachado ${fFecha(c.despachado)}` : "Recibida · en preparación"}</span></div>
+        <div class="cab"><span>Orden ${esc(c.orden)} · ${fFecha(c.fecha)}</span><span class="est ${c.despachado ? "" : "pend"}">${c.despachado ? `Despachado ${fFecha(c.despachado)}` : (c.seguimiento ? "Envío contratado · por despachar" : "Recibida · en preparación")}</span></div>
+        ${c.seguimiento ? `<a class="mc-seg" href="${esc(c.seguimientoUrl || "")}" target="_blank" rel="noopener"><span>Andreani · seguimiento <b>${esc(c.seguimiento)}</b></span><i>Seguir mi envío →</i></a>` : ""}
         ${c.items.map(i=>`<div class="mc-it" data-t="${esc(i.tag)}">
           <div class="n">${esc(i.producto)}<small>${esc(i.variante || "")}${i.cantidad > 1 ? ` · ${i.cantidad} unidades` : ""}</small></div>
           ${i.opinado ? `<div class="ya">✓ Ya lo calificaste<span>${"★".repeat(i.estrellas)}${"☆".repeat(5 - i.estrellas)}</span></div>`
@@ -7317,6 +7350,589 @@ body:has(.modal-compras.abierto) .flot,body:has(.modal-resenas.abierto) .flot,bo
       pintarModalResenas(); if(sc) sc.scrollTop = top;
     }catch(e){ if(b){ b.disabled = false; b.textContent = "No se pudieron cargar. Reintentar"; } }
   }
+})();
+</script>
+
+<style id="v29-css">
+/* ===== opiniones: ordenar y filtrar por estrellas ===== */
+.barra-row{cursor:pointer;padding:3px 6px;margin:0 -6px;border-radius:3px;transition:background .2s,opacity .2s;}
+.barra-row:hover{background:rgba(228,188,110,.08);}
+.barras.filtrando .barra-row{opacity:.4;}
+.barras.filtrando .barra-row.on{opacity:1;background:rgba(228,188,110,.12);}
+.barra-row.on span:first-child{color:#e4bc6e;font-weight:600;}
+.re-herr{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px;padding:12px 22px;border-bottom:1px solid var(--linea);}
+.re-herr label{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--hueso-dim);}
+.re-herr select{background:#121211;color:#fff;border:1px solid var(--linea-fuerte);padding:7px 10px;font-size:13.5px;font-family:inherit;}
+.re-filtro{display:none;align-items:center;gap:8px;font-size:13px;color:#e8cf8f;}
+.re-filtro.on{display:flex;}
+.re-filtro button{background:none;border:1px solid rgba(228,188,110,.5);color:#e8cf8f;font-size:12px;padding:4px 9px;cursor:pointer;}
+.re-ayuda{font-size:12px;color:#77726a;}
+.resenas-vacio small{display:block;margin-top:6px;}
+</style>
+<script id="v29-js">
+(function(){
+  "use strict";
+  const $ = (s, r=document) => r.querySelector(s);
+  let filtro = 0, orden = "rel", ultimo = null;
+  /* relevancia: opiniones con más texto (más útiles), mejor puntuadas y con fotos primero */
+  const util = r => Math.min(String(r.texto||"").replace(/<[^>]*>/g,"").length, 400) / 400 + (r.estrellas||0) / 5 * .6 + ((r.fotos||[]).length ? .3 : 0);
+  const ORDEN = {
+    rel:      (a,b) => util(b) - util(a) || b.fecha - a.fecha,
+    mejor:    (a,b) => b.estrellas - a.estrellas || util(b) - util(a),
+    recientes:(a,b) => b.fecha - a.fecha,
+    peor:     (a,b) => a.estrellas - b.estrellas || b.fecha - a.fecha
+  };
+  const item = r => `
+    <div class="resena-item"><div class="re-top"><span class="re-stars">${starsStr(r.estrellas)}</span><span class="re-fecha">${haceTiempo(r.fecha)}</span></div>
+    <div class="re-autor">${r.autor}${r.deCliente? " · compra verificada" : ""}</div>
+    <div class="re-texto">${r.texto}</div>
+    ${(r.fotos||[]).length? `<div class="re-fotos">${r.fotos.map(f=>`<img src="${f}">`).join("")}</div>` : ""}</div>`;
+
+  function herramientas(){
+    let h = $("#re-herr");
+    if(!h){
+      const resumen = $(".resenas-resumen"); if(!resumen) return;
+      resumen.insertAdjacentHTML("afterend", `<div class="re-herr" id="re-herr">
+        <label>Ordenar <select id="re-orden"><option value="rel">Más útiles</option><option value="mejor">Mejor puntuadas</option><option value="recientes">Más recientes</option><option value="peor">Peor puntuadas</option></select></label>
+        <span class="re-filtro" id="re-filtro"><span id="re-filtro-t"></span><button type="button" id="re-filtro-x">Ver todas</button></span>
+        <span class="re-ayuda" id="re-ayuda">Tocá una barra para ver solo esas estrellas</span></div>`);
+      h = $("#re-herr");
+      $("#re-orden").addEventListener("change", e=>{ orden = e.target.value; pintarModalResenas(); });
+      $("#re-filtro-x").addEventListener("click", ()=>{ filtro = 0; pintarModalResenas(); });
+    }
+    $("#re-orden").value = orden;
+  }
+
+  const prev = pintarModalResenas;
+  pintarModalResenas = function(){
+    if(modeloActual && modeloActual.id !== ultimo){ ultimo = modeloActual.id; filtro = 0; orden = "rel"; }   // otro producto: arranca sin filtro
+    prev.apply(this, arguments);
+    herramientas();
+    const barras = $("#re-barras"), scroll = $("#resenas-scroll"); if(!barras || !scroll) return;
+    /* barras clickeables (5★ arriba … 1★ abajo) */
+    [...barras.querySelectorAll(".barra-row")].forEach((row, k)=>{
+      const n = 5 - k; row.classList.toggle("on", filtro === n); row.setAttribute("role","button"); row.tabIndex = 0;
+      row.title = filtro === n ? "Ver todas" : `Ver solo las de ${n} estrella${n===1?"":"s"}`;
+      row.onclick = ()=>{ filtro = filtro === n ? 0 : n; pintarModalResenas(); };
+      row.onkeydown = e=>{ if(e.key === "Enter" || e.key === " "){ e.preventDefault(); row.onclick(); } };
+    });
+    barras.classList.toggle("filtrando", !!filtro);
+    /* lista ordenada y filtrada (el botón "Ver más opiniones" se conserva) */
+    const mas = scroll.querySelector(".re-mas");
+    const todas = reviewsAprobadas(modeloActual.id);
+    const lista = todas.filter(r=> !filtro || r.estrellas === filtro).sort(ORDEN[orden] || ORDEN.rel);
+    scroll.innerHTML = lista.length ? lista.map(item).join("")
+      : `<div class="resenas-vacio">${filtro ? `No hay opiniones de ${filtro}★ entre las cargadas.${mas ? "<small>Probá cargar más abajo.</small>" : ""}` : "Todavía no hay opiniones publicadas de este producto."}</div>`;
+    if(mas) scroll.appendChild(mas);
+    $("#re-filtro").classList.toggle("on", !!filtro);
+    $("#re-ayuda").style.display = filtro ? "none" : "";
+    if(filtro) $("#re-filtro-t").textContent = `Mostrando ${lista.length} de ${filtro}★`;
+  };
+})();
+</script>
+
+<style id="v30-css">
+/* ===== pie legal, formularios del pie, logo y reloj ===== */
+.topbar .logo{cursor:pointer;}
+.pie-legal{border-top:1px solid rgba(255,255,255,.05);}
+.pie-legal .in{max-width:1180px;margin:0 auto;padding:12px 26px 4px;display:flex;flex-wrap:wrap;align-items:center;gap:4px 0;}
+.pie-legal a,.pie-legal button{background:none;border:none;padding:0;color:#6c675f;font-size:11.5px;letter-spacing:.02em;cursor:pointer;text-decoration:none;font-family:inherit;line-height:1.6;transition:color .2s;}
+.pie-legal a:hover,.pie-legal button:hover{color:#bdb8ae;}
+.pie-legal .in > * + *::before{content:"·";display:inline-block;margin:0 9px;color:#3e3b36;}
+.pie-legal .arrep{color:#8a7a58;}
+.pie-datos{max-width:1180px;margin:0 auto;padding:0 26px 12px;display:flex;flex-wrap:wrap;align-items:center;gap:4px 0;font-size:11.5px;color:#5c5852;}
+.pie-datos > * + *::before{content:"·";display:inline-block;margin:0 9px;color:#3e3b36;}
+.pie-datos a{color:#5c5852;text-decoration:none;}
+.pie-datos a:hover{color:#bdb8ae;}
+.pie-datos .df{display:inline-flex;align-items:center;}
+.pie-datos .df img{height:30px;width:auto;display:block;background:#fff;padding:1px;opacity:.75;}
+.pie-datos .df:hover img{opacity:1;}
+.pie-ml-txt{color:inherit;}
+.v30m{position:fixed;inset:0;z-index:330;background:rgba(5,5,4,.82);display:none;align-items:flex-start;justify-content:center;overflow-y:auto;padding:40px 16px;}
+.v30m.on{display:flex;}
+.v30m .card{width:680px;max-width:100%;background:linear-gradient(180deg,#10100f,#0b0b0a);border:1px solid rgba(201,162,74,.3);padding:34px 36px;position:relative;color:var(--hueso);}
+.v30m h3{font-family:'Archivo',sans-serif;font-size:25px;color:#fff;margin:6px 0 16px;}
+.v30m .x{position:absolute;top:12px;right:16px;background:none;border:none;color:var(--hueso-dim);font-size:22px;cursor:pointer;}
+.v30m .txt{white-space:pre-line;font-size:15px;line-height:1.65;color:#cfcac0;}
+.v30m .intro{font-size:15px;line-height:1.6;color:#cfcac0;margin:0 0 18px;}
+.v30m form{display:grid;grid-template-columns:1fr 1fr;gap:12px 14px;}
+.v30m label{display:flex;flex-direction:column;gap:6px;font-size:13px;color:var(--hueso-dim);}
+.v30m label.w{grid-column:1 / -1;}
+.v30m input,.v30m textarea{background:#121211;border:1px solid var(--linea-fuerte);color:#fff;padding:11px 12px;font-size:15px;font-family:inherit;}
+.v30m textarea{min-height:84px;resize:vertical;}
+.v30m input.err{border-color:#e08a6c;}
+.v30m .trampa{position:absolute;left:-9999px;width:1px;height:1px;opacity:0;}
+.v30m .acc{grid-column:1 / -1;display:flex;justify-content:flex-end;gap:10px;margin-top:6px;}
+.v30m .ok{text-align:center;padding:10px 0;}
+.v30m .ok > b{display:block;font-family:var(--mono);font-size:20px;letter-spacing:.12em;color:#fff;margin:10px 0;}
+.v30m .wa-btn{display:inline-block;margin-top:16px;}
+@media (max-width:640px){ .v30m form{grid-template-columns:1fr;} .v30m .card{padding:28px 18px;} .pie-legal .in,.pie-datos{padding-left:16px;padding-right:16px;} }
+</style>
+<script id="v30-js">
+(function(){
+  "use strict";
+  const $ = (s, r=document) => r.querySelector(s), $$ = (s, r=document) => [...r.querySelectorAll(s)];
+  const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+  const A = window.BRASAS_AJUSTES;
+  const WA = () => String((CAT.web && CAT.web.whatsapp) || WHATSAPP_NUMERO).replace(/\D/g,"");
+  const waLink = t => `https://wa.me/${WA()}?text=${encodeURIComponent(t)}`;
+  const dominioReal = () => /(^|\.)brasasargentina\.com$/.test(location.hostname);
+  let CAT = {}; try{ CAT = JSON.parse(localStorage.getItem("brasas-catalogo") || "{}") || {}; }catch(e){}
+  const T = (k, def) => (CAT.textos && CAT.textos[k]) || def;
+
+  /* ---------- 1. logo: vuelve arriba ---------- */
+  const logo = $(".topbar .logo");
+  if(logo){ logo.setAttribute("role","link"); logo.title = "Ir al inicio"; logo.addEventListener("click", ()=> window.scrollTo({ top:0, behavior:"smooth" })); }
+
+  /* ---------- 2. "En línea" con la hora actual del visitante ---------- */
+  const reloj = () => { const s = $("#ent-sync"); if(s) s.textContent = `En línea · ${new Date().toLocaleTimeString("es-AR", { hour:"2-digit", minute:"2-digit", hourCycle:"h23" })}`; };
+  setInterval(reloj, 15000); setTimeout(reloj, 1500);
+  document.addEventListener("brasas-catalogo", ()=> setTimeout(reloj, 50));
+
+  /* ---------- 3. pie: sin links a MercadoLibre (tu perfil no se puede abrir de afuera) ---------- */
+  function sinLinksML(){ $$(".lujo-footer a.pie-ml").forEach(a=>{ const s = document.createElement("span"); s.className = "pie-ml-txt"; s.textContent = a.textContent.replace(/\s*↗\s*$/, ""); a.replaceWith(s); }); }
+  const pie = $(".lujo-footer");
+  if(pie){ new MutationObserver(sinLinksML).observe(pie, { childList:true, subtree:true }); sinLinksML(); }
+
+  /* ---------- 4. pie legal ---------- */
+  if(pie && !$(".pie-legal", pie)){
+    const base = $(".base", pie);
+    base.insertAdjacentHTML("beforebegin", `<div class="pie-legal"><div class="in">
+        <button type="button" class="arrep" data-v30="arrep">Botón de arrepentimiento</button>
+        <button type="button" data-v30="terminos">Términos y condiciones</button>
+        <button type="button" data-v30="privacidad">Política de privacidad</button>
+        <button type="button" data-v30="garantia">Cambios, devoluciones y garantía</button>
+        <a href="https://www.argentina.gob.ar/produccion/defensadelconsumidor/formulario" target="_blank" rel="noopener">Defensa del Consumidor</a>
+        <button type="button" data-v30="mayoristas">Mayoristas</button>
+        <button type="button" data-v30="cv">Trabajá con nosotros</button>
+      </div></div>
+      <div class="pie-datos" id="pie-datos"></div>`);
+  }
+  function pintarDatos(){
+    const d = $("#pie-datos"); if(!d) return;
+    const w = CAT.web || {};
+    d.innerHTML = `<span>${esc(w.direccion || "Olavarría, Buenos Aires, Argentina")}</span><a href="${waLink("Hola! Tengo una consulta.")}" target="_blank" rel="noopener">WhatsApp +${esc(WA())}</a>
+      ${w.dataFiscal ? `<a class="df" href="${esc(w.dataFiscal)}" target="_blank" rel="noopener" title="Data Fiscal"><img src="https://www.afip.gob.ar/images/f960/DATAWEB.jpg" alt="Data Fiscal" onerror="this.replaceWith(document.createTextNode('Data Fiscal'))"></a>` : ""}`;
+  }
+  pintarDatos();
+
+  /* ---------- 5. ventanas ---------- */
+  const m = document.createElement("div"); m.className = "v30m"; m.id = "v30m"; m.setAttribute("role","dialog"); m.setAttribute("aria-modal","true");
+  m.innerHTML = `<div class="card" id="v30-card"></div>`; document.body.appendChild(m);
+  const cerrar = () => m.classList.remove("on");
+  m.addEventListener("click", e=>{ if(e.target === m && !$("form", m)) cerrar(); });
+  document.addEventListener("keydown", e=>{ if(e.key === "Escape" && m.classList.contains("on")){ e.stopImmediatePropagation(); cerrar(); } }, true);
+  const abrir = html => { $("#v30-card").innerHTML = `<button class="x" type="button" aria-label="Cerrar">✕</button>` + html; $(".x", m).addEventListener("click", cerrar); m.classList.add("on"); m.scrollTop = 0; };
+  const DEF = {
+    terminos: "Términos y condiciones de compra en brasasargentina.com. Precios en pesos argentinos, finales. El pedido se confirma con el pago acreditado. Derecho de arrepentimiento dentro de los 10 días corridos de recibido el producto (Ley 24.240). Rigen las leyes de la República Argentina.",
+    privacidad: "Usamos tus datos solo para procesar y enviar tu pedido y, si lo aceptaste, para mandarte novedades. No los vendemos ni los cedemos. Podés pedir acceso, corrección o eliminación cuando quieras (Ley 25.326).",
+    garantia: "Garantía contra defectos de fabricación. Cambios y devoluciones dentro de los 10 días de recibido, sin uso y en su embalaje. Escribinos con tu número de pedido.",
+    arrep: "Tenés 10 días corridos desde que recibiste el producto para arrepentirte de la compra, sin dar explicaciones (Ley 24.240 art. 34). Te enviamos por mail un código de trámite.",
+    mayo: "Canal exclusivo para comercios y revendedores con CUIT. Escribinos con tus datos y te damos tu acceso personal.",
+    cv: "Dejanos tus datos y tu CV."
+  };
+  const legal = (tit, k, def) => abrir(`<div class="ck-e">★★★★★★</div><h3>${tit}</h3><div class="txt">${esc(T(k, def))}</div>`);
+  /* envío al script; sin script conectado (vista previa) solo muestra la confirmación */
+  async function enviarForm(datos){
+    if(!A.appsScript) return { ok:true, demo:true };
+    try{ const r = await fetch(A.appsScript, { method:"POST", body:JSON.stringify(datos) }); return await r.json(); }
+    catch(e){ try{ await fetch(A.appsScript, { method:"POST", mode:"no-cors", body:JSON.stringify(datos) }); return { ok:true, sinRespuesta:true }; }catch(x){ return { ok:false }; } }
+  }
+  const leer = f => Object.fromEntries(new FormData(f).entries());
+  const marcar = (f, campos) => { let primero = null; campos.forEach(([n, ok])=>{ const el = $(`[name=${n}]`, f); el.classList.toggle("err", !ok); if(!ok) primero = primero || el; }); if(primero){ primero.focus(); return false; } return true; };
+  const emailOk = e => /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(String(e||"").trim());
+
+  function arrepentimiento(){
+    const t0 = Date.now();
+    abrir(`<div class="ck-e">★★★★★★</div><h3>Botón de arrepentimiento</h3><p class="intro">${esc(T("legalArrep", DEF.arrep))}</p>
+      <form id="v30-f" novalidate>
+        <label><span>Nombre y apellido</span><input name="nombre" autocomplete="name" required></label>
+        <label><span>Email</span><input name="email" type="email" autocomplete="email" required></label>
+        <label><span>Teléfono</span><input name="telefono" type="tel" autocomplete="tel"></label>
+        <label><span>Número de pedido (si lo tenés)</span><input name="pedido" placeholder="BR-…"></label>
+        <label><span>Fecha de compra</span><input name="fechaCompra" type="date"></label>
+        <label><span>Producto</span><input name="producto"></label>
+        <label class="w"><span>Motivo (opcional, no es obligatorio)</span><textarea name="motivo"></textarea></label>
+        <input class="trampa" name="web2" tabindex="-1" autocomplete="off" aria-hidden="true">
+        <div class="acc"><button type="submit" class="cta">Enviar solicitud</button></div>
+      </form>`);
+    $("#v30-f").addEventListener("submit", async e=>{
+      e.preventDefault(); const f = e.target, d = leer(f);
+      if(!marcar(f, [["nombre", String(d.nombre||"").trim().length > 2], ["email", emailOk(d.email)]])) return;
+      const b = $("button[type=submit]", f); b.disabled = true; b.textContent = "Enviando…";
+      const r = await enviarForm(Object.assign({ tipo:"arrepentimiento", t: Date.now() - t0 }, d));
+      if(r && r.ok) abrir(`<div class="ok"><div class="ck-e">★★★★★★</div><h3>Recibimos tu solicitud</h3>${r.codigo ? `<p>Tu código de trámite es</p><b>${esc(r.codigo)}</b>` : ""}<p class="intro">Te lo enviamos también por mail${d.email ? ` a <b>${esc(d.email)}</b>` : ""}. En breve te escribimos para coordinar la devolución.</p></div>`);
+      else { b.disabled = false; b.textContent = "No se pudo enviar. Reintentar"; }
+    });
+  }
+  function cv(){
+    const t0 = Date.now();
+    abrir(`<div class="ck-e">★★★★★★</div><h3>Trabajá con nosotros</h3><p class="intro">${esc(T("cvTexto", DEF.cv))}</p>
+      <form id="v30-f" novalidate>
+        <label><span>Nombre y apellido</span><input name="nombre" autocomplete="name" required></label>
+        <label><span>Email</span><input name="email" type="email" autocomplete="email" required></label>
+        <label><span>Teléfono</span><input name="telefono" type="tel" autocomplete="tel"></label>
+        <label><span>Localidad</span><input name="localidad" autocomplete="address-level2"></label>
+        <label class="w"><span>Oficio o puesto</span><input name="puesto" placeholder="Soldador, plegador, ventas…"></label>
+        <label class="w"><span>Contanos de vos (opcional)</span><textarea name="mensaje"></textarea></label>
+        <label class="w"><span>CV (PDF, Word o foto · hasta 5 MB)</span><input name="cvfile" type="file" accept=".pdf,.doc,.docx,image/jpeg,image/png"></label>
+        <input class="trampa" name="web2" tabindex="-1" autocomplete="off" aria-hidden="true">
+        <div class="acc"><button type="submit" class="cta">Enviar</button></div>
+      </form>`);
+    $("#v30-f").addEventListener("submit", async e=>{
+      e.preventDefault(); const f = e.target, d = leer(f), file = d.cvfile; delete d.cvfile;
+      if(!marcar(f, [["nombre", String(d.nombre||"").trim().length > 2], ["email", emailOk(d.email)]])) return;
+      if(file && file.size > 5e6) return toast("El CV pesa más de 5 MB");
+      const b = $("button[type=submit]", f); b.disabled = true; b.textContent = "Enviando…";
+      if(file && file.size){ d.archivo = String(await new Promise((ok,mal)=>{ const r = new FileReader(); r.onload = ()=> ok(r.result); r.onerror = mal; r.readAsDataURL(file); })).split(",")[1]; d.mime = file.type; }
+      const r = await enviarForm(Object.assign({ tipo:"cv", t: Date.now() - t0 }, d));
+      if(r && r.ok) abrir(`<div class="ok"><div class="ck-e">★★★★★★</div><h3>¡Gracias!</h3><p class="intro">Recibimos tus datos. Si hay una búsqueda que encaje, te contactamos.</p></div>`);
+      else { b.disabled = false; b.textContent = "No se pudo enviar. Reintentar"; }
+    });
+  }
+  function mayoristas(){
+    const msg = "Hola! Quiero ser revendedor de BRASAS.\n\nRazón social: \nCUIT: \nRubro: \nLocal o Instagram: \nCiudad: \nUnidades estimadas por mes: ";
+    abrir(`<div class="ck-e">★★★★★★</div><h3>Mayoristas</h3><p class="intro">${esc(T("mayoPie", DEF.mayo))}</p>
+      <a class="ck-wa-btn wa-btn" href="${waLink(msg)}" target="_blank" rel="noopener">Pedir acceso por WhatsApp</a>`);
+  }
+  document.addEventListener("click", e=>{
+    const b = e.target.closest("[data-v30]"); if(!b) return; e.preventDefault();
+    const k = b.dataset.v30;
+    if(k === "terminos") legal("Términos y condiciones", "legalTerminos", DEF.terminos);
+    else if(k === "privacidad") legal("Política de privacidad", "legalPrivacidad", DEF.privacidad);
+    else if(k === "garantia") legal("Cambios, devoluciones y garantía", "legalGarantia", DEF.garantia);
+    else if(k === "arrep") arrepentimiento();
+    else if(k === "cv") cv();
+    else if(k === "mayoristas") mayoristas();
+  });
+  /* #arrepentimiento en la dirección abre el formulario (sirve para linkearlo) */
+  if(/^#arrepentimiento/.test(location.hash)) setTimeout(arrepentimiento, 600);
+
+  /* ---------- 6. medición ---------- */
+  document.addEventListener("brasas-catalogo", e=>{ CAT = e.detail || CAT; pintarDatos(); clarity(); });
+  let clarityPuesto = false;
+  function clarity(){
+    const id = CAT.web && CAT.web.clarity; if(clarityPuesto || !id || !dominioReal() || !/^[a-z0-9]{6,14}$/i.test(id)) return;
+    clarityPuesto = true;
+    (function(c,l,a,r,i,t,y){ c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)}; t=l.createElement(r); t.async=1; t.src="https://www.clarity.ms/tag/"+i; y=l.getElementsByTagName(r)[0]; y.parentNode.insertBefore(t,y); })(window, document, "clarity", "script", id);
+  }
+  clarity();
+  /* una señal anónima por visita: qué productos miró, si agregó al carrito, si empezó a comprar */
+  const esMayorista = () => /^#mayoristas?-/.test(location.hash) || document.body.classList.contains("mayo-abierto");
+  const V = { vistos:new Set(), checkout:false, compro:false, whatsapp:false };
+  const abrirPrev = window.abrirFicha;
+  if(typeof abrirPrev === "function") abrirFicha = function(id){ const r = abrirPrev.apply(this, arguments); try{ const mm = MODELOS.find(x=> x.id === id); if(mm) V.vistos.add(mm.grupo || mm.nombre); }catch(e){} return r; };
+  document.addEventListener("click", e=>{ if(e.target.closest('a[href*="wa.me"]')) V.whatsapp = true; }, true);
+  { const ck = $("#checkout"); if(ck) new MutationObserver(()=>{ if(ck.classList.contains("abierto")) V.checkout = true; }).observe(ck, { attributes:true, attributeFilter:["class"] }); }
+  const fPrev = window.fetch;
+  window.fetch = function(u, o){ try{ if(o && typeof o.body === "string" && /"tipo":"pedido"/.test(o.body)) V.compro = true; }catch(e){} return fPrev.apply(this, arguments); };
+  const origen = (()=>{ try{ const q = new URLSearchParams(location.search); if(q.get("utm_source")) return q.get("utm_source").toLowerCase().slice(0,30);
+    const r = document.referrer ? new URL(document.referrer).hostname.replace(/^www\./,"") : ""; if(!r || r === location.hostname) return "directo";
+    return /instagram/.test(r) ? "instagram" : /facebook|fb\./.test(r) ? "facebook" : /google/.test(r) ? "google" : /whatsapp|wa\.me/.test(r) ? "whatsapp" : /mercadoli/.test(r) ? "mercadolibre" : r.slice(0,30); }catch(e){ return ""; } })();
+  let enviado = false;
+  function senal(){
+    if(!A.appsScript || enviado) return;
+    /* mayorista que se va con productos cargados sin enviar el pedido */
+    if(esMayorista()){
+      try{ const cod = (location.hash.match(/mayoristas?-([A-Za-z0-9]{4,12})/) || [])[1]; if(cod){ const cant = JSON.parse(localStorage.getItem("brasas-mayo-" + cod.toUpperCase()) || "{}");
+        const items = Object.entries(cant).filter(([,n])=> n > 0).map(([tag,cantidad])=>({ tag, cantidad }));
+        if(items.length) navigator.sendBeacon(A.appsScript, JSON.stringify({ tipo:"mayo_carrito", codigo:cod.toUpperCase(), items })); } }catch(e){}
+      enviado = true; return;
+    }
+    if(!dominioReal() && !window.__BRASAS_MEDIR) return;          // en vistas previas no se mide
+    let carrito = 0; try{ carrito = (JSON.parse(localStorage.getItem("brasas-carrito") || "[]") || []).length; }catch(e){}
+    const d = { tipo:"actividad", vistos:[...V.vistos].slice(0,30), carrito, checkout:V.checkout, compro:V.compro, whatsapp:V.whatsapp, movil: matchMedia("(max-width:760px)").matches, origen };
+    try{ navigator.sendBeacon(A.appsScript, JSON.stringify(d)); enviado = true; }catch(e){}
+  }
+  addEventListener("pagehide", senal);
+  document.addEventListener("visibilitychange", ()=>{ if(document.visibilityState === "hidden") senal(); });
+  window.BRASAS_V30 = { senal, V, arrepentimiento, cv, mayoristas };
+})();
+</script>
+
+<style id="v31-css">
+/* ===== FICHA v31: descripción a la izquierda · pagos junto al precio · barra de compra fija ===== */
+/* detalle (consejo + descripción) debajo de las fotos */
+.v31-detalle{margin-top:28px;}
+.v31-detalle .descripcion{margin-bottom:0;}
+.v31-detalle .t + .descripcion{margin-top:2px;}
+/* abajo de todo: preguntas frecuentes + consulta por WhatsApp */
+.fold-abajo:has(.v31-ayuda){display:block;}
+.fold-abajo .v31-ayuda{width:100%;}
+.fold-abajo .v31-ayuda .asesor{margin-top:0;width:auto;max-width:none;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:0 48px;align-items:start;}
+.fold-abajo .v31-ayuda .asesor > *{grid-column:1;}
+.fold-abajo .v31-ayuda .asesor > .preg-box{grid-column:2;grid-row:1 / span 4;margin-top:0;}
+@media (max-width:860px){ .fold-abajo .v31-ayuda .asesor{display:block;} .fold-abajo .v31-ayuda .asesor > .preg-box{margin-top:22px;} }
+/* flotantes: Ayuda no hace falta dentro de la ficha (está el link al asistente); WhatsApp queda arriba de la barra */
+body:has(.overlay.abierto) .asist-fab{opacity:0 !important;pointer-events:none !important;}
+@media (max-width:760px){ body:has(.overlay.abierto) .flot{bottom:150px;} }
+.fold-abajo .fold-col-izq:empty{display:none;}
+
+/* columna derecha: sin los pasos 02/03/04 (todo eso vive en la barra de abajo) */
+.ficha .envio-block .paso,.ficha .medios-lista .paso,.ficha .paso-confirmar,.ficha .medios-lista .label-op{display:none !important;}
+body:not(.intl) .ficha .envio-block{display:none;}
+.ficha .info-col > .cant-row,.ficha #cant-total,.ficha .info-col > .cta-row{display:none !important;}
+.ficha .cant-nota{margin:12px 0 0;}
+.ficha-tecnica .v31-cod b{color:var(--hueso-dim);}
+.ficha-tecnica .v31-cod{font-family:var(--mono);letter-spacing:.08em;}
+
+/* precio + medios de pago a la derecha */
+.precio-box.v31{display:grid;grid-template-columns:minmax(0,1fr) minmax(230px,272px);gap:14px 20px;align-items:center;}
+.precio-box.v31 .v31-pv{min-width:0;}
+.precio-box.v31 .precio-grande{font-size:clamp(34px,3.4vw,46px);}
+.precio-box .medios-lista{margin:0;padding:0;border:none;}
+.precio-box .medios-lista::before,.precio-box .medios-lista::after{display:none;}
+.precio-box .medios-box{display:grid;gap:7px;border:none;padding:0;background:none;}
+.precio-box .medios-box .pago-op{position:relative;overflow:hidden;display:grid;grid-template-columns:14px 1fr auto;align-items:center;gap:9px;margin:0;
+  padding:9px 11px;border:1px solid var(--linea-fuerte);background:rgba(255,255,255,.015);cursor:pointer;transition:border-color .25s,background .25s;}
+.precio-box .medios-box .pago-op:hover{border-color:rgba(228,188,110,.55);}
+.precio-box .medios-box .pago-op.on{border-color:#e4bc6e;background:rgba(228,188,110,.07);}
+.precio-box .medios-box .pago-op .rd{width:12px;height:12px;margin:0;}
+.precio-box .medios-box .pago-op .nm b{font-size:12.5px;line-height:1.3;font-weight:500;display:flex;align-items:center;gap:6px;flex-wrap:wrap;color:#fff;}
+.precio-box .medios-box .pago-op .nm small{display:none;}
+.precio-box .medios-box .pago-op .pr{font-family:var(--mono);font-size:12.5px;color:var(--hueso);white-space:nowrap;}
+.precio-box .medios-box .pago-op .pr s{display:none;}
+.precio-box .medios-box .pago-op .ml-logo{font-size:9px;padding:1px 4px;}
+.precio-box .medios-box .pago-total,.precio-box .medios-box .pago-nota,.precio-box .medios-box .ver-desglose{display:none !important;}
+/* transferencia: la mejor opción, con un destello que pasa cada tanto */
+.precio-box .medios-box .pago-op[data-m="transferencia"]{border-color:rgba(228,188,110,.7);}
+.precio-box .medios-box .pago-op[data-m="transferencia"] .nm b::after{content:"Mejor precio";font-family:var(--mono);font-size:8.5px;letter-spacing:.14em;text-transform:uppercase;
+  color:#111;background:linear-gradient(180deg,#f0d28f,#c9a24a);padding:2px 5px;line-height:1.3;}
+.precio-box .medios-box .pago-op[data-m="transferencia"]::after{content:"";position:absolute;top:0;bottom:0;left:-60%;width:45%;pointer-events:none;
+  background:linear-gradient(105deg,transparent,rgba(255,236,190,.28),transparent);transform:skewX(-18deg);animation:v31Destello 3.6s ease-in-out 1s infinite;}
+@keyframes v31Destello{0%{left:-60%;}38%{left:120%;}100%{left:120%;}}
+@media (prefers-reduced-motion:reduce){ .precio-box .medios-box .pago-op[data-m="transferencia"]::after{animation:none;display:none;} }
+
+/* ===== barra de compra: siempre visible ===== */
+.ficha-sticky{transform:none !important;opacity:1 !important;padding:12px 30px;}
+.ficha-sticky .fs-nombre,.ficha-sticky .fs-precio,.ficha-sticky #fs-comprar{display:none !important;}
+.v31-bar{display:flex;align-items:center;gap:18px;width:100%;}
+.v31-bar .b-prod{flex:0 1 180px;min-width:0;}
+.v31-bar .b-prod b{display:block;font-family:var(--mono);font-size:11.5px;letter-spacing:.12em;text-transform:uppercase;color:#fff;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.v31-bar .b-prod small{display:block;margin-top:3px;font-size:12px;color:var(--hueso-dim);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.v31-bar .b-envio{flex:1 1 320px;min-width:270px;display:flex;align-items:center;gap:12px;}
+.v31-bar .b-envio .cp-fila{margin:0;flex:0 0 136px;}
+.v31-bar .b-envio .cp-fila input{padding:10px 10px;font-size:14px;width:100%;min-width:0;}
+.v31-bar .b-envio .llega{margin:0;padding:0;border:none;background:none;min-width:0;}
+.v31-bar .b-envio .llega.on{display:block;}
+.v31-bar .b-envio .llega .ic{display:none;}
+.v31-bar .b-envio .llega b{font-size:13.5px;line-height:1.3;}
+.v31-bar .b-envio .llega span{font-size:11.5px;margin-top:2px;line-height:1.35;}
+.v31-bar .b-envio .v31-gratis{font-size:13.5px;line-height:1.35;color:#8fd0a3;min-width:0;flex:1 1 auto;}
+.v31-bar .b-envio .v31-gratis small{display:block;color:var(--hueso-dim);font-size:11.5px;}
+.v31-bar .b-envio .llega.on + .v31-gratis{display:none;}
+.v31-bar .b-envio .v31-ml{font-size:13px;color:var(--hueso-dim);line-height:1.35;}
+.v31-bar .b-cant{flex:0 0 auto;}
+.v31-bar .b-cant .cant button{width:34px;height:40px;font-size:18px;}
+.v31-bar .b-cant .cant input{width:40px;height:40px;font-size:15px;}
+.v31-bar .b-total{flex:0 0 auto;text-align:right;min-width:150px;}
+.v31-bar .b-total small{display:block;font-size:11.5px;color:var(--hueso-dim);line-height:1.35;white-space:nowrap;}
+.v31-bar .b-total b{display:block;font-family:'Oswald',sans-serif;font-weight:400;font-size:25px;line-height:1.1;color:#fff;font-variant-numeric:tabular-nums;}
+.v31-bar .b-total .cmp{color:#8fd0a3;cursor:pointer;background:none;border:none;padding:0;font:inherit;font-size:11.5px;text-decoration:underline;text-underline-offset:2px;}
+.v31-bar .b-total .carr{background:none;border:none;padding:0;cursor:pointer;color:#e8cf8f;font:inherit;font-size:11.5px;text-decoration:underline;text-underline-offset:2px;}
+.v31-bar .b-btns{display:flex;gap:8px;flex:0 0 auto;}
+.v31-bar .b-btns .cta{padding:13px 18px;font-size:12.5px;white-space:nowrap;margin:0;width:auto;flex:0 0 auto;}
+@media (max-width:1180px){ .v31-bar .b-prod{display:none;} }
+@media (max-width:760px){
+  .precio-box.v31{grid-template-columns:1fr;}
+  .precio-box .medios-box{grid-template-columns:1fr 1fr;}
+  .precio-box .medios-box .pago-op{grid-template-columns:12px 1fr;padding:8px 9px;gap:7px;}
+  .precio-box .medios-box .pago-op .pr{grid-column:2;font-size:12px;}
+  .ficha-sticky{bottom:0;padding:10px 14px calc(10px + env(safe-area-inset-bottom));}
+  .v31-bar{display:grid;grid-template-columns:minmax(0,1fr) auto auto;grid-template-areas:"envio envio cant" "total btns btns";gap:9px 10px;align-items:center;}
+  .v31-bar .b-envio{min-width:0;}
+  .v31-bar .b-envio{grid-area:envio;gap:8px;}
+  .v31-bar .b-envio .cp-fila{flex:0 0 96px;}
+  .v31-bar .b-envio .cp-fila input{padding:8px;font-size:16px;}
+  .v31-bar .b-envio .llega b{font-size:12.5px;}
+  .v31-bar .b-envio .llega span,.v31-bar .b-envio .v31-gratis small{display:none;}
+  .v31-bar .b-envio .v31-gratis{font-size:12.5px;}
+  .v31-bar .b-cant{grid-area:cant;}
+  .v31-bar .b-cant .cant button{width:32px;height:36px;}
+  .v31-bar .b-cant .cant input{width:34px;height:36px;}
+  .v31-bar .b-total{grid-area:total;text-align:left;min-width:0;}
+  .v31-bar .b-total b{font-size:22px;}
+  .v31-bar .b-total small{white-space:normal;}
+  .v31-bar .b-btns{grid-area:btns;}
+  .v31-bar .b-btns .cta{padding:13px 14px;}
+  .v31-bar #btn-agregar-carrito{width:46px;padding:0;font-size:0;background-repeat:no-repeat;background-position:center;background-size:22px;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23e9e4da' stroke-width='1.7' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M3 4h2l2.4 11.2a1 1 0 0 0 1 .8h8.9a1 1 0 0 0 1-.8L20 8H6.2'/%3E%3Ccircle cx='9.5' cy='19.5' r='1.3'/%3E%3Ccircle cx='17' cy='19.5' r='1.3'/%3E%3Cpath d='M13 10v4M11 12h4'/%3E%3C/svg%3E");}
+}
+/* reseñas: nota cuando el total incluye calificaciones solo con estrellas */
+.v31-nota-cal{font-size:12px;color:#77726a;line-height:1.5;margin-top:8px;}
+</style>
+<script id="v31-js">
+(function(){
+  "use strict";
+  const $ = (s, r=document) => r.querySelector(s), $$ = (s, r=document) => [...r.querySelectorAll(s)];
+  const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+  const num = t => +String(t || "").replace(/[^\d]/g, "") || 0;
+  const intl = () => document.body.classList.contains("intl");
+  const ficha = $(".ficha"); if(!ficha) return;
+
+  /* =========================================================
+     1. ESTRUCTURA: consejo + descripción debajo de las fotos; preguntas y WhatsApp abajo de todo
+     ========================================================= */
+  const colIzq = $(".col-izq"), asesor = $("#asesor"), fold = $(".fold-abajo"), desc = $("#descripcion");
+  const detalle = document.createElement("div"); detalle.className = "asesor v31-detalle"; detalle.id = "v31-detalle";
+  detalle.innerHTML = `<div class="t v31-ct">¿Cuál te conviene?</div><p class="asesor-consejo" id="v31-consejo"></p><div class="t v31-dt">Descripción</div>`;
+  if(colIzq){ (asesor && asesor.parentNode === colIzq ? asesor : null) ? asesor.before(detalle) : colIzq.appendChild(detalle); }
+  if(desc){ detalle.appendChild(desc); }
+  $$(".fold-titulo").forEach(t=>{ if(/Descripci/i.test(t.textContent)) t.remove(); });
+  if(fold && asesor){ const ay = document.createElement("div"); ay.className = "v31-ayuda"; fold.appendChild(ay); ay.appendChild(asesor); }
+
+  /* en el celular las fotos van primero y el detalle después de la medida (no antes del título) */
+  const mqMovil = window.matchMedia("(max-width:760px)");
+  function ubicarDetalle(){
+    const ancla = $(".info-col > .ayuda-link") || $("#ficha-tecnica");
+    if(mqMovil.matches && ancla) ancla.after(detalle);
+    else if(colIzq && fold && detalle.parentNode !== colIzq) colIzq.appendChild(detalle);
+  }
+  if(mqMovil.addEventListener) mqMovil.addEventListener("change", ubicarDetalle);
+
+  /* =========================================================
+     2. PRECIO + MEDIOS DE PAGO (a la derecha del precio)
+     ========================================================= */
+  const pbox = $(".precio-box"), medios = $(".medios-lista");
+  if(pbox && medios){
+    const pv = document.createElement("div"); pv.className = "v31-pv";
+    [...pbox.childNodes].forEach(n=> pv.appendChild(n));
+    pbox.appendChild(pv); pbox.appendChild(medios); pbox.classList.add("v31");
+  }
+  const notaCant = $("#cant-nota"), ft = $("#ficha-tecnica");
+  if(notaCant && ft) ft.after(notaCant);
+  const ayudaLink = $(".info-col > .ayuda-link"); if(ayudaLink && notaCant) notaCant.after(ayudaLink);
+  ubicarDetalle();
+
+  /* =========================================================
+     3. BARRA DE COMPRA FIJA: modelo · envío · cantidad · total · botones
+     ========================================================= */
+  const sticky = $(".ficha-sticky");
+  const bar = document.createElement("div"); bar.className = "v31-bar"; bar.id = "v31-bar";
+  bar.innerHTML = `<div class="b-prod"><b id="v31-bn"></b><small id="v31-bs"></small></div>
+    <div class="b-envio" id="v31-envio"><div class="v31-gratis" id="v31-gratis">✓ Envío gratis<small>Poné tu CP y te decimos cuándo llega</small></div><div class="v31-ml" id="v31-ml" hidden>Envío y pago por MercadoLibre</div></div>
+    <div class="b-cant" id="v31-cant"></div>
+    <div class="b-total notranslate" translate="no"><small id="v31-tl"></small><b id="v31-tot"></b><small id="v31-t2"></small></div>
+    <div class="b-btns" id="v31-btns"></div>`;
+  if(sticky) sticky.appendChild(bar);
+  const env = $("#v31-envio"), cpFila = $(".cp-fila"), llega = $("#llega-ar");
+  if(cpFila){ env.prepend(cpFila); const ci = $("input", cpFila); const ph = () => { if(ci) ci.placeholder = mqMovil.matches ? "Tu CP" : "Código postal"; }; ph(); if(mqMovil.addEventListener) mqMovil.addEventListener("change", ph); }
+  if(llega) $("#v31-gratis").before(llega);
+  const cant = $(".cant-row .cant"); if(cant) $("#v31-cant").appendChild(cant);
+  const bAg = $("#btn-agregar-carrito"), bCo = $("#btn-comprar-ahora");
+  if(bAg) $("#v31-btns").appendChild(bAg);
+  if(bCo) $("#v31-btns").appendChild(bCo);
+  const inpCant = $("#cant-v25");
+  const cantidad = () => Math.max(1, Math.min(50, Math.round(+(inpCant && inpCant.value) || 1)));
+
+  function totalCarrito(){
+    let n = 0, t = 0;
+    (typeof CARRITO !== "undefined" ? CARRITO : []).forEach(x=>{
+      const m = MODELOS.find(y=>y.id===x.mid), v = m && m.variantes[x.tag]; if(!v) return;
+      const q = +x.qty || 1; n += q; t += roundK(precioTransfer(v)) * q;
+    });
+    return { n, t };
+  }
+  /* el total "rueda" hasta el nuevo valor (sin pelearse con otras animaciones) */
+  const reducido = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  function rodarTotal(el, fin){
+    if(el._fin === fin) return;
+    const desde = el._v === undefined ? fin : el._v; el._fin = fin;
+    if(reducido || desde === fin){ el._v = fin; el.textContent = money(fin); return; }
+    const t0 = performance.now(), id = (el._id = (el._id || 0) + 1);
+    (function paso(now){
+      if(el._id !== id) return;
+      const p = Math.min(1, (now - t0) / 550), e = 1 - Math.pow(1 - p, 3);
+      el._v = p < 1 ? desde + (fin - desde) * e : fin;
+      el.textContent = money(el._v);
+      if(p < 1) requestAnimationFrame(paso);
+    })(t0);
+  }
+  function pintarBarra(){
+    const m = modeloActual; if(!m || !sticky) return;
+    const tag = tagActivo(), v = m.variantes[tag]; if(!v) return;
+    const q = cantidad(), ml = medioActivo === "ml";
+    /* precio por unidad del medio elegido (el valor final, aunque el número esté "rodando") */
+    let unit = 0;
+    if(ml) unit = roundK(+(v.ml && v.ml.precio) || 0);
+    else { const pg = $("#precio-grande"), w = pg && document.createTreeWalker(pg, NodeFilter.SHOW_TEXT); let n, fin;
+      while(w && (n = w.nextNode())){ if(n._rkFin !== undefined){ fin = n._rkFin; break; } }
+      unit = fin !== undefined ? +fin : num(pg && pg.textContent); }
+    $("#v31-bn").textContent = `${v.nombre || m.nombre} · ${v.label}`;
+    const chip = $("#stock-chip");
+    $("#v31-bs").textContent = chip && chip.style.display !== "none" ? chip.textContent.trim() : "";
+    /* envío */
+    const cpF = $(".cp-fila", env);
+    if(cpF) cpF.style.display = ml ? "none" : "";
+    $("#v31-ml").hidden = !ml;
+    $("#v31-gratis").style.display = ml ? "none" : "";
+    if(llega) llega.style.visibility = ml ? "hidden" : "";
+    if(llega) llega.style.position = ml ? "absolute" : "";
+    /* total de lo elegido */
+    const tl = $("#v31-tl"), tot = $("#v31-tot"), t2 = $("#v31-t2");
+    if(intl()){ tl.textContent = q > 1 ? `${q} unidades` : ""; tot.textContent = ""; tot._v = undefined; t2.textContent = ""; t2._h = ""; return; }
+    tl.textContent = q > 1 ? `${q} × ${money(unit)}${ml ? " en MercadoLibre" : ""}` : (ml ? "Total en MercadoLibre" : "Total");
+    rodarTotal(tot, roundK(unit * q));
+    let h2 = "";
+    if(ml){
+      const tr = roundK(precioTransfer(v)) * q, dif = unit * q - tr;
+      if(tr > 0 && dif > 0) h2 = `<button type="button" class="cmp" id="v31-cmp">Por transferencia: ${money(tr)} · ahorrás ${money(dif)}</button>`;
+    } else {
+      const c = totalCarrito();
+      if(c.n) h2 = `<button type="button" class="carr" id="v31-carr">🛒 Carrito: ${c.n} · ${money(c.t)} →</button>`;
+    }
+    if(t2._h === h2) return;                       // sin cambios: no se rehace (el botón no "parpadea")
+    t2._h = h2; t2.innerHTML = h2;
+    const cmp = $("#v31-cmp", t2);
+    if(cmp) cmp.addEventListener("click", ()=>{ medioActivo = "transferencia"; renderMedios(tagActivo()); renderPrecioYCuotas(); });
+    const carr = $("#v31-carr", t2);
+    if(carr) carr.addEventListener("click", ()=>{ cerrarFicha(); abrirCarrito(); });
+  }
+  const pintarLuego = () => setTimeout(pintarBarra, 0);
+  if(inpCant) inpCant.addEventListener("input", pintarLuego);
+  if(cant) $$("button", cant).forEach(b=> b.addEventListener("click", pintarLuego));
+  const precioEl = $("#precio-grande");
+  if(precioEl) new MutationObserver(pintarLuego).observe(precioEl, { childList:true, characterData:true, subtree:true });
+
+  /* =========================================================
+     4. TODO SEGÚN LA MEDIDA ELEGIDA: título, código, consejo, descripción, plazo
+     ========================================================= */
+  function pintarVariante(){
+    const m = modeloActual; if(!m) return;
+    const tag = tagActivo(), v = m.variantes[tag] || {};
+    const tit = $("#ficha-titulo"); if(tit) tit.textContent = v.nombre || m.nombre;
+    const consejo = v.consejo || m.consejo || "", d = v.descripcion || m.descripcion || "";
+    $("#v31-consejo").textContent = consejo;
+    $(".v31-ct", detalle).style.display = $("#v31-consejo").style.display = consejo ? "" : "none";
+    if(desc) desc.textContent = d;
+    $(".v31-dt", detalle).style.display = d ? "" : "none";
+    detalle.style.display = consejo || d ? "" : "none";
+    /* el consejo ya está arriba: en el bloque de preguntas no se repite */
+    if(asesor){ const ac = $(".asesor-consejo", asesor); if(ac){ const t = ac.previousElementSibling; if(t && t.classList.contains("t")) t.remove(); ac.remove(); } }
+    pintarBarra();
+  }
+  const abrirPrev = abrirFicha;
+  abrirFicha = function(){ abrirPrev.apply(this, arguments); pintarVariante(); setTimeout(pintarVariante, 0); };
+  const actPrev = activarVariante;
+  activarVariante = function(){ actPrev.apply(this, arguments); pintarVariante(); setTimeout(pintarVariante, 0); };
+  const medPrev = renderMedios;
+  renderMedios = function(){ medPrev.apply(this, arguments); pintarLuego(); };
+  const accPrev = renderAccionesUsuario;
+  renderAccionesUsuario = function(){ accPrev.apply(this, arguments); if(modeloActual) pintarLuego(); };
+
+  /* =========================================================
+     5. OPINIONES: el total de ML incluye calificaciones solo con estrellas
+     ========================================================= */
+  const resPrev = pintarModalResenas;
+  pintarModalResenas = function(){
+    resPrev.apply(this, arguments);
+    const rt = modeloActual && ratingDe(modeloActual.id), barras = $("#re-barras"); if(!rt || !barras) return;
+    const nota = $("#v31-nota-cal"); if(nota) nota.remove();
+    if(!rt.base || rt.base >= rt.total) return;
+    $$(".barra-row", barras).forEach((row, k)=>{ const n = 5 - k, c = +(rt.dist || {})[n] || 0, f = $(".barra-fill", row); if(f) f.style.width = (rt.base ? c / rt.base * 100 : 0) + "%"; });
+    barras.insertAdjacentHTML("afterend", `<div class="v31-nota-cal" id="v31-nota-cal">${(+rt.total).toLocaleString("es-AR")} calificaciones en total. Las barras y la lista muestran las ${(+rt.base).toLocaleString("es-AR")} que dejaron comentario; el resto calificó solo con estrellas.</div>`);
+  };
+  window.BRASAS_V31 = { pintarBarra, pintarVariante };
 })();
 </script>
 </body>
