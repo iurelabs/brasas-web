@@ -1358,9 +1358,9 @@ body.panel-abierto .asist-fab,body:has(.asist.abierto) .asist-fab{opacity:0;poin
   <canvas class="h2-brasas" id="h2-brasas" aria-hidden="true"></canvas>
   <div class="h2-inner">
     <div class="h2-texto">
-      <div class="h2-eyebrow"><i></i><span class="rango">★★★★★★</span>BRASAS® · Argentina · Est. 2017</div>
+      <div class="h2-eyebrow"><i></i><span class="rango">★★★★★★</span>BRASAS® · Est. 2017</div>
       <h1>Hecho a mano.<br><em>Uno a uno.</em></h1>
-      <p class="h2-lead">Cada etapa, bajo protocolo estricto.<br><span class="h2-ar">Diseñado y fabricado en Argentina.</span></p>
+      <p class="h2-lead">Cada etapa, bajo protocolo.<br><span class="h2-ar">Diseñado y fabricado en Argentina.</span></p>
       <a class="h2-cta" href="#coleccion">Ver colección <span>→</span></a>
     </div>
     <figure class="h2-foto" id="h2-foto">
@@ -1373,7 +1373,7 @@ body.panel-abierto .asist-fab,body:has(.asist.abierto) .asist-fab{opacity:0;poin
   <div class="h2-datos">
     <span><b>2017</b>Fabricando desde</span>
     <span><b id="lujo-vendidos" data-contar="0">0</b>Unidades entregadas</span>
-    <span><b>06</b>Etapas de fabricación</span>
+    <span><b>6</b>etapas de fabricación</span>
       </div>
   <div class="h2-scroll" aria-hidden="true"></div>
 </section>
@@ -1423,7 +1423,7 @@ body.panel-abierto .asist-fab,body:has(.asist.abierto) .asist-fab{opacity:0;poin
 <footer class="lujo-footer">
   <div class="firma"><div class="firma-estrellas">★★★★★★</div><p>Si no está perfecto, <span>no sale del taller.</span></p></div>
   <div class="cols">
-    <div class="col"><div class="k">Taller</div><div class="v">Olavarría, provincia de Buenos Aires<br>36°53′S · 60°19′O<br>Envíos gratis a todo el país<br><a class="pie-wa" data-wa="Hola! Quería consultar por un envío internacional." href="#">Envíos internacionales: consultanos ↗</a></div></div>
+    <div class="col"><div class="k">Taller</div><div class="v">Olavarría, provincia de Buenos Aires<br>36°53′S · 60°19′O<br>Envíos gratis a todo el país por Andreani<br><a class="pie-wa" data-wa="Hola! Quería consultar por un envío internacional." href="#">Envíos internacionales: consultanos ↗</a></div></div>
     <div class="col"><div class="k">Atención</div><div class="v">Autoservicio web oficial · las 24 h<br>También en MercadoLibre<br><a class="pie-wa" data-wa="Hola! Tengo una consulta." href="#">Consultas por WhatsApp ↗</a><br>Atención personalizada, si la necesitás</div></div>
     <div class="col"><div class="k">Medios de pago</div><div class="v" id="pie-medios">Transferencia bancaria<br>MercadoLibre</div></div>
   </div>
@@ -1481,13 +1481,13 @@ body.panel-abierto .asist-fab,body:has(.asist.abierto) .asist-fab{opacity:0;poin
             <button data-tipo="internacional">🌎 Internacional</button>
           </div>
           <div class="envio-panel" id="envio-panel-domicilio">
-            <div class="gratis">✓ Envío gratis a todo el país</div>
+            <div class="gratis">✓ Envío gratis a todo el país por Andreani</div>
             <div class="origen">Despacha desde Olavarría, provincia de Buenos Aires</div>
             <div class="cp-row"><input type="text" placeholder="Tu código postal" id="cp-input"><button class="calc" id="cp-btn">Calcular</button></div>
             <div class="envio-resultado" id="cp-resultado"></div>
           </div>
           <div class="envio-panel" id="envio-panel-internacional" style="display:none;">
-            <div class="origen" style="margin-bottom:8px;">Despachamos a todo el mundo desde Olavarría, Argentina</div>
+            <div class="origen" style="margin-bottom:8px;">Despachamos a todos los países desde Olavarría, Argentina</div>
             <div class="cp-row">
               <select id="intl-pais"><option value="uy">Uruguay</option><option value="cl">Chile</option><option value="py">Paraguay</option><option value="br">Brasil</option><option value="otro">Resto del mundo</option></select>
               <button class="calc" id="intl-btn">Calcular</button>
@@ -1680,7 +1680,7 @@ let variantesOrden = {};
 let fotosPos = {};
 let medioActivo = "transferencia";
 let envioTipo = "domicilio";
-let envioDetalle = { texto:"Envío gratis a todo el país (Argentina)", costo:0 };
+let envioDetalle = { texto:"Envío gratis por Andreani a todo el país (Argentina)", costo:0 };
 let cardIdx = {};
 let cineIdx = 0;
 let fotosNuevaResena = [];
@@ -1781,7 +1781,7 @@ function renderLanding(){
       </div>
       <div class="modelo-info">
         <div class="nombre">${m.nombre}</div>
-        <div class="mini-stars">${cant? starsStr(avg)+' <span>('+cant+')</span>' : '<span>Sin opiniones aún</span>'}</div>
+        <div class="mini-stars${cant? '' : ' vacia'}">${cant? starsStr(avg)+' <span>('+cant+')</span>' : '☆☆☆☆☆ <span>(0)</span>'}</div>
         <div class="desde">Desde ${money(desde)}</div>
         <div class="cuotas-destacada">o ${plan.n} cuotas de ${money(cuota)}</div>
         <div class="vendidos">${m.vendidos} vendidos</div>
@@ -1804,7 +1804,7 @@ function abrirFicha(modeloId){
   if(!variantesOrden[modeloId]) variantesOrden[modeloId] = Object.keys(modeloActual.variantes);
   medioActivo = "transferencia";
   envioTipo = "domicilio";
-  envioDetalle = { texto:"Envío gratis a todo el país (Argentina)", costo:0 };
+  envioDetalle = { texto:"Envío gratis por Andreani a todo el país (Argentina)", costo:0 };
   document.getElementById("overlay").classList.add("abierto");
   document.getElementById("ficha-titulo").textContent = modeloActual.nombre;
   document.getElementById("consejo").innerHTML = `<b>¿Cuál te conviene?</b> ${modeloActual.consejo}`;
@@ -1863,7 +1863,7 @@ document.querySelectorAll(".envio-toggle button").forEach(btn=>{
     document.getElementById("envio-panel-domicilio").style.display = envioTipo==="domicilio" ? "block" : "none";
     document.getElementById("envio-panel-internacional").style.display = envioTipo==="internacional" ? "block" : "none";
     document.getElementById("envio-nota-wu").style.display = envioTipo==="internacional" ? "block" : "none";
-    envioDetalle = envioTipo==="domicilio" ? { texto:"Envío gratis a todo el país (Argentina)", costo:0 } : { texto:"Envío internacional — pago por Western Union, coordinar por WhatsApp", costo:null };
+    envioDetalle = envioTipo==="domicilio" ? { texto:"Envío gratis por Andreani a todo el país (Argentina)", costo:0 } : { texto:"Envío internacional — pago por Western Union, coordinar por WhatsApp", costo:null };
     actualizarResumenMedioElegido();
   });
 });
@@ -1874,7 +1874,7 @@ document.getElementById("cp-btn").addEventListener("click", ()=>{
   const primeros = parseInt(cp.slice(0,4)) || 0;
   let zona="Centro", dias="5 a 7";
   if(primeros>=8000){ zona="Sur"; dias="8 a 12"; } else if(primeros<3000){ zona="Norte"; dias="6 a 9"; }
-  envioDetalle = { texto:`Envío gratis · Zona ${zona} · entrega en ${dias} días hábiles (CP ${cp})`, costo:0 };
+  envioDetalle = { texto:`Envío gratis por Andreani · Zona ${zona} · entrega en ${dias} días hábiles (CP ${cp})`, costo:0 };
   r.textContent = `Zona ${zona} — entrega estimada en ${dias} días hábiles.`; r.style.display="block";
   actualizarResumenMedioElegido();
 });
@@ -2050,7 +2050,7 @@ document.getElementById("cine").addEventListener("click", (e)=>{ if(e.target.id=
 document.getElementById("cine-prev").addEventListener("click",(e)=>{ e.stopPropagation(); cineIdx=(cineIdx-1+modeloActual.fotos.length)%modeloActual.fotos.length; pintarCine(); });
 document.getElementById("cine-next").addEventListener("click",(e)=>{ e.stopPropagation(); cineIdx=(cineIdx+1)%modeloActual.fotos.length; pintarCine(); });
 document.getElementById("cerrar-ficha").addEventListener("click", cerrarFicha);
-document.getElementById("overlay").addEventListener("click", e=>{ if(e.target.id==="overlay") cerrarFicha(); });
+/* el popup solo se cierra con la cruz (o Esc) */
 
 /* ===================== RESEÑAS ===================== */
 function abrirModalResenas(){ document.getElementById("modal-resenas").classList.add("abierto"); pintarModalResenas(); }
@@ -2097,7 +2097,7 @@ document.getElementById("login-enviar").addEventListener("click", ()=>{
   currentUser = { nombre, email, telefono, promos };
   PURCHASES[email] = modeloActual ? [modeloActual.id] : [MODELOS[0].id];
   cerrarLogin(); renderAccionesUsuario();
-  toast(`¡Bienvenido/a ${nombre}! Tu cupón 10% OFF: BIENVENIDO10${promos?" · suscripto a novedades por mail":""}`);
+  toast(`¡Bienvenido/a ${nombre}!${promos?" · suscripto a novedades por mail":""}`);
   if(modeloActual) pintarModalResenas();
 });
 
@@ -2267,13 +2267,13 @@ renderLanding();
     renderLandingOriginal.apply(this, arguments);
     const grid = document.getElementById("grid-modelos");
     const h2 = document.querySelector(".landing h2");
-    if(h2) h2.innerHTML = `La colección <span class="cuenta">${String(MODELOS.length).padStart(2,"0")}</span>`;
+    if(h2) h2.innerHTML = `Colección <span class="cuenta">${new Date().getFullYear()}</span>`;
     if(vendidosEl && !primeraVez) vendidosEl.textContent = totalVendidos().toLocaleString("es-AR");
     grid.querySelectorAll(".modelo-card").forEach((card, i)=>{
       card.style.setProperty("--i", i);
       const brillo = document.createElement("div"); brillo.className = "brillo"; card.appendChild(brillo);
       const serie = document.createElement("span"); serie.className = "lujo-serie"; serie.textContent = "N.º " + String(i+1).padStart(2,"0");
-      card.querySelector(".modelo-foto").appendChild(serie);
+      const infoS = card.querySelector(".modelo-info"); (infoS || card.querySelector(".modelo-foto")).appendChild(serie);
       const info = card.querySelector(".modelo-info");
       if(info && !info.querySelector(".ver-mas")){ const vm=document.createElement("div"); vm.className="ver-mas"; vm.innerHTML="Descubrir <span>→</span>"; info.appendChild(vm); }
       if(reducido) return;
@@ -2515,7 +2515,7 @@ renderLanding();
     const e = envioUSD();
     res.style.display = "block";
     res.innerHTML = e ? `${M().bandera} Envío puerta a puerta a <b>${M().nombre}</b>: ${fmtUSD(e)} · entrega estimada en ${M().dias} días hábiles`
-                      : `🌎 Enviamos a todo el mundo. Escribinos por WhatsApp y te cotizamos el envío a tu país.`;
+                      : `🌎 Enviamos a todos los países. Escribinos por WhatsApp y te cotizamos el envío a tu país.`;
     envioDetalle = { texto: e ? `Envío a ${M().nombre} (estimado ${fmtUSD(e)}, ${M().dias} días hábiles)` : "Envío internacional a cotizar", costo:e };
     pInt.querySelector(".origen").textContent = "Despachamos desde Olavarría, Argentina. Embalaje reforzado para viaje internacional.";
   }
@@ -2592,25 +2592,32 @@ renderLanding();
 (function(){
   const cv = document.getElementById("h2-brasas"); if(!cv) return;
   if(window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-  const ctx = cv.getContext("2d"); let W=0,H=0,dpr=Math.min(2,window.devicePixelRatio||1), activo=true;
+  const movil = !!(window.matchMedia && matchMedia("(max-width:860px), (pointer:coarse)").matches);
+  const ctx = cv.getContext("2d"); let W=0,H=0,dpr=movil ? 1 : Math.min(2,window.devicePixelRatio||1), activo=true;
   function medir(){ const r=cv.getBoundingClientRect(); W=r.width; H=r.height; cv.width=W*dpr; cv.height=H*dpr; ctx.setTransform(dpr,0,0,dpr,0,0); }
   medir(); window.addEventListener("resize", medir);
-  const N = Math.round(Math.min(60, W/22));
+  const N = movil ? 12 : Math.round(Math.min(60, W/22));
+  /* un solo brillo dibujado de antemano: después solo se copia (mucho más liviano que armar un degradado por brasa en cada cuadro) */
+  const spr = document.createElement("canvas"); spr.width = spr.height = 64; const sx = spr.getContext("2d");
+  const gr = sx.createRadialGradient(32,32,0,32,32,32); gr.addColorStop(0,"rgba(255,196,110,1)"); gr.addColorStop(.35,"rgba(232,120,40,.55)"); gr.addColorStop(1,"rgba(232,120,40,0)");
+  sx.fillStyle = gr; sx.fillRect(0,0,64,64);
   const nueva = (inicio)=>({ x: W*(.45+Math.random()*.55), y: inicio? Math.random()*H : H+10, r: .6+Math.random()*1.8,
     vy: .25+Math.random()*.7, fase: Math.random()*6.28, vida: 0, max: 380+Math.random()*420 });
   const ps = Array.from({length:N}, ()=>nueva(true));
   new IntersectionObserver(e=>{ activo = e[0].isIntersecting; if(activo) requestAnimationFrame(paso); }).observe(cv);
-  function paso(){
+  let ult = 0;
+  function paso(t){
     if(!activo) return;
+    if(movil && t - ult < 33){ requestAnimationFrame(paso); return; }   /* en el celular, 30 cuadros por segundo alcanzan */
+    ult = t;
     ctx.clearRect(0,0,W,H);
     for(let i=0;i<ps.length;i++){
       const p = ps[i]; p.vida++; p.y -= p.vy; p.fase += .02; p.x += Math.sin(p.fase)*.35;
-      const t = p.vida/p.max, a = Math.max(0, Math.sin(Math.PI*Math.min(1,t))) * (.55+.45*Math.sin(p.fase*3));
-      const g = ctx.createRadialGradient(p.x,p.y,0,p.x,p.y,p.r*5);
-      g.addColorStop(0,`rgba(255,196,110,${a})`); g.addColorStop(.35,`rgba(232,120,40,${a*.55})`); g.addColorStop(1,"rgba(232,120,40,0)");
-      ctx.fillStyle = g; ctx.beginPath(); ctx.arc(p.x,p.y,p.r*5,0,6.283); ctx.fill();
+      const k = p.vida/p.max, a = Math.max(0, Math.sin(Math.PI*Math.min(1,k))) * (.55+.45*Math.sin(p.fase*3));
+      const d = p.r*10; ctx.globalAlpha = a; ctx.drawImage(spr, p.x-d/2, p.y-d/2, d, d);
       if(p.vida>p.max || p.y<-20) ps[i] = nueva(false);
     }
+    ctx.globalAlpha = 1;
     requestAnimationFrame(paso);
   }
   requestAnimationFrame(paso);
@@ -2792,7 +2799,7 @@ renderLanding();
   /* bienvenida */
   const btnLogin = document.getElementById("login-enviar");
   btnLogin.addEventListener("click", ()=>{
-    setTimeout(()=>{ if(currentUser) toast(`Bienvenido a la Comunidad BRASAS, ${currentUser.nombre.split(" ")[0]}. Tu 10%: BIENVENIDO10`); }, 30);
+    setTimeout(()=>{ if(currentUser) toast(`Bienvenido a la Comunidad BRASAS, ${currentUser.nombre.split(" ")[0]}.`); }, 30);
   });
 
   /* después de confirmar una orden: invitar a compartir */
@@ -3762,7 +3769,7 @@ window.BRASAS_AJUSTES = {
   /* =========================================================
      3. CÓDIGO POSTAL → FECHA ESTIMADA DE ENTREGA
      ========================================================= */
-  const ZONAS = { cercano:"Buenos Aires y CABA", centro:"el Centro del país", lejos:"el Norte y Cuyo", patagonia:"la Patagonia", sur:"la Patagonia Sur" };
+  const ZONAS = { cercano:"Buenos Aires", centro:"el Centro", lejos:"Cuyo y el Norte", patagonia:"la Patagonia", sur:"la Patagonia" };
   const LETRA = { B:"cercano", C:"cercano", S:"centro", X:"centro", D:"centro", E:"centro", L:"centro",
     A:"lejos", F:"lejos", G:"lejos", H:"lejos", J:"lejos", K:"lejos", M:"lejos", N:"lejos", P:"lejos", T:"lejos", W:"lejos", Y:"lejos",
     Q:"patagonia", R:"patagonia", U:"sur", V:"sur", Z:"sur" };
@@ -3804,9 +3811,9 @@ window.BRASAS_AJUSTES = {
     const cp = $("#cp-v18").value.trim(), box = $("#llega-ar"), r = entregaCP(cp);
     if(!r){ box.classList.remove("on"); return null; }
     $(":scope > div > b", box).textContent = `Llega entre el ${fFecha(r.desde)} y el ${fFecha(r.hasta)}`;
-    $(":scope > div > span", box).textContent = `Envío gratis ${aZona(r.nombre)} · ${r.prep <= 1 ? "despacho en 24 h" : `incluye ${r.prep} días hábiles de fabricación`}`;
+    $(":scope > div > span", box).textContent = `Envío gratis por Andreani ${aZona(r.nombre)} · ${r.prep <= 1 ? "despacho en 24 h" : `incluye ${r.prep} días hábiles de fabricación`}`;
     box.classList.add("on");
-    envioDetalle = { texto:`Envío gratis ${aZona(r.nombre)} (CP ${cp.toUpperCase()}) · llega entre el ${fFecha(r.desde)} y el ${fFecha(r.hasta)}`, costo:0 };
+    envioDetalle = { texto:`Envío gratis por Andreani ${aZona(r.nombre)} (CP ${cp.toUpperCase()}) · llega entre el ${fFecha(r.desde)} y el ${fFecha(r.hasta)}`, costo:0 };
     if(guardarlo) lsSet("brasas-cp", cp);
     return r;
   }
@@ -4101,7 +4108,7 @@ window.BRASAS_AJUSTES = {
     if(!PURCHASES[u.email]) PURCHASES[u.email] = modeloActual ? [modeloActual.id] : []; // demo: sin sistema de pedidos todavía
     lsSet("brasas-usuario", JSON.stringify({ nombre:u.nombre, email:u.email, foto:u.foto||"", telefono:u.telefono||"" }));
     renderAccionesUsuario();
-    if(anunciar) toast(`Bienvenido a la Comunidad BRASAS, ${String(u.nombre).split(" ")[0]}. Tu 10%: BIENVENIDO10`);
+    if(anunciar) toast(`Bienvenido a la Comunidad BRASAS, ${String(u.nombre).split(" ")[0]}.`);
   }
   function alIngresar(resp){
     const p = decodificar(resp.credential), promos = ($("#login-promos")||{}).checked !== false;
@@ -4422,7 +4429,7 @@ body:has(.ck.abierto) .asist-fab{opacity:0;pointer-events:none;}
         <span class="pr notranslate" translate="no">${off ? `<s>${money(base)}</s>` : ""}${money(p)}</span></div>`;
     }).join("") + `<div class="pago-total"><span>Total</span><b class="notranslate" translate="no">${money(precioUnidad(v, medioActivo))}</b></div>
       <div class="pago-nota">${medioActivo === "ml" ? "Te llevamos a la publicación oficial de BRASAS en MercadoLibre. El pago, el envío y la garantía se gestionan allí."
-        : medioActivo === "transferencia" ? `Envío gratis incluido. Al confirmar te damos los datos bancarios.`
+        : medioActivo === "transferencia" ? `Envío gratis por Andreani incluido. Al confirmar te damos los datos bancarios.`
         : esc((mediosCheckout().find(x=>x.k===medioActivo)||{}).instr || "")}</div>`;
     $$(".pago-op", cont).forEach(r=>{
       const sel = ()=>{ medioActivo = r.dataset.m; renderMedios(tag); renderPrecioYCuotas(); };
@@ -4463,7 +4470,7 @@ body:has(.ck.abierto) .asist-fab{opacity:0;pointer-events:none;}
       const m = MODELOS.find(x=>x.id===card.dataset.modelo); if(!m) return;
       const d = Math.min(...Object.values(m.variantes).map(unitTransfer));
       const de = $(".desde", card); if(de) de.textContent = "Desde " + money(d);
-      const cu = $(".cuotas-destacada", card); if(cu) cu.textContent = "Transferencia · envío gratis";
+      const cu = $(".cuotas-destacada", card); if(cu) cu.innerHTML = `<svg class="v41-cam" viewBox="0 0 28 18" aria-hidden="true"><path d="M1 3h15v10H1zM16 6h6l4 4v3h-10z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><circle cx="7" cy="14" r="2" fill="#0b0b0a" stroke="currentColor" stroke-width="1.6"/><circle cx="21" cy="14" r="2" fill="#0b0b0a" stroke="currentColor" stroke-width="1.6"/></svg>Envío gratis por Andreani`;
       const u = $(".usd-card", card); if(u) u.remove();
     });
   };
@@ -4512,9 +4519,7 @@ body:has(.ck.abierto) .asist-fab{opacity:0;pointer-events:none;}
   const ck = document.createElement("div"); ck.className = "ck"; ck.id = "checkout"; ck.setAttribute("role","dialog"); ck.setAttribute("aria-modal","true"); ck.setAttribute("aria-label","Finalizar compra");
   ck.innerHTML = `<div class="ck-card" id="ck-card"></div>`;
   document.body.appendChild(ck);
-  let ckItems = [], ckOrigen = "ahora", ckMedio = "transferencia", ckOrden = null, ckQuitado = null, ckCupon = null;
-  window.BRASAS_SET_CUPON = c => { ckCupon = c; if(document.getElementById("checkout").classList.contains("abierto")) pintarCheckout(); };
-  window.BRASAS_CUPON = () => ckCupon;
+  let ckItems = [], ckOrigen = "ahora", ckMedio = "transferencia", ckOrden = null, ckQuitado = null;
   const cerrarCk = () => { ck.classList.remove("abierto"); document.body.style.overflow = ""; if(ckOrden){ ckOrden = null; } };
   ck.addEventListener("click", e=>{ if(e.target === ck) cerrarCk(); });
   document.addEventListener("keydown", e=>{ if(e.key === "Escape" && ck.classList.contains("abierto")){ e.stopImmediatePropagation(); cerrarCk(); } }, true);
@@ -4530,11 +4535,11 @@ body:has(.ck.abierto) .asist-fab{opacity:0;pointer-events:none;}
     let desc = 0, rec = 0;
     if(o.k === "transferencia") desc = items.reduce((a,x)=> a + descUnit(unitTransfer(x.v)) * x.it.qty, 0);
     else rec = items.reduce((a,x)=> a + (roundK(unitTransfer(x.v) * (1 + o.recargo/100)) - unitTransfer(x.v)) * x.it.qty, 0);
-    /* promo del día o cupón (el mayor de los dos; no se suman), solo por transferencia */
+    /* promo del día (solo por transferencia) */
     const promo = window.BRASAS_PROMO ? window.BRASAS_PROMO() : null;
     let extraPct = 0, extraTxt = "", cupon = "", promoUsada = "";
-    if(o.k === "transferencia"){ const pp = promo ? +promo.pct || 0 : 0, cp = ckCupon ? +ckCupon.pct || 0 : 0;
-      if(cp && cp >= pp){ extraPct = cp; extraTxt = "Cupón " + ckCupon.codigo; cupon = ckCupon.codigo; } else if(pp){ extraPct = pp; extraTxt = promo.nombre || "Promo"; promoUsada = extraTxt; } }
+    if(o.k === "transferencia"){ const pp = promo ? +promo.pct || 0 : 0;
+      if(pp){ extraPct = pp; extraTxt = promo.nombre || "Promo"; promoUsada = extraTxt; } }
     const extra = extraPct ? roundK((sub - desc) * extraPct / 100) : 0;
     return { items, sub, desc, rec, extra, extraPct, extraTxt, cupon, promoUsada, total: sub - desc - extra + rec, medio:o };
   }
@@ -4574,10 +4579,9 @@ body:has(.ck.abierto) .asist-fab{opacity:0;pointer-events:none;}
         ${c.desc ? `<div class="desc"><span>★ Comunidad BRASAS −${pct()}%</span><span>− ${money(c.desc)}</span></div>` : ""}
         ${c.extra ? `<div class="desc"><span>★ ${esc(c.extraTxt)} −${c.extraPct}%</span><span>− ${money(c.extra)}</span></div>` : ""}
         ${c.rec ? `<div><span>Recargo ${esc(c.medio.n)} (${c.medio.recargo}%)</span><span>+ ${money(c.rec)}</span></div>` : ""}
-        <div class="gratis"><span>Envío a domicilio</span><span>Gratis</span></div>
+        <div class="gratis"><span>Envío a domicilio · Andreani</span><span>Gratis</span></div>
         <div class="total"><span>Total</span><span>${money(c.total)}</span></div>
       </div>
-      ${c.medio.k === "transferencia" ? `<div class="ck-cupon" id="ck-cupon">${ckCupon ? `<span>Cupón <b>${esc(ckCupon.codigo)}</b> aplicado${c.cupon ? "" : " · la promo del día es mayor, se usa esa"}</span><button type="button" data-cq>Quitar</button>` : `<button type="button" class="abrir" data-ca>¿Tenés un cupón de descuento?</button><div class="f" hidden><input id="ck-cupon-in" placeholder="Código del cupón" autocomplete="off" autocapitalize="characters"><button type="button" data-cok>Aplicar</button></div><small id="ck-cupon-msg"></small>`}</div>` : ""}
       ${!currentUser && pct() && c.medio.k === "transferencia" ? `<button type="button" class="g-invita ck-inv">${G_ICON}<span>Unite con Google y ahorrá <b>${money(c.items.reduce((a,x)=> a + roundK(unitTransfer(x.v)*pct()/100) * x.it.qty, 0))}</b></span></button>` : ""}
 
       ${ms.length > 1 ? `<div class="ck-s">02 · Medio de pago</div><div class="ck-med">${ms.map(o=>`
@@ -4668,7 +4672,7 @@ body:has(.ck.abierto) .asist-fab{opacity:0;pointer-events:none;}
     const c = cuentas(), orden = nuevaOrden(), entrega = window.BRASAS_ENTREGA_CP(d.cp, ckItems);
     const pedido = {
       tipo:"pedido", orden, fecha:new Date().toISOString(),
-      medio:c.medio.n, subtotal:c.sub, descuento:c.desc + (c.extra || 0), recargo:c.rec, total:c.total, cupon:c.cupon || "", promo:c.promoUsada || "",
+      medio:c.medio.n, subtotal:c.sub, descuento:c.desc + (c.extra || 0), recargo:c.rec, total:c.total, promo:c.promoUsada || "",
       items:c.items.map(x=>({ tag:x.it.tag, producto:x.v.nombre || x.m.nombre, variante:x.v.label, cantidad:x.it.qty, unitario:unitTransfer(x.v) })),
       cliente:{ nombre:d.nombre.trim(), email:d.email.trim(), telefono:d.telefono.trim(),
         calle:d.calle.trim(), numero:String(d.numero).trim(), piso:(d.piso||"").trim(), depto:(d.depto||"").trim(),
@@ -4791,7 +4795,7 @@ body:has(.ck.abierto) .asist-fab{opacity:0;pointer-events:none;}
      ========================================================= */
   const toastPrev = toast;
   toast = function(msg){
-    if(/BIENVENIDO10|cup[oó]n 10%/i.test(String(msg))){
+    if(/^¡?Bienvenido/i.test(String(msg)) && !/®/.test(String(msg)) && pct() > 0){
       const n = currentUser ? String(currentUser.nombre).split(" ")[0] : "";
       msg = `Bienvenido a la Comunidad BRASAS${n ? ", " + n : ""}. Tu ${pct()}% ya está aplicado al pagar por transferencia.`;
     }
@@ -4991,12 +4995,13 @@ body:has(.ck.abierto) .asist-fab{opacity:0;pointer-events:none;}
     fr:`<svg viewBox="0 0 3 2" preserveAspectRatio="none"><rect width="1" height="2" fill="#0055A4"/><rect x="1" width="1" height="2" fill="#fff"/><rect x="2" width="1" height="2" fill="#EF4135"/></svg>`,
     "zh-CN":`<svg viewBox="0 0 30 20" preserveAspectRatio="none"><rect width="30" height="20" fill="#DE2910"/><polygon fill="#FFDE00" points="5,2 5.9,4.8 8.8,4.8 6.5,6.5 7.4,9.3 5,7.6 2.6,9.3 3.5,6.5 1.2,4.8 4.1,4.8"/></svg>`
   };
+  FL.au = `<svg viewBox="0 0 60 30" preserveAspectRatio="none"><rect width="60" height="30" fill="#00247D"/><path d="M0 0l30 15M30 0L0 15" stroke="#fff" stroke-width="3"/><path d="M0 0l30 15M30 0L0 15" stroke="#CF142B" stroke-width="1.2"/><path d="M15 0v15M0 7.5h30" stroke="#fff" stroke-width="5"/><path d="M15 0v15M0 7.5h30" stroke="#CF142B" stroke-width="3"/><g fill="#fff"><circle cx="15" cy="23" r="2.6"/><circle cx="44" cy="6" r="1.6"/><circle cx="52" cy="13" r="1.6"/><circle cx="44" cy="25" r="1.6"/><circle cx="37" cy="14" r="1.6"/><circle cx="48" cy="17" r=".9"/></g></svg>`;
   FL.ES = `<svg viewBox="0 0 30 20" preserveAspectRatio="none"><rect width="30" height="20" fill="#AA151B"/><rect y="5" width="30" height="10" fill="#F1BF00"/></svg>`;
   /* cada bandera = país + idioma. Argentina y España comparten idioma. */
   const PAISES = [
     { p:"AR", l:"es", n:"Argentina · Español", f:FL.es }, { p:"ES", l:"es", n:"España · Español", f:FL.ES },
     { p:"US", l:"en", n:"English", f:FL.en }, { p:"IT", l:"it", n:"Italiano", f:FL.it },
-    { p:"DE", l:"de", n:"Deutsch", f:FL.de }, { p:"FR", l:"fr", n:"Français", f:FL.fr }, { p:"CN", l:"zh-CN", n:"中文", f:FL["zh-CN"] }
+    { p:"AU", l:"en", n:"Australia · English", f:FL.au }, { p:"DE", l:"de", n:"Deutsch", f:FL.de }, { p:"FR", l:"fr", n:"Français", f:FL.fr }, { p:"CN", l:"zh-CN", n:"中文", f:FL["zh-CN"] }
   ];
   const actual = () => (window.BRASAS_IDIOMA_ACTUAL ? window.BRASAS_IDIOMA_ACTUAL() : "es");
   function tzEspana(){ try{ return /^(Europe\/Madrid|Atlantic\/Canary|Africa\/Ceuta)$/.test(Intl.DateTimeFormat().resolvedOptions().timeZone||""); }catch(e){ return false; } }
@@ -5325,7 +5330,7 @@ body.intl .paso-pago-intl{display:block;}
   const lsSet = (k,v) => { try{ v===null ? localStorage.removeItem(k) : localStorage.setItem(k,v); }catch(e){} };
   const guardar = () => window.BRASAS_GUARDAR && window.BRASAS_GUARDAR();
   const intl = () => !!(window.BRASAS_INTL && window.BRASAS_INTL());
-  const PAIS_N = { ES:"España", US:"Estados Unidos", IT:"Italia", DE:"Alemania", FR:"Francia", CN:"China" };
+  const PAIS_N = { ES:"España", US:"Estados Unidos", AU:"Australia", IT:"Italia", DE:"Alemania", FR:"Francia", CN:"China" };
   const waLink = t => `https://wa.me/${String(WHATSAPP_NUMERO).replace(/\D/g,"")}?text=${encodeURIComponent(t)}`;
   const ML_DEFAULT = "https://listado.mercadolibre.com.ar/_CustId_248927229";
   if(!A.mlTienda) A.mlTienda = ML_DEFAULT;
@@ -5380,7 +5385,7 @@ body.intl .paso-pago-intl{display:block;}
     if(tall){
       const linea = intl()
         ? `Envíos internacionales con DHL y FedEx<br><a class="pie-wa" target="_blank" rel="noopener" href="${waLink("Hola! Quería cotizar un envío internacional.")}">Cotizar envío ↗</a>`
-        : `Envíos gratis a todo el país<br><a class="pie-wa" target="_blank" rel="noopener" href="${waLink("Hola! Quería consultar por un envío internacional.")}">Envíos internacionales: consultanos ↗</a>`;
+        : `Envíos gratis a todo el país por Andreani<br><a class="pie-wa" target="_blank" rel="noopener" href="${waLink("Hola! Quería consultar por un envío internacional.")}">Envíos internacionales: consultanos ↗</a>`;
       tall.innerHTML = `Olavarría, provincia de Buenos Aires<br>36°53′S · 60°19′O<br>${linea}`;
     }
     const url = esc(A.mlTienda || ML_DEFAULT);
@@ -5451,7 +5456,7 @@ body.intl .paso-pago-intl{display:block;}
 .ficha-tecnica span b{display:block;font-family:var(--mono);font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--hueso-dim);font-weight:400;}
 .ficha-tecnica span{color:#fff;font-family:var(--mono);font-size:14px;}
 .ficha-tecnica .ft-caja{flex:0 0 100%;}
-.ficha-tecnica .ft-caja svg{display:block;width:min(300px,100%);height:auto;margin-top:6px;}
+.ficha-tecnica .ft-caja svg{display:block;width:min(360px,100%);height:auto;margin-top:8px;}
 .pn-planilla{border:1px solid rgba(228,188,110,.4);background:rgba(228,188,110,.06);padding:12px 14px;margin-bottom:16px;font-size:14px;line-height:1.55;color:#e9e4da;}
 .pn-planilla b{color:#e8cf8f;}
 #grid-modelos.oculta{display:none !important;}
@@ -5461,33 +5466,39 @@ body.intl .paso-pago-intl{display:block;}
 </style>
 
 <script id="v22-caja">
-/* Caja 3D (isométrica) con flechas de cota: Alto · Ancho · Largo. tema: "oscuro" (web) o "claro" (impresión / PDF) */
-window.BRASAS_CAJA = function(alto, ancho, largo, u, tema){
+/* Caja 3D (isométrica, en proporción real) con flechas de cota. Etiquetas grandes en dos renglones: "ALTO" y "95 cm".
+   tema: "oscuro" (web) o "claro" (impresión / PDF) */
+window.BRASAS_CAJA = function(alto, ancho, largo, u, tema, op){
+  op = op || {};
   const num = x => +String(x).replace(",", ".") || 0, H0 = num(alto), W0 = num(ancho), L0 = num(largo); if(!(H0 && W0 && L0)) return "";
-  const mx = Math.max(H0, W0, L0), k = v => Math.max(.28, v / mx) * 74;
+  const mx = Math.max(H0, W0, L0), k = v => Math.max(.1, v / mx) * 100;          // proporción real (solo se evita que un lado muy fino desaparezca)
   const H = k(H0), W = k(W0), L = k(L0), c30 = .866, s30 = .5;
-  const P = (x, y) => [x, y], add = (a, b) => [a[0] + b[0], a[1] + b[1]], mul = (v, t) => [v[0] * t, v[1] * t];
+  const add = (a, b) => [a[0] + b[0], a[1] + b[1]], mul = (v, t) => [v[0] * t, v[1] * t];
   const ex = [c30, -s30], ey = [-c30, -s30], up = [0, -1];
-  const O = P(0, 0), A = mul(ex, L), B = mul(ey, W), C = add(A, B), Ht = mul(up, H);
+  const O = [0, 0], A = mul(ex, L), B = mul(ey, W), C = add(A, B), Ht = mul(up, H);
   const O2 = add(O, Ht), A2 = add(A, Ht), B2 = add(B, Ht), C2 = add(C, Ht);
-  const o1 = [s30, c30], o2 = [-s30, c30], dd = 11;
+  const o1 = [s30, c30], o2 = [-s30, c30], dd = 12;
   const lL = [add(O, mul(o1, dd)), add(A, mul(o1, dd))], lW = [add(O, mul(o2, dd)), add(B, mul(o2, dd))], lH = [add(B, [-dd, 0]), add(B2, [-dd, 0])];
-  const pts = [O, A, B, C, O2, A2, B2, C2, ...lL, ...lW, ...lH];
-  const un = String(u || "cm").toLowerCase(), tw = t => t.length * 6.5;
-  const tH = `Alto ${H0} ${un}`, tW = `Ancho ${W0} ${un}`, tL = `Largo ${L0} ${un}`;
-  const minX = Math.min(Math.min(...pts.map(p => p[0])) - 6, lH[0][0] - 8 - tw(tH), lW[1][0] - 2 - tw(tW)), maxX = Math.max(Math.max(...pts.map(p => p[0])) + 6, lL[1][0] + 4 + tw(tL)) , minY = Math.min(...pts.map(p => p[1])) - 8, maxY = Math.max(...pts.map(p => p[1])) + 22;
-  const claro = tema === "claro", ln = claro ? "#222" : "#cfc9bd", cota = claro ? "#111" : "#e4bc6e", tx = claro ? "#111" : "#ece6da";
-  const f = p => p.map(n => n.toFixed(1)).join(","), poly = (ps, fill) => `<polygon points="${ps.map(f).join(" ")}" fill="${fill}" stroke="${ln}" stroke-width="1.1" stroke-linejoin="round"/>`;
-  const id = "fl" + Math.random().toString(36).slice(2, 7);
-  const linea = (a, b) => `<line x1="${a[0].toFixed(1)}" y1="${a[1].toFixed(1)}" x2="${b[0].toFixed(1)}" y2="${b[1].toFixed(1)}" stroke="${cota}" stroke-width="1" marker-start="url(#${id})" marker-end="url(#${id})"/>`;
+  const un = String(u || "cm").toLowerCase(), f1 = op.web ? 7 : 12, f2 = op.web ? 14 : 17, tw = (t, f) => t.length * f * .62;
+  const etq = { H: ["ALTO", `${H0} ${un}`], W: ["ANCHO", `${W0} ${un}`], L: ["LARGO", `${L0} ${un}`] };
+  const anchoE = e => Math.max(tw(e[0], f1), tw(e[1], f2));
   const mid = (a, b) => [(a[0] + b[0]) / 2, (a[1] + b[1]) / 2];
-  const txt = (p, t, anchor, dy) => `<text x="${p[0].toFixed(1)}" y="${(p[1] + (dy || 0)).toFixed(1)}" text-anchor="${anchor}" font-family="ui-monospace,Menlo,Consolas,monospace" font-size="10.5" fill="${tx}">${t}</text>`;
-  const mL = mid(...lL), mW = mid(...lW), mH = mid(...lH);
+  const pH = add(mid(...lH), [-8, 0]), pW = add(mid(...lW), [-8, 14]), pL = add(mid(...lL), [8, 14]);
+  const pts = [O, A, B, C, O2, A2, B2, C2, ...lL, ...lW, ...lH];
+  const minX = Math.min(Math.min(...pts.map(p => p[0])) - 6 - (op.web ? 28 : 0), pH[0] - anchoE(etq.H) - 4, pW[0] - anchoE(etq.W) - 4);
+  const maxX = Math.max(Math.max(...pts.map(p => p[0])) + 6 + (op.web ? 14 : 0), pL[0] + anchoE(etq.L) + 4);
+  const minY = Math.min(Math.min(...pts.map(p => p[1])) - 8, pH[1] - f1 - 6), maxY = Math.max(Math.max(...pts.map(p => p[1])), pW[1] + f1 + f2 + 4, pL[1] + f1 + f2 + 4) + 4;
+  const claro = tema === "claro", ln = claro ? "#222" : "#d8d2c6", cota = claro ? "#111" : "#e4bc6e", tx = claro ? "#111" : "#ffffff", tx2 = claro ? "#555" : "#a8a296";
+  const f = p => p.map(n => n.toFixed(1)).join(","), poly = (ps, fill) => `<polygon points="${ps.map(f).join(" ")}" fill="${fill}" stroke="${ln}" stroke-width="1.3" stroke-linejoin="round"/>`;
+  const id = "fl" + Math.random().toString(36).slice(2, 7);
+  const linea = (a, b) => `<line x1="${a[0].toFixed(1)}" y1="${a[1].toFixed(1)}" x2="${b[0].toFixed(1)}" y2="${b[1].toFixed(1)}" stroke="${cota}" stroke-width="1.3" marker-start="url(#${id})" marker-end="url(#${id})"/>`;
+  const label = (p, e, anchor, centrado, k, val) => { const y0 = centrado ? p[1] - (f1 + f2) / 2 + f1 : p[1]; return `<text text-anchor="${anchor}" font-family="Archivo,Helvetica,Arial,sans-serif"><tspan x="${p[0].toFixed(1)}" y="${y0.toFixed(1)}" font-size="${f1}" letter-spacing="1.5" fill="${tx2}">${e[0]}</tspan><tspan x="${p[0].toFixed(1)}" dy="${f2 + 1}" font-size="${f2}" font-weight="600" fill="${tx}"${op.web ? ` class="v42-n" data-k="${k}" data-v="${val}" data-u="${un}"` : ""}>${e[1]}</tspan></text>`; };
   return `<svg class="brasas-caja" viewBox="${minX.toFixed(1)} ${minY.toFixed(1)} ${(maxX - minX).toFixed(1)} ${(maxY - minY).toFixed(1)}" role="img" aria-label="Alto ${H0} ${un}, ancho ${W0} ${un}, largo ${L0} ${un}">
     <defs><marker id="${id}" viewBox="0 0 8 8" refX="4" refY="4" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M0 1 L7 4 L0 7 z" fill="${cota}"/></marker></defs>
     ${poly([O, A, A2, O2], claro ? "#f1f1f1" : "rgba(228,188,110,.10)")}${poly([O, B, B2, O2], claro ? "#e4e4e4" : "rgba(228,188,110,.05)")}${poly([O2, A2, C2, B2], claro ? "#fafafa" : "rgba(228,188,110,.16)")}
+    ${op.peso ? (() => { const t = String(op.peso), fs = Math.max(7, Math.min(H * .34, (L * .9) / (t.length * .6))), cx = (O[0] + A[0]) / 2, cy = (O[1] + A[1]) / 2 + (-H / 2); return `<text class="v42-pn" transform="translate(${cx.toFixed(1)} ${cy.toFixed(1)}) skewY(-30)" text-anchor="middle" dominant-baseline="central" font-family="Archivo,Helvetica,Arial,sans-serif" font-size="${fs.toFixed(1)}" font-weight="700" fill="${claro ? "#111" : "#fff"}">${t}</text>`; })() : ""}
     ${linea(...lL)}${linea(...lW)}${linea(...lH)}
-    ${txt(add(mL, [6, 14]), tL, "start")}${txt(add(mW, [-6, 14]), tW, "end")}${txt(add(mH, [-6, 3]), tH, "end")}
+    ${label(pH, etq.H, "end", true, "alto", H0)}${label(pW, etq.W, "end", false, "ancho", W0)}${label(pL, etq.L, "start", false, "largo", L0)}
   </svg>`;
 };
 </script>
@@ -5626,10 +5637,15 @@ window.BRASAS_CAJA = function(alto, ancho, largo, u, tema){
     }
     const ft = $("#ficha-tecnica"), partes = [];
     if(v.armado){ const m = String(v.armado).trim().match(/^(\d+(?:[.,]\d+)?)\s*[x×*]\s*(\d+(?:[.,]\d+)?)\s*[x×*]\s*(\d+(?:[.,]\d+)?)\s*(cm|mm|m)?$/i);
-      partes.push(["Medidas armado", m ? `Alto ${m[1]} · Ancho ${m[2]} · Largo ${m[3]} ${(m[4]||"cm").toLowerCase()}` : v.armado, m ? window.BRASAS_CAJA(m[1], m[2], m[3], m[4] || "cm") : ""]); }
+      const kg = Math.ceil(+String(v.peso || "").replace(",", ".")) || 0;
+      if(m){ const u = (m[4]||"cm").toLowerCase(), N = x => +String(x).replace(",", ".");
+        const svg = window.BRASAS_CAJA(m[1], m[2], m[3], u, "oscuro", { web:true, peso: kg ? "0 kg" : "" });
+        partes.push(["Medidas armado", "", `${svg.replace("<svg ", `<svg data-kg="${kg}" `)}`]); }
+      else partes.push(["Medidas armado", v.armado]); }
     if(v.bulto) partes.push(["Embalaje", v.bulto.replace(/x/g,"×") + " cm"]);
-    if(v.peso) partes.push(["Peso aprox.", String(v.peso).replace(".", ",") + " kg"]);
+    if(v.peso && !v.armado) partes.push(["Peso aprox.", Math.ceil(+String(v.peso).replace(",", ".")) + " kg"]);
     ft.innerHTML = partes.map(([k,x,svg])=> svg ? `<span class="ft-caja"><b>${k}</b>${svg}</span>` : `<span><b>${k}</b>${esc(x)}</span>`).join("");
+    window.BRASAS_RODAR_MEDIDAS && window.BRASAS_RODAR_MEDIDAS(ft);
     ft.classList.toggle("on", partes.length > 0);
   }
 
@@ -5996,6 +6012,10 @@ a.mayo-btn{text-decoration:none;display:inline-block;}
 .mayo-card.gar b{color:#7fd6a0;}
 .mayo-promo{margin:-12px 0 24px;padding:12px 16px;border:1px solid rgba(228,188,110,.6);background:rgba(228,188,110,.08);color:#e8cf8f;font-size:15px;}
 .mayo-promo b{color:#fff;}
+.sr-e{display:block;font-style:normal;font-size:12px;color:#9c968b;text-align:right;margin-top:4px;}
+.mc-cp{margin:14px 0 0;display:grid;gap:8px;} .mc-cp label{display:flex;align-items:center;gap:10px;font-size:13px;color:#9c968b;} .mc-cp input{width:130px;background:#0b0d0f;border:1px solid var(--linea-fuerte);color:#fff;padding:9px 10px;font:inherit;font-size:15px;}
+.mc-llega{margin-bottom:14px;font-size:14px;color:#8fd0a3;line-height:1.45;} .mc-llega b{display:block;color:#fff;font-size:15px;} .mc-llega span{color:#9c968b;font-size:13px;}
+.mayo-row.web .pu{color:#c9c3b6;}
 .mayo-row{grid-template-columns:112px minmax(0,1fr) 180px 236px;gap:20px;align-items:start;padding:20px 0;}
 .mayo-row .sr{flex-wrap:nowrap;gap:5px;}
 .mayo-row .th{width:112px;height:112px;}
@@ -6021,6 +6041,7 @@ a.mayo-btn{text-decoration:none;display:inline-block;}
 .mayo-row .sr{justify-content:flex-end;margin:0;}
 .mayo-row .sr span{font-size:12px;padding:5px 7px;white-space:nowrap;}
 .mayo-row .sr-f{font-size:13.5px;margin:0;text-align:right;}
+.mayo-row .sr{flex-wrap:wrap;max-width:300px;row-gap:5px;}
 .mayo-btn.rojo{border-color:rgba(224,138,108,.6);color:#f0a98f;}
 .mayo-btn:disabled{opacity:.4;cursor:default;}
 .mh-row.anulado{opacity:.55;}
@@ -6114,6 +6135,8 @@ a.mayo-btn{text-decoration:none;display:inline-block;}
   .mp-cab h1{font-size:22px;letter-spacing:.32em;margin:0;}
   .mp-cab .s{font-size:10.5px;color:#666;letter-spacing:.12em;text-transform:uppercase;margin-top:3px;}
   .mp-cab .d{text-align:right;font-size:11px;color:#333;}
+  .mp-reglas{margin:10px 0 8px;padding:7px 10px;border:1px solid #bbb;font-size:10.5px;color:#222;line-height:1.5;} .mp-reglas b{color:#000;}
+  .mayo-print .im .sf{display:block;font-size:9px;color:#888;text-align:center;letter-spacing:.06em;}
   .mp-cab .d b{display:block;font-size:14px;color:#111;}
   .mp-cond{display:grid;grid-template-columns:1fr 1.6fr 1fr;gap:10px;margin:14px 0 16px;}
   .mp-cond > div{border:1px solid #ccc;padding:9px 11px;}
@@ -6124,7 +6147,8 @@ a.mayo-btn{text-decoration:none;display:inline-block;}
   .mp-esc span{border:1px solid #bbb;padding:2px 6px;font-size:10.5px;white-space:nowrap;}
   .mp-esc span b{font-size:11px;}
   body.imprimiendo .mayo-print table{width:100%;border-collapse:collapse;table-layout:fixed;}
-  body.imprimiendo .mayo-print col.c-im{width:28mm;} body.imprimiendo .mayo-print col.c-ar{width:34mm;} body.imprimiendo .mayo-print td.ar .cj svg{width:32mm;height:auto;display:block;margin:0 auto;} body.imprimiendo .mayo-print col.c-pe{width:12mm;} body.imprimiendo .mayo-print col.c-pm{width:22mm;} body.imprimiendo .mayo-print col.c-sg{width:20mm;} body.imprimiendo .mayo-print col.c-tu{width:18mm;}
+  body.imprimiendo .mayo-print col.c-im{width:24mm;} body.imprimiendo .mayo-print col.c-ar{width:30mm;} body.imprimiendo .mayo-print td.ar .cj svg{width:28mm;height:auto;display:block;margin:0 auto;} body.imprimiendo .mayo-print col.c-pe{width:11mm;} body.imprimiendo .mayo-print col.c-pm{width:16mm;} body.imprimiendo .mayo-print col.c-sg{width:20mm;} body.imprimiendo .mayo-print th{letter-spacing:0;}
+  body.imprimiendo .mayo-print td.pr{font-size:10.5px;} body.imprimiendo .mayo-print th.pmh small{font-size:7.5px;} body.imprimiendo .mayo-print tr.g1 th{border-bottom:1px solid #999;padding-bottom:4px;}
   body.imprimiendo .mayo-print th{font-size:8.5px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:#111;text-align:left;border-bottom:1.5px solid #111;padding:0 4px 7px;vertical-align:bottom;line-height:1.2;white-space:nowrap;}
   body.imprimiendo .mayo-print th small{display:block;font-size:7.5px;font-weight:400;letter-spacing:.04em;color:#888;text-transform:none;margin-top:3px;}
   body.imprimiendo .mayo-print th.r{text-align:right;}
@@ -6135,7 +6159,7 @@ a.mayo-btn{text-decoration:none;display:inline-block;}
   body.imprimiendo .mayo-print td{border-bottom:1px solid #ddd;padding:7px 4px;vertical-align:middle;}
   body.imprimiendo .mayo-print tr{break-inside:avoid;}
   body.imprimiendo .mayo-print .r{text-align:right;white-space:nowrap;}
-  body.imprimiendo .mayo-print .im img{display:block;width:27mm;height:27mm;object-fit:contain;background:#fff;margin:0 auto;}
+  body.imprimiendo .mayo-print .im img{display:block;width:22mm;height:22mm;object-fit:contain;background:#fff;margin:0 auto;}
   body.imprimiendo .mayo-print tbody td{height:29mm;}
   body.imprimiendo .mayo-print td.c{text-align:center;}
   body.imprimiendo .mayo-print .tx{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:9;overflow:hidden;}
@@ -6321,7 +6345,7 @@ a.mayo-btn{text-decoration:none;display:inline-block;}
       MODELOS.forEach(m=> Object.entries(m.variantes).forEach(([tag,v])=>{ const ml = (v.ml && +v.ml.precio) || 0; if(!ml) return;
         const f = (m.fotos||[]).find(x=> typeof x === "string" && x.length > 4);
         items.push({ tag, nombre:m.nombre, medida:v.label, precio: Math.round(ml/1.55/1000)*1000, web: Math.round(precioTransfer(v)/1000)*1000, ml, peso:v.peso||null, foto:f||null }); }));
-      return { ok:true, nombre:"Vista previa", minimo:{ unidades:6, monto:0 }, escalas:[{desde:6,pct:3},{desde:12,pct:5},{desde:24,pct:8}], envioGratis:1500000, banco:{ alias:"brasas.argentina", cbu:"0000000000000000000000", titular:"BRASAS", cuit:"", banco:"" }, items, pedidos:[], cliente:{} };
+      return { ok:true, nombre:"Vista previa", minimo:{ unidades:3, monto:0 }, escalas:[{desde:6,pct:3},{desde:12,pct:5},{desde:24,pct:8}], envioGratis:1, banco:{ alias:"brasas.argentina", cbu:"0000000000000000000000", titular:"BRASAS", cuit:"", banco:"" }, items, pedidos:[], cliente:{} };
     }
     try{
       const ctl = new AbortController(); const to = setTimeout(()=>ctl.abort(), 45000);
@@ -6332,7 +6356,9 @@ a.mayo-btn{text-decoration:none;display:inline-block;}
 
   /* descuento POR SERIE: unidades iguales del mismo modelo → % en ese modelo */
   const COLORES = ["#e4bc6e","#d9d454","#a9d35c","#6cc96c","#36b981","#1fa3a0"];
-  const series = i => ((i && i.escalas) || M.escalas || []).slice().sort((a,b)=> a.desde - b.desde);   // cada modelo puede tener su propia serie
+  const minU = () => Math.max(1, +(M.minimo && M.minimo.unidades) || 3);
+  /* escalones: el primero es el precio mayorista (con "minU" iguales); después los descuentos por cantidad (editables en la pestaña WEB) */
+  const series = i => [{ desde:minU(), pct:0, base:true }].concat(((i && i.escalas) || M.escalas || []).filter(e=> e.pct > 0 && e.desde > minU()).slice().sort((a,b)=> a.desde - b.desde));
   const pctDe = (n, i) => series(i).filter(e=> n >= e.desde).map(e=> e.pct).pop() || 0;
   const colorSerie = i => COLORES[Math.min(COLORES.length - 1, i + 1)];
   const armadoTxt = a => { const t = String(a||"").trim(); if(!t) return ""; const m = t.match(/^(\d+(?:[.,]\d+)?)\s*[x×*]\s*(\d+(?:[.,]\d+)?)(?:\s*[x×*]\s*(\d+(?:[.,]\d+)?))?\s*(cm|mm|m)?$/i);
@@ -6342,18 +6368,41 @@ a.mayo-btn{text-decoration:none;display:inline-block;}
     return m ? { alto:m[1], ancho:m[2], largo:m[3], u:(m[4]||"cm").toLowerCase() } : null; };
   const pesoRef = p => `≈ ${kg(p)}`;
   const altoFila = i => { const d = String(i.descripcion||"").trim(), n = d ? d.split(/\n/).filter(Boolean).length + Math.floor(d.length / 90) : 0; return n >= 5 ? "alto3" : n >= 3 ? "alto2" : ""; };   // descripción larga → foto más grande
+  /* menos de minU iguales de un TAG → precio web; desde minU → precio mayorista; más unidades → descuento por cantidad */
+  const esWeb = (i, n) => n < minU() && !!i.web;
+  const puDe = (i, n) => esWeb(i, n) ? i.web : Math.round(i.precio * (1 - pctDe(n, i) / 100));
+  /* entrega: elaboración según cantidad y stock (PLAZO × unidades que faltan) + viaje de Andreani según el código postal */
+  const EN = () => (M && M.entrega) || {};
+  const diasDespacho = () => +EN().despacho > 0 ? +EN().despacho : 2;
+  const diasFab = i => +i.plazo > 0 ? +i.plazo : (+EN().fabricacion > 0 ? +EN().fabricacion : 7);
+  const faltanDe = (i, n) => Math.max(0, n - Math.max(0, +i.stock || 0));
+  const prepDe = (i, n) => faltanDe(i, n) > 0 ? diasFab(i) * faltanDe(i, n) : diasDespacho();
+  function llegaDe(prep, cp){
+    const t = window.BRASAS_TRANSITO && window.BRASAS_TRANSITO(cp); if(!t) return null;
+    const tr = (EN().transito && EN().transito[t.zona]) || null, a = tr ? tr[0] : t.min, b = tr ? tr[1] : t.max, hoy = new Date();
+    return { nombre:t.nombre, prep, desde:window.BRASAS_FFECHA(window.BRASAS_HABILES(hoy, prep + a)), hasta:window.BRASAS_FFECHA(window.BRASAS_HABILES(hoy, prep + b)) };
+  }
+  const prepTxt = p => p <= diasDespacho() ? `despacho en ${diasDespacho() <= 2 ? "24–48 h" : diasDespacho() + " días hábiles"}` : `${p} días hábiles de elaboración`;
+  function pintarLlega(sel, c){
+    const el = $(sel); if(!el) return;
+    const cp = (($("#mc-cp") || $("#mayo-form [name=cp]") || {}).value || lsGet("brasas-cp") || "").trim(), r = c.unidades ? llegaDe(c.prep, cp) : null;
+    el.innerHTML = !c.unidades ? "" : r ? `<b>Llega entre el ${r.desde} y el ${r.hasta}</b><span>Envío gratis por Andreani ${window.BRASAS_AZONA ? window.BRASAS_AZONA(r.nombre) : ""} · ${prepTxt(c.prep)}</span>`
+      : `<span>Envío gratis por Andreani · ${prepTxt(c.prep)} + viaje. Poné tu código postal y te decimos cuándo llega.</span>`;
+    el.dataset.txt = r ? `Llega entre el ${r.desde} y el ${r.hasta} (CP ${cp}) · ${prepTxt(c.prep)}` : "";
+  }
   function cuentas(){
-    const lineas = M.items.filter(i=> (cant[i.tag]||0) > 0).map(i=>{ const S = series(i), n = cant[i.tag], pct = pctDe(n, i), bruto = n * i.precio, desc = Math.round(bruto * pct / 100);
-      const prox = S.find(e=> n < e.desde) || null; return { i, n, pct, bruto, desc, neto: bruto - desc, prox, k: S.filter(e=> n >= e.desde).length - 1 }; });
+    const lineas = M.items.filter(i=> (cant[i.tag]||0) > 0).map(i=>{ const S = series(i), n = cant[i.tag], web = esWeb(i, n), pct = web ? 0 : pctDe(n, i), pb = web ? i.web : i.precio, bruto = n * pb, desc = Math.round(bruto * pct / 100);
+      const prox = S.find(e=> n < e.desde) || null; return { i, n, web, pct, pb, bruto, desc, neto: bruto - desc, pu: puDe(i, n), prox, k: web ? -1 : S.filter(e=> n >= e.desde).length - 1 }; });
     const unidades = lineas.reduce((s,l)=> s + l.n, 0), subtotal = lineas.reduce((s,l)=> s + l.bruto, 0);
     const desc = lineas.reduce((s,l)=> s + l.desc, 0), total = subtotal - desc;
     const peso = lineas.reduce((s,l)=> s + l.n * (l.i.peso||0), 0);
-    const okU = unidades >= M.minimo.unidades, okM = !M.minimo.monto || total >= M.minimo.monto;
-    const envioGratis = !!(M.envioGratis && total >= M.envioGratis);
-    /* el empujón: el modelo al que menos le falta para bajar de precio */
+    const maxN = lineas.reduce((m,l)=> Math.max(m, l.n), 0), prep = lineas.reduce((m,l)=> Math.max(m, prepDe(l.i, l.n)), 0);
+    const okU = lineas.some(l=> l.n >= minU()), okM = true;          // el pedido vale si al menos un modelo llega a las "minU" iguales
+    const envioGratis = true;                                         // envío gratis en todo, sin mínimo
+    /* el empujón: el modelo al que menos le falta para el próximo precio */
     const empuje = lineas.filter(l=> l.prox).map(l=> ({ l, falta: l.prox.desde - l.n })).sort((a,b)=> a.falta - b.falta || b.l.n - a.l.n)[0] || null;
     const mejor = lineas.reduce((m,l)=> Math.max(m, l.k), -1);              // escalón más alto alcanzado por algún modelo
-    return { lineas, unidades, subtotal, desc, total, peso, okU, okM, ok: okU && okM, envioGratis, empuje, mejor };
+    return { lineas, unidades, subtotal, desc, total, peso, maxN, prep, okU, okM, ok: okU && okM, envioGratis, empuje, mejor };
   }
 
   const ICO_TACHO = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 12a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2l1-12M9 7V4h6v3"/></svg>`;
@@ -6364,7 +6413,7 @@ a.mayo-btn{text-decoration:none;display:inline-block;}
   const pendiente = p => p.estado === "recibido" && !p.comprobante && !p.seguimiento;
 
   function pintarMayo(){
-    const S = series(), G = M.envioGratis, propias = M.items.some(i=> i.escalas);
+    const S = series(), propias = M.items.some(i=> i.escalas);
     const hist = (M.pedidos||[]).length ? `
       <details class="mayo-hist" id="mayo-hist" ${M.pedidos.some(pendiente) ? "open" : ""}><summary>Tus pedidos <span>${M.pedidos.length} pedido${M.pedidos.length===1?"":"s"}</span></summary>
         ${M.pedidos.slice(0,8).map((p,k)=>`<div class="mh-row ${p.estado === "cancelado" ? "anulado" : ""}"><code>${esc(p.orden)}</code><span>${new Date(p.fecha).toLocaleDateString("es-AR",{day:"numeric",month:"short",year:"numeric"})}</span>
@@ -6378,17 +6427,17 @@ a.mayo-btn{text-decoration:none;display:inline-block;}
       </details>` : "";
     $("#mayo-main").innerHTML = `
       <div class="mayo-cards">
-        <div class="mayo-card"><small>Pedido mínimo</small><b>${M.minimo.unidades} productos</b><span>Combiná modelos y medidas como quieras</span></div>
-        <div class="mayo-card envio ${G ? "gratis" : ""}"><small>Envío</small><b>${G ? `GRATIS desde ${$$m(G)}` : "A cotizar según destino"}</b><span>${G ? "Debajo de ese monto, se cotiza según destino" : "Por peso y volumen · te lo pasamos por WhatsApp"}</span></div>
+        <div class="mayo-card"><small>Precio mayorista</small><b>Desde ${minU()} iguales</b><span>${minU()} unidades del mismo modelo y medida (mismo TAG). Con menos, se cobra el precio web. Combiná todos los modelos que quieras.</span></div>
+        <div class="mayo-card envio gratis"><small>Envío por Andreani</small><b>GRATIS en todo</b><span>Por Andreani, sin monto mínimo, a todo el país · la fecha depende de la cantidad y tu código postal</span></div>
         <div class="mayo-card"><small>Pago</small><b>Transferencia bancaria</b><span>Los datos te llegan por mail al confirmar</span></div>
         <div class="mayo-card"><small>Embalaje</small><b>${esc(TX("embTitulo", "Embalaje individual"))}</b><span>${esc(TX("embTexto", "Cada producto viene en su embalaje individual, apto para conservarlo en óptimas condiciones por años si se guarda en un lugar seco."))}</span></div>
         <div class="mayo-card gar"><small>Garantía</small><b>${esc(TX("garTitulo", "Garantía total de fabricación"))}</b><span>${esc(TX("garTexto", "Todos los productos tienen garantía ante defectos de fabricación: si algo falla por un defecto nuestro, lo reparamos o lo reemplazamos sin cargo, envío incluido."))}</span></div>
       </div>
       ${M.promo && M.promo.pct ? `<div class="mayo-promo"><b>${esc(M.promo.texto || "Promo especial")}</b> · −${M.promo.pct}% extra en toda la lista, ya aplicado en los precios${M.promo.hasta ? ` · hasta el ${esc(M.promo.hasta)}` : ""}</div>` : ""}
       ${hist}
-      ${S.length ? `<div class="mayo-esc-t"><h4>Descuento por serie</h4><span>${propias ? "Cuantas más unidades iguales, menos pagás cada una · algunos modelos tienen su propia serie (la ves en cada uno)" : "Cuantas más unidades iguales de un modelo, menos pagás cada una"}</span></div>
-      <div class="mayo-ladder" id="mayo-ladder">${S.map((e,i)=>`<div class="esc-step" data-i="${i}" style="--c:${colorSerie(i)}"><div class="ic">−${e.pct}%</div><div class="lb">en ese modelo</div><div class="de">${e.desde} o más iguales</div><div class="fa"></div></div>`).join("")}</div>` : ""}
-      <div class="mayo-filtro"><span>${M.items.length} productos</span><span>Precio por unidad · sin envío</span></div>
+      <div class="mayo-esc-t"><h4>Cuantas más iguales, menos pagás</h4><span>${propias ? "Se cuenta por modelo y medida (mismo TAG) · algunos modelos tienen su propia escala (la ves en cada uno)" : "Se cuenta por modelo y medida (mismo TAG): cada uno baja de precio por separado"}</span></div>
+      <div class="mayo-ladder" id="mayo-ladder">${S.map((e,i)=>`<div class="esc-step" data-i="${i}" style="--c:${colorSerie(i)}"><div class="ic">${e.base ? "Mayorista" : "−" + e.pct + "%"}</div><div class="lb">${e.base ? "precio de lista" : "sobre el precio mayorista"}</div><div class="de">${e.desde} o más iguales</div><div class="fa"></div></div>`).join("")}</div>
+      <div class="mayo-filtro"><span>${M.items.length} productos</span><span>Precio por unidad · envío gratis</span></div>
       <div id="mayo-lista">${M.items.map(i=>`
         <div class="mayo-row" data-t="${esc(i.tag)}">
           <div class="th ${i.foto ? "" : "vacia"}" ${i.foto ? `style="background-image:url('${esc(i.foto)}')"` : ""}></div>
@@ -6402,7 +6451,7 @@ a.mayo-btn{text-decoration:none;display:inline-block;}
           <div class="q">
             <div class="q1"><div class="mayo-q"><button type="button" data-d="-1" aria-label="Menos">−</button><input type="number" min="0" max="500" inputmode="numeric" value="${cant[i.tag]||0}" aria-label="Cantidad"><button type="button" data-d="1" aria-label="Más">+</button></div>
               <button type="button" class="tacho" aria-label="Quitar este producto" title="Quitar">${ICO_TACHO}</button></div>
-            ${series(i).length ? `<div class="sr">${series(i).map((e,k)=>`<span data-k="${k}" style="--c:${colorSerie(k)}">${e.desde}+ <b>−${e.pct}%</b></span>`).join("")}</div><em class="sr-f"></em>` : ""}
+            ${series(i).length ? `<div class="sr">${series(i).map((e,k)=>`<span data-k="${k}" style="--c:${colorSerie(k)}">${e.desde}+ <b>${e.base ? "mayorista" : "−" + e.pct + "%"}</b></span>`).join("")}</div><em class="sr-f"></em>` : ""}<em class="sr-e"></em>
           </div>
         </div>`).join("")}</div>
       <p class="mayo-priv">🔒 ${esc(TX("mayoPrivado", "Este link es personal: tiene tus datos y tus pedidos. No lo reenvíes."))}</p>`;
@@ -6438,45 +6487,49 @@ a.mayo-btn{text-decoration:none;display:inline-block;}
   function pintarFilas(c){
     $$(".mayo-row").forEach(row=>{
       const i = M.items.find(x=> x.tag === row.dataset.t); if(!i) return;
-      const S = series(i), n = cant[i.tag]||0, pct = pctDe(n, i), pu = Math.round(i.precio * (1 - pct/100)), mg = i.ml ? i.ml - pu : 0;
-      row.classList.toggle("con", n > 0); row.style.setProperty("--c", pct ? colorSerie(S.findIndex(e=> e.pct === pct)) : "#e4bc6e");
+      const S = series(i), n = cant[i.tag]||0, web = n > 0 && esWeb(i, n), pct = web ? 0 : pctDe(n, i), pu = n ? puDe(i, n) : i.precio, mg = i.ml ? i.ml - pu : 0;
+      row.classList.toggle("con", n > 0); row.classList.toggle("web", web); row.style.setProperty("--c", web ? "#9c968b" : pct ? colorSerie(S.findIndex(e=> e.pct === pct)) : "#e4bc6e");
       $(".pu", row).textContent = $$m(pu); $("s", row).textContent = pct ? $$m(i.precio) : "";
-      $(".mg", row).textContent = mg > 0 ? `tu margen +${$$m(mg)} (${Math.round(mg / pu * 100)}%)` : "";
+      const sm = $(".p small", row); if(sm) sm.textContent = web ? "Precio web" : "Tu precio";
+      $(".mg", row).textContent = mg > 0 && !web ? `tu margen +${$$m(mg)} (${Math.round(mg / pu * 100)}%)` : "";
       $$(".sr span", row).forEach(s=> s.classList.toggle("on", n >= S[+s.dataset.k].desde));
       const prox = S.find(e=> n < e.desde), f = $(".sr-f", row);
-      if(f) f.textContent = n && prox ? `${prox.desde - n} más y baja a ${$$m(Math.round(i.precio * (1 - prox.pct/100)))} c/u` : n && pct ? "máximo descuento ✓" : "";
+      const en = $(".sr-e", row); if(en){ const fa = faltanDe(i, n), st = Math.max(0, +i.stock || 0);
+        en.textContent = !n ? (st ? `${st} listas para despachar` : `Se fabrica a pedido · ${diasFab(i)} días hábiles c/u`) : !fa ? `Listas: despacho en ${diasDespacho() <= 2 ? "24–48 h" : diasDespacho() + " días hábiles"}` : st ? `${st} listas + ${fa} a fabricar: ${prepDe(i, n)} días hábiles` : `A fabricar: ${prepDe(i, n)} días hábiles de elaboración`; }
+      if(f) f.textContent = n && prox ? (prox.base ? `${prox.desde - n} más y pasa al precio mayorista: ${$$m(i.precio)} c/u` : `${prox.desde - n} más y baja a ${$$m(Math.round(i.precio * (1 - prox.pct/100)))} c/u`) : n && pct ? "máximo descuento ✓" : "";
     });
   }
 
   /* barra de abajo: mínimo → empujón por serie → envío gratis (una sola leyenda de envío) */
   function barra(){
-    const c = cuentas(), m = M.minimo, G = M.envioGratis, S = series();
+    const c = cuentas(), m = M.minimo, S = series();
     pintarFilas(c);
-    const nivel = (c.okU ? 1 : 0) + (c.mejor + 1) + (c.envioGratis ? 1 : 0);
+    const nivel = (c.mejor + 1) + (c.unidades ? 1 : 0);
     const color = !c.unidades ? "#9c7a35" : COLORES[Math.min(COLORES.length - 1, nivel)];
-    const a1 = Math.min(1, c.unidades / m.unidades), a2 = G ? Math.min(1, c.total / G) : (c.okU ? 1 : 0);
-    const avance = G ? (c.okU ? 50 + a2 * 50 : a1 * 50) : a1 * 100;
+    const avance = c.unidades ? (c.okU ? 50 + 50 * Math.min(1, c.mejor / Math.max(1, S.length - 1)) : Math.min(1, c.maxN / minU()) * 50) : 0;
+    const nombreDe = l => `${l.i.nombre}${l.i.medida ? " " + l.i.medida : ""}`;
     let msg, der;
-    if(!c.okU){ const f = m.unidades - c.unidades; msg = `Te ${f === 1 ? "falta" : "faltan"} <b>${f} producto${f===1?"":"s"}</b> para el pedido mínimo`; der = `<b>${c.unidades} / ${m.unidades}</b>`; }
-    else if(!c.okM){ msg = `Te faltan <b>${$$m(m.monto - c.total)}</b> para el pedido mínimo`; der = `<b>${c.unidades} productos</b>`; }
-    else if(c.empuje){ const e = c.empuje, nombre = `${e.l.i.nombre}${e.l.i.medida ? " " + e.l.i.medida : ""}`;
-      msg = `Sumá <b>${e.falta} × ${esc(nombre)}</b> y ese modelo baja <b style="color:${colorSerie(e.l.k + 1)}">${e.l.prox.pct}%</b> <span class="ah">(${$$m(Math.round(e.l.i.precio * (1 - e.l.prox.pct/100)))} c/u)</span>`;
-      der = `<b>${c.desc ? "Ahorrás " + $$m(c.desc) : "Mínimo cumplido ✓"}</b>`; }
-    else { msg = c.desc ? `<b>Máximo descuento por serie</b> en todo tu pedido` : `Pedido mínimo cumplido`; der = `<b>${c.desc ? "Ahorrás " + $$m(c.desc) : "✓"}</b>`; }
-    const env = !G ? "" : c.envioGratis ? `<span class="ok">${ICO_CAMION} Envío GRATIS ✓</span>` : `<span>${ICO_CAMION} Te faltan <b>${$$m(G - c.total)}</b> para el envío gratis</span>`;
+    if(!c.unidades){ msg = `Llevá <b>${minU()} iguales</b> de un mismo modelo para pagar el precio mayorista`; der = `<b>0 / ${minU()}</b>`; }
+    else if(!c.okU && c.empuje){ const e = c.empuje; msg = `Sumá <b>${e.falta} × ${esc(nombreDe(e.l))}</b> y pasás a precio mayorista <span class="ah">(${$$m(e.l.i.precio)} c/u)</span>`; der = `<b>${c.maxN} / ${minU()} iguales</b>`; }
+    else if(c.empuje){ const e = c.empuje, p = e.l.prox;
+      msg = p.base ? `Sumá <b>${e.falta} × ${esc(nombreDe(e.l))}</b> y pasa a precio mayorista <span class="ah">(${$$m(e.l.i.precio)} c/u)</span>`
+        : `Sumá <b>${e.falta} × ${esc(nombreDe(e.l))}</b> y ese modelo baja <b style="color:${colorSerie(e.l.k + 1)}">${p.pct}%</b> <span class="ah">(${$$m(Math.round(e.l.i.precio * (1 - p.pct/100)))} c/u)</span>`;
+      der = `<b>${c.desc ? "Ahorrás " + $$m(c.desc) : "Precio mayorista ✓"}</b>`; }
+    else { msg = c.desc ? `<b>Máximo descuento</b> en todo tu pedido` : `Precio mayorista aplicado`; der = `<b>${c.desc ? "Ahorrás " + $$m(c.desc) : "✓"}</b>`; }
+    const env = `<span class="ok">${ICO_CAMION} Envío GRATIS por Andreani ✓</span>`;
     const prog = $("#mayo-prog");
     prog.style.setProperty("--tc", color);
     prog.innerHTML = `<div class="lbl"><span>${msg}</span>${der}</div>
-      <div class="mayo-tr"><i style="width:${Math.max(c.unidades ? 2 : 0, avance)}%"></i>${G ? `<span class="tk" style="left:50%"></span>` : ""}</div>
-      <div class="mayo-tk2"><span class="${c.okU ? "ok" : ""}">${c.okU ? "✓ " : ""}Mínimo ${m.unidades} productos</span>${env}</div>`;
+      <div class="mayo-tr"><i style="width:${Math.max(c.unidades ? 2 : 0, avance)}%"></i><span class="tk" style="left:50%"></span></div>
+      <div class="mayo-tk2"><span class="${c.okU ? "ok" : ""}">${c.okU ? "✓ " : ""}Mínimo ${minU()} iguales</span>${env}</div>`;
     $("#mayo-tot").innerHTML = `<div><small>${c.unidades} producto${c.unidades===1?"":"s"}${c.peso ? ` · ≈ ${Math.round(c.peso)} kg` : ""}</small>
-      ${c.desc ? `<div class="mt-l"><span>Sin descuento</span><s>${$$m(c.subtotal)}</s></div><div class="mt-l desc"><span>Descuento por serie</span><em>−${$$m(c.desc)}</em></div>` : ""}
+      ${c.desc ? `<div class="mt-l"><span>Sin descuento</span><s>${$$m(c.subtotal)}</s></div><div class="mt-l desc"><span>Descuento por cantidad</span><em>−${$$m(c.desc)}</em></div>` : ""}
       <div class="mt-t"><span>${c.desc ? "Total con descuento" : "Total"}</span><b>${$$m(c.total)}</b></div></div>
       <div class="mayo-bts"><button class="mayo-btn" type="button" id="mayo-ver" ${c.unidades ? "" : "disabled"}>Ver pedido${c.unidades ? ` (${c.unidades})` : ""}</button>
       <button class="cta" type="button" id="mayo-enviar" ${c.ok ? "" : "disabled"}>Enviar pedido</button></div>`;
     $("#mayo-enviar").addEventListener("click", formulario);
     $("#mayo-ver").addEventListener("click", verPedido);
-    const sel = c.lineas.length ? Math.max(...c.lineas.map(l=> l.n)) : 0;
+    const sel = c.maxN;
     $$("#mayo-ladder .esc-step").forEach(s=>{ const i = +s.dataset.i, e = S[i];
       s.classList.toggle("ok", i <= c.mejor); s.classList.toggle("cur", i === c.mejor); s.classList.toggle("next", i === c.mejor + 1 && sel > 0);
       const falta = e.desde - sel;
@@ -6490,27 +6543,28 @@ a.mayo-btn{text-decoration:none;display:inline-block;}
   function verPedido(){ $("#mayo-card").innerHTML = `<div id="mayo-carrito"></div>`; pintarCarrito(); modal.classList.add("on"); modal.scrollTop = 0; }
   function pintarCarrito(){
     const c = cuentas(), cont = $("#mayo-carrito"); if(!cont) return;
-    const G = M.envioGratis;
     cont.innerHTML = `<button class="x" type="button" aria-label="Cerrar">✕</button><div class="ck-e">★★★★★★</div><h3>Tu pedido</h3>
       ${!c.lineas.length ? `<p class="mc-vacio">Todavía no agregaste productos.</p>` : `
-      <div class="mc-lista">${c.lineas.map(l=>{ const pu = Math.round(l.i.precio * (1 - l.pct/100));
+      <div class="mc-lista">${c.lineas.map(l=>{ const pu = l.pu;
         return `<div class="mc-it" data-t="${esc(l.i.tag)}"><div class="mc-th" ${l.i.foto ? `style="background-image:url('${esc(l.i.foto)}')"` : ""}></div>
           <div class="mc-n"><code>${esc(l.i.tag)}</code><b>${esc(l.i.nombre)}${l.i.medida ? ` · ${esc(l.i.medida)}` : ""}</b>
-            <span>${l.n} × ${$$m(pu)} c/u${l.pct ? ` <em>(−${l.pct}% por serie, antes ${$$m(l.i.precio)})</em>` : ""}</span></div>
+            <span>${l.n} × ${$$m(pu)} c/u${l.web ? ` <em>(precio web · con ${minU()} iguales pasa a ${$$m(l.i.precio)})</em>` : l.pct ? ` <em>(−${l.pct}% por cantidad, antes ${$$m(l.i.precio)})</em>` : ""}</span></div>
           <div class="mc-q"><div class="mayo-q"><button type="button" data-d="-1" aria-label="Menos">−</button><input type="number" min="0" max="500" value="${l.n}" aria-label="Cantidad"><button type="button" data-d="1" aria-label="Más">+</button></div>
             <button type="button" class="tacho" aria-label="Quitar" title="Quitar">${ICO_TACHO}</button></div>
           <div class="mc-s">${$$m(l.neto)}</div></div>`; }).join("")}</div>
       <div class="mayo-res">
-        ${c.desc ? `<div><span>Subtotal sin descuento</span><b>${$$m(c.subtotal)}</b></div><div class="vd"><span>Ahorrás por comprar en serie</span><b>−${$$m(c.desc)}</b></div>` : ""}
-        <div class="${c.envioGratis ? "vd" : ""}"><span>Envío</span><b>${c.envioGratis ? "GRATIS" : G ? `A cotizar · faltan ${$$m(G - c.total)} para envío gratis` : "A cotizar"}</b></div>
+        ${c.desc ? `<div><span>Subtotal sin descuento</span><b>${$$m(c.subtotal)}</b></div><div class="vd"><span>Ahorrás por cantidad</span><b>−${$$m(c.desc)}</b></div>` : ""}
+        <div class="vd"><span>Envío por Andreani</span><b>GRATIS</b></div>
         <div class="tt"><span>Total</span><b>${$$m(c.total)}</b></div></div>
-      ${!c.okU ? `<p class="mc-aviso">Te ${m1(c)} para el pedido mínimo de ${M.minimo.unidades} productos.</p>` : ""}`}
+      <div class="mc-cp"><label><span>Tu código postal</span><input id="mc-cp" inputmode="text" maxlength="8" value="${esc(lsGet("brasas-cp") || "")}" placeholder="Ej. 7400"></label><div class="mc-llega" id="mc-llega"></div></div>
+      ${!c.okU ? `<p class="mc-aviso">Para enviar el pedido necesitás al menos ${minU()} unidades iguales (mismo modelo y medida). ${c.empuje ? `Te ${c.empuje.falta === 1 ? "falta" : "faltan"} ${c.empuje.falta} de ${esc(c.empuje.l.i.nombre)}${c.empuje.l.i.medida ? " " + esc(c.empuje.l.i.medida) : ""}.` : ""}</p>` : ""}`}
       <div class="mc-acc">
         ${c.lineas.length ? `<button type="button" class="mayo-btn rojo" id="mc-vaciar">${ICO_TACHO.replace("<svg", '<svg style="width:15px;height:15px;vertical-align:-3px;margin-right:6px"')}Vaciar pedido</button>
         <button type="button" class="mayo-btn" id="mc-resumen">Resumen (PDF)</button>` : ""}
         <button type="button" class="cta" id="mc-seguir" ${c.ok ? "" : "disabled"}>Enviar pedido · ${$$m(c.total)}</button>
       </div>`;
     $(".x", cont).addEventListener("click", cerrarModal);
+    const cpI = $("#mc-cp", cont); if(cpI){ const act = () => { lsSet("brasas-cp", cpI.value.trim()); pintarLlega("#mc-llega", c); }; cpI.addEventListener("input", act); pintarLlega("#mc-llega", c); }
     $$(".mc-it", cont).forEach(it=>{
       const t = it.dataset.t, inp = $("input", it);
       const fijar = n => { cant[t] = Math.max(0, Math.min(500, Math.round(+n||0))); guardar(); pintarMayo(); verPedidoAbierto(); };
@@ -6522,20 +6576,19 @@ a.mayo-btn{text-decoration:none;display:inline-block;}
     const rs = $("#mc-resumen", cont); if(rs) rs.addEventListener("click", ()=> imprimirResumen(resumenActual()));
     $("#mc-seguir", cont).addEventListener("click", formulario);
   }
-  const m1 = c => { const f = M.minimo.unidades - c.unidades; return `${f === 1 ? "falta" : "faltan"} ${f} producto${f===1?"":"s"}`; };
   function verPedidoAbierto(){ if(!$("#mayo-carrito")) verPedido(); else pintarCarrito(); }
 
   /* resumen del pedido (PDF), "para que se entienda todo" */
   function resumenActual(){
     const c = cuentas();
-    return { titulo:"Presupuesto", orden:"", fecha:Date.now(), envioGratis:c.envioGratis, envioFalta: M.envioGratis && !c.envioGratis ? M.envioGratis - c.total : 0,
-      lineas:c.lineas.map(l=>({ tag:l.i.tag, nombre:l.i.nombre, medida:l.i.medida, foto:l.i.foto, n:l.n, precio:l.i.precio, pct:l.pct })), subtotal:c.subtotal, desc:c.desc, total:c.total, pagar:false };
+    return { titulo:"Presupuesto", orden:"", fecha:Date.now(), envioGratis:true, envioFalta:0,
+      lineas:c.lineas.map(l=>({ tag:l.i.tag, nombre:l.i.nombre, medida:l.i.medida, foto:l.i.foto, n:l.n, precio:l.pb, pct:l.pct, web:l.web })), subtotal:c.subtotal, desc:c.desc, total:c.total, pagar:false };
   }
   function resumenDePedido(p){
     const lineas = (p.items||[]).map(it=>{ const i = M.items.find(x=> x.tag === it.tag) || {};
       return { tag:it.tag, nombre:it.producto || i.nombre || it.tag, medida:it.variante || i.medida || "", foto:i.foto || null, n:it.cantidad, precio:it.precio || i.precio || 0, pct:it.pct || 0 }; });
     const subtotal = p.subtotal || lineas.reduce((s,l)=> s + l.n * l.precio, 0);
-    return { titulo:"Resumen de pedido", orden:p.orden, fecha:p.fecha, envioGratis:p.envio === "gratis", envioFalta:0, lineas, subtotal, desc:p.descuento || Math.max(0, subtotal - p.total), total:p.total, pagar:pendiente(p) };
+    return { titulo:"Resumen de pedido", orden:p.orden, fecha:p.fecha, envioGratis:true, envioFalta:0, lineas, subtotal, desc:p.descuento || Math.max(0, subtotal - p.total), total:p.total, pagar:pendiente(p) };
   }
   function imprimirResumen(R){
     if(!R || !R.lineas.length) return toast("No hay productos en el pedido");
@@ -6544,11 +6597,11 @@ a.mayo-btn{text-decoration:none;display:inline-block;}
     pr.innerHTML = `<div class="mp-cab"><div><h1>BRASAS®</h1><div class="s">${esc(R.titulo)}${R.orden ? ` · ${esc(R.orden)}` : ""}</div></div><div class="d"><b>${esc(cl.razon || M.nombre)}</b>${hoy}</div></div>
       <table class="rs"><colgroup><col class="c-im"><col><col class="c-n"><col class="c-p"><col class="c-d"><col class="c-p"><col class="c-s"></colgroup>
         <thead><tr><th></th><th>Producto<small>código y descripción</small></th><th class="c">Cantidad<small>unidades</small></th><th class="c">Precio<small>por unidad</small></th>
-          <th class="c">Descuento<small>por serie</small></th><th class="c pmh">Te queda<small>por unidad</small></th><th class="c">Subtotal<small>cantidad × precio</small></th></tr></thead><tbody>
+          <th class="c">Descuento<small>por cantidad</small></th><th class="c pmh">Te queda<small>por unidad</small></th><th class="c">Subtotal<small>cantidad × precio</small></th></tr></thead><tbody>
       ${R.lineas.map(l=>{ const pu = Math.round(l.precio * (1 - l.pct/100)), sub = l.n * pu;
         return `<tr><td class="im">${l.foto ? `<img src="${esc(tam(l.foto))}" alt="">` : ""}</td>
           <td class="pd"><div class="cod">${esc(l.tag)}</div><div class="ds">${esc(String(l.nombre||"").toUpperCase())}${l.medida ? ` · ${esc(String(l.medida).toUpperCase())}` : ""}</div>
-            ${l.pct ? `<div class="ex">Por llevar ${l.n} iguales: −${l.pct}%. Pagás ${$$m(pu)} cada uno en vez de ${$$m(l.precio)} (ahorrás ${$$m(l.precio - pu)} por unidad).</div>` : ""}</td>
+            ${l.web ? `<div class="ex">Precio web: llevando ${minU()} iguales o más pasa al precio mayorista.</div>` : ""}${l.pct ? `<div class="ex">Por llevar ${l.n} iguales: −${l.pct}%. Pagás ${$$m(pu)} cada uno en vez de ${$$m(l.precio)} (ahorrás ${$$m(l.precio - pu)} por unidad).</div>` : ""}</td>
           <td class="c gr">${l.n}</td><td class="c">${$$m(l.precio)}</td><td class="c">${l.pct ? "−" + l.pct + "%" : "—"}</td><td class="c pr">${$$m(pu)}</td><td class="c gr">${$$m(sub)}</td></tr>`; }).join("")}
       </tbody></table>
       <div class="rs-pie">
@@ -6559,9 +6612,8 @@ a.mayo-btn{text-decoration:none;display:inline-block;}
         </div>
         <div class="rs-tot">
           <div><span>Productos</span><b>${R.lineas.reduce((s,l)=> s + l.n, 0)} unidades</b></div>
-          ${R.desc ? `<div><span>Subtotal sin descuento</span><b>${$$m(R.subtotal)}</b></div><div class="vd"><span>Ahorro por comprar en serie</span><b>−${$$m(R.desc)}</b></div>` : ""}
-          <div><span>Envío</span><b>${R.envioGratis ? "GRATIS" : "A cotizar según destino"}</b></div>
-          ${R.envioFalta ? `<div class="gris"><span>Para envío gratis faltan</span><b>${$$m(R.envioFalta)}</b></div>` : ""}
+          ${R.desc ? `<div><span>Subtotal sin descuento</span><b>${$$m(R.subtotal)}</b></div><div class="vd"><span>Ahorro por cantidad</span><b>−${$$m(R.desc)}</b></div>` : ""}
+          <div><span>Envío por Andreani</span><b>GRATIS</b></div>
           <div class="tt"><span>${R.pagar || !R.orden ? "Total a transferir" : "Total"}</span><b>${$$m(R.total)}</b></div>
         </div>
       </div>
@@ -6569,8 +6621,7 @@ a.mayo-btn{text-decoration:none;display:inline-block;}
     document.body.classList.add("imprimiendo", "imp-resumen");
     const fin = () => { document.body.classList.remove("imprimiendo", "imp-resumen"); window.removeEventListener("afterprint", fin); };
     window.addEventListener("afterprint", fin);
-    const imgs = $$("img", pr), listo = Promise.all(imgs.map(im=> im.complete ? 1 : new Promise(r=>{ im.onload = im.onerror = r; setTimeout(r, 4000); })));
-    listo.then(()=>{ window.print(); setTimeout(fin, 1500); });
+    esperarImgs(pr).then(()=>{ window.print(); setTimeout(fin, 1500); });
   }
 
   const modal = $("#mayo-modal"), cerrarModal = () => modal.classList.remove("on");
@@ -6581,9 +6632,9 @@ a.mayo-btn{text-decoration:none;display:inline-block;}
     d = Object.assign({}, d, M.cliente || {});
     const v = k => esc(d[k] || "");
     $("#mayo-card").innerHTML = `<button class="x" type="button" aria-label="Cerrar">✕</button><div class="ck-e">★★★★★★</div><h3>Confirmar pedido mayorista</h3>
-      <div class="mayo-res">${c.lineas.map(l=>`<div><span>${l.n} × ${esc(l.i.nombre)} · ${esc(l.i.medida)}${l.pct ? ` <em>−${l.pct}% serie</em>` : ""}</span><b>${$$m(l.neto)}</b></div>`).join("")}
-        ${c.desc ? `<div class="vd"><span>Ahorrás por comprar en serie</span><b>${$$m(c.desc)}</b></div>` : ""}
-        <div class="${c.envioGratis ? "vd" : ""}"><span>Envío${c.peso ? ` · ${Math.round(c.peso)} kg aprox.` : ""}</span><b>${c.envioGratis ? "GRATIS" : "A cotizar"}</b></div>
+      <div class="mayo-res">${c.lineas.map(l=>`<div><span>${l.n} × ${esc(l.i.nombre)} · ${esc(l.i.medida)}${l.web ? ` <em>precio web</em>` : l.pct ? ` <em>−${l.pct}%</em>` : ""}</span><b>${$$m(l.neto)}</b></div>`).join("")}
+        ${c.desc ? `<div class="vd"><span>Ahorrás por cantidad</span><b>${$$m(c.desc)}</b></div>` : ""}
+        <div class="vd"><span>Envío por Andreani${c.peso ? ` · ${Math.round(c.peso)} kg aprox.` : ""}</span><b>GRATIS</b></div>
         <div class="tt"><span>Total a transferir</span><b>${$$m(c.total)}</b></div></div>
       <form class="ck-f" id="mayo-form" novalidate>
         <label class="w"><span>Comercio / razón social</span><input name="razon" value="${v("razon")}" required></label>
@@ -6597,9 +6648,11 @@ a.mayo-btn{text-decoration:none;display:inline-block;}
         <label><span>Código postal</span><input name="cp" inputmode="numeric" autocomplete="postal-code" value="${v("cp")}"></label>
         <label class="w"><span>Notas (opcional)</span><textarea name="notas"></textarea></label>
       </form>
+      <div class="mc-llega" id="mf-llega"></div>
       <button class="cta ck-go" id="mayo-confirmar">Confirmar pedido · ${$$m(c.total)}</button>
-      <div class="ck-legal">Al confirmar te mostramos los datos para transferir y te llega todo por mail.${c.envioGratis ? "" : " El costo del envío te lo pasamos por WhatsApp."}</div>`;
+      <div class="ck-legal">Al confirmar te mostramos los datos para transferir y te llega todo por mail.</div>`;
     $(".x", modal).addEventListener("click", cerrarModal);
+    { const cpF = $("#mayo-form [name=cp]"); if(cpF && !cpF.value) cpF.value = lsGet("brasas-cp") || ""; const act = () => pintarLlega("#mf-llega", c); if(cpF) cpF.addEventListener("input", act); act(); }
     $("#mayo-confirmar").addEventListener("click", enviar);
     modal.classList.add("on"); modal.scrollTop = 0;
   }
@@ -6616,12 +6669,15 @@ a.mayo-btn{text-decoration:none;display:inline-block;}
     const guardables = Object.assign({}, d); delete guardables.notas;
     lsSet("brasas-mayo-datos", JSON.stringify(guardables)); M.cliente = Object.assign({}, M.cliente || {}, guardables);
     const c = cuentas(), orden = nuevaOrden();
-    const pedido = { tipo:"pedido_mayorista", codigo, orden, items:c.lineas.map(l=>({ tag:l.i.tag, cantidad:l.n })), cliente:d, fecha:new Date().toISOString() };
+    if(d.cp) lsSet("brasas-cp", String(d.cp).trim());
+    const llega = llegaDe(c.prep, d.cp || "");
+    const entregaTxt = llega ? `Llega entre el ${llega.desde} y el ${llega.hasta} · ${prepTxt(c.prep)}` : prepTxt(c.prep);
+    const pedido = { tipo:"pedido_mayorista", codigo, orden, items:c.lineas.map(l=>({ tag:l.i.tag, cantidad:l.n })), cliente:d, entrega:entregaTxt, fecha:new Date().toISOString() };
     if(A.appsScript) fetch(A.appsScript, { method:"POST", mode:"no-cors", body:JSON.stringify(pedido) }).catch(()=>{});
-    M.pedidos.unshift({ orden, fecha:Date.now(), unidades:c.unidades, total:c.total, envio:c.envioGratis ? "gratis" : "cotizar", estado:"recibido", comprobante:false, items:pedido.items });
+    M.pedidos.unshift({ orden, fecha:Date.now(), unidades:c.unidades, total:c.total, envio:"gratis", estado:"recibido", comprobante:false, items:pedido.items });
     cant = {}; guardar();                                                   // el carrito ya es un pedido: si cierran, no queda cargado
     enviando = false;
-    pantallaPago({ orden, total:c.total, envioGratis:c.envioGratis, peso:c.peso, d, resumen:`${c.lineas.map(l=>`${l.n}× ${l.i.tag}`).join(" · ")}\n${c.unidades} productos · Total ${$$m(c.total)}${c.desc ? ` (ahorro por serie ${$$m(c.desc)})` : ""}\nPeso aprox.: ${Math.round(c.peso)} kg` });
+    pantallaPago({ orden, total:c.total, envioGratis:c.envioGratis, peso:c.peso, entrega:entregaTxt, d, resumen:`${c.lineas.map(l=>`${l.n}× ${l.i.tag}`).join(" · ")}\n${c.unidades} productos · Total ${$$m(c.total)}${c.desc ? ` (ahorro por cantidad ${$$m(c.desc)})` : ""}\nPeso aprox.: ${Math.round(c.peso)} kg` });
   }
   /* datos de pago + comprobante: al confirmar y también desde "Tus pedidos" */
   function pantallaPago(o){
@@ -6633,7 +6689,7 @@ a.mayo-btn{text-decoration:none;display:inline-block;}
       <p>${o.desdeHistorial ? "Datos para pagar este pedido." : `Listo${nombre ? ", " + esc(nombre.split(" ")[0]) : ""}. Te enviamos el detalle a <b>${esc(String(d.email||"").trim())}</b>.`}</p>
       ${B.alias || B.cbu ? `<div class="ck-monto"><small>Transferí</small><b class="notranslate" translate="no">${$$m(o.total)}</b><button type="button" class="ck-copiar" data-c="${Math.round(o.total)}" style="margin-top:10px">Copiar monto</button></div>
       <div class="ck-banco">${fila("Alias", B.alias)}${fila("CBU / CVU", B.cbu)}${fila("Titular", B.titular)}${fila("CUIT", B.cuit)}${fila("Banco", B.banco)}</div>` : ""}
-      <div class="mayo-envio ${o.envioGratis ? "gratis" : ""}">${o.envioGratis ? `${ICO_CAMION.replace("<svg", '<svg style="width:18px;height:18px;vertical-align:-4px;margin-right:6px"')}Envío GRATIS: corre por nuestra cuenta.` : `Envío: lo cotizamos según destino${o.peso ? ` (${Math.round(o.peso)} kg aprox.)` : ""} y te pasamos el costo por WhatsApp. Se abona aparte.`}</div>
+      <div class="mayo-envio ${o.envioGratis ? "gratis" : ""}">${o.envioGratis ? `${ICO_CAMION.replace("<svg", '<svg style="width:18px;height:18px;vertical-align:-4px;margin-right:6px"')}Envío GRATIS por Andreani: corre por nuestra cuenta.${o.entrega ? `<br><small style="opacity:.85">${esc(o.entrega)}</small>` : ""}` : `Envío: lo cotizamos según destino${o.peso ? ` (${Math.round(o.peso)} kg aprox.)` : ""} y te pasamos el costo por WhatsApp. Se abona aparte.`}</div>
       ${A.appsScript ? (p.comprobante ? `<div class="ck-subir listo"><b>Comprobante recibido ✓</b><small>Si mandaste otro por error, avisanos por WhatsApp.</small></div>`
         : `<label class="ck-subir" id="mayo-subir"><input type="file" accept="image/*,application/pdf" hidden><b>Subir comprobante</b><small>Foto o PDF · nos llega directo. Si preferís, respondé el mail del pedido adjuntándolo (una sola de las dos).</small></label>`) : ""}
       <a class="${o.envioGratis ? "mayo-btn" : "ck-wa-btn"}" id="mayo-wa" href="${waLink(wa)}" target="_blank" rel="noopener" style="display:${o.envioGratis ? "inline-block;margin-top:16px;text-decoration:none" : "block"}">${o.envioGratis ? "¿Algún problema con el pago? Escribinos" : "Coordinar envío por WhatsApp"}</a>
@@ -6669,28 +6725,41 @@ a.mayo-btn{text-decoration:none;display:inline-block;}
   }
   function terminar(){ cerrarModal(); pintarMayo(); }
 
+  /* fotos del PDF: se bajan ANTES de imprimir (si no, el navegador imprime la hoja con los cuadros vacíos) */
+  function esperarImgs(cont){
+    const un = im => new Promise(done=>{
+      const src = im.getAttribute("src"); if(!src) return done();
+      const fin = () => done();
+      const poner = u => { im.onload = im.onerror = fin; im.src = u; if(im.complete && im.naturalWidth) done(); };
+      fetch(src, { mode:"cors", cache:"force-cache" }).then(r=> r.ok ? r.blob() : Promise.reject()).then(b=> poner(URL.createObjectURL(b)))
+        .catch(()=>{ im.removeAttribute("crossorigin"); im.referrerPolicy = "no-referrer"; poner(src); });
+    });
+    return Promise.race([Promise.all($$("img", cont).map(un)), new Promise(r=> setTimeout(r, 12000))]).then(()=> Promise.all($$("img", cont).map(im=> im.decode ? im.decode().catch(()=>{}) : 1)));
+  }
   /* lista para imprimir / PDF: limpia, solo lo que el revendedor necesita tener a mano */
   function imprimir(){
     if(!M || !M.ok) return;
     const hoy = new Date().toLocaleDateString("es-AR", { day:"numeric", month:"long", year:"numeric" });
     const tam = u => /lh3\.googleusercontent\.com\/d\/[\w-]+=w\d+$/.test(u) ? u.replace(/=w\d+$/, "=w300") : u;
     const T = (k, def) => String((M.textos && M.textos[k]) || def).replace(/\{fecha\}/g, hoy);
+    const TR = [...new Set([minU()].concat(M.items.flatMap(i=> series(i).map(e=> e.desde))))].sort((a,b)=> a - b).slice(0, 5);   // columnas: 3+, 6+, 12+, 24+
     pr.innerHTML = `<div class="mp-cab"><div><h1>BRASAS®</h1><div class="s">${esc(T("pdfTitulo", "Lista de precios mayorista"))}</div></div><div class="d"><b>${esc(M.nombre)}</b>${hoy}</div></div>
-      <table><colgroup><col class="c-im"><col><col class="c-ar"><col class="c-pe"><col class="c-pm"><col class="c-sg"><col class="c-sg"><col class="c-tu"></colgroup>
-        <thead><tr><th></th><th>Producto<small>código y descripción</small></th><th class="c">Armado<small>en cm</small></th><th class="c">Peso<small>kg aprox.</small></th>
-          <th class="c pmh">Mayorista<small>precio por unidad</small></th><th class="c">Web<small>sugerido</small></th><th class="c">MercadoLibre<small>sugerido</small></th><th class="c">Tu precio<small>de venta</small></th></tr></thead><tbody>
-      ${M.items.map(i=>`<tr><td class="im">${i.foto ? `<img src="${esc(tam(i.foto))}" alt="">` : ""}</td>
+      <div class="mp-reglas"><b>Precio mayorista desde ${minU()} iguales</b> (mismo modelo y medida; con menos, se cobra el precio web)${((M.escalas||[]).filter(e=> e.pct > 0 && e.desde > minU()).map(e=> ` · ${e.desde}+ iguales: −${e.pct}%`).join(""))} · <b>Envío gratis por Andreani en todo el país</b>, sin mínimo · la entrega suma los días de elaboración según la cantidad y el stock</div>
+      <table><colgroup><col class="c-im"><col><col class="c-ar"><col class="c-pe">${TR.map(()=>`<col class="c-pm">`).join("")}<col class="c-sg"><col class="c-sg"></colgroup>
+        <thead><tr class="g1"><th colspan="4"></th><th class="c pmh" colspan="${TR.length}">Precio mayorista por unidad<small>según cuántas iguales llevás</small></th><th class="c" colspan="2">Precios de venta<small>de referencia</small></th></tr>
+        <tr><th></th><th>Producto<small>código y descripción</small></th><th class="c">Armado<small>en cm</small></th><th class="c">Peso<small>kg aprox.</small></th>
+          ${TR.map((q,k)=>`<th class="c pmh">${q}+ iguales<small>${k ? "−" + (pctDe(q) ) + "%" : "precio lista"}</small></th>`).join("")}<th class="c">Web<small>1 o 2 unidades</small></th><th class="c">MercadoLibre<small>sugerido</small></th></tr></thead><tbody>
+      ${M.items.map(i=>`<tr><td class="im">${i.foto ? `<img src="${esc(tam(i.foto))}" alt="" referrerpolicy="no-referrer">` : `<span class="sf">${esc(i.tag)}</span>`}</td>
         <td class="pd"><div class="cod">${esc(i.tag)}</div><div class="tx"><div class="ds">${esc(String(i.nombre||"").toUpperCase())}${i.medida ? ` · ${esc(String(i.medida).toUpperCase())}` : ""}</div>${i.descripcion ? `<div class="dl">${esc(String(i.descripcion).trim())}</div>` : ""}</div></td>
         <td class="c ar">${(p => p ? (window.BRASAS_CAJA ? `<div class="cj">${window.BRASAS_CAJA(p.alto, p.ancho, p.largo, p.u, "claro")}</div>` : `<div class="arg"><i>Alto:</i><b>${esc(p.alto)}</b><i>Ancho:</i><b>${esc(p.ancho)}</b><i>Largo:</i><b>${esc(p.largo)}${p.u !== "cm" ? " " + p.u : ""}</b></div>`) : i.armado ? esc(i.armado) : "—")(armadoPartes(i.armado))}</td>
-        <td class="c pe">${i.peso ? kg(i.peso) : "—"}</td><td class="c pr">${$$m(i.precio)}</td>
-        <td class="c sgv">${i.web ? $$m(i.web) : "—"}</td><td class="c sgv">${i.ml ? $$m(i.ml) : "—"}</td><td class="tu"><span>$</span></td></tr>`).join("")}
+        <td class="c pe">${i.peso ? kg(i.peso) : "—"}</td>${TR.map(q=>`<td class="c pr">${$$m(Math.round(i.precio * (1 - pctDe(q, i) / 100)))}</td>`).join("")}
+        <td class="c sgv">${i.web ? $$m(i.web) : "—"}</td><td class="c sgv">${i.ml ? $$m(i.ml) : "—"}</td></tr>`).join("")}
       </tbody></table>
       <div class="mp-pie"><span>${esc(T("pdfPie", "Precios por unidad. Válidos al {fecha}; sujetos a cambio sin previo aviso."))}<br>${esc(T("pdfPeso", "El peso es de referencia y puede variar levemente."))}<br><b>${esc(T("embTitulo", "Embalaje individual"))}:</b> ${esc(T("embTexto", "cada producto viene en su embalaje individual, apto para conservarlo por años en un lugar seco."))}<br><b>${esc(T("garTitulo", "Garantía total de fabricación"))}:</b> ${esc(T("garTexto", "si algo falla por un defecto nuestro, lo reparamos o lo reemplazamos sin cargo, envío incluido."))}</span><span>${esc(T("pdfContacto", "BRASAS® · Olavarría, Buenos Aires"))} · WhatsApp +${esc(String(M.whatsapp || WHATSAPP_NUMERO).replace(/\D/g,""))}</span></div>`;
     document.body.classList.add("imprimiendo");
     const fin = () => { document.body.classList.remove("imprimiendo"); window.removeEventListener("afterprint", fin); };
     window.addEventListener("afterprint", fin);
-    const imgs = $$("img", pr), listo = Promise.all(imgs.map(im=> im.complete ? 1 : new Promise(r=>{ im.onload = im.onerror = r; setTimeout(r, 4000); })));
-    listo.then(()=>{ window.print(); setTimeout(fin, 1500); });
+    esperarImgs(pr).then(()=>{ window.print(); setTimeout(fin, 1500); });
   }
   $("#mayo-pdf").addEventListener("click", imprimir);
   function cerrarMayo(){ mayo.classList.remove("on"); document.body.classList.remove("mayo-abierto"); if(codigoHash()) history.replaceState(null, "", location.pathname + location.search); }
@@ -6823,7 +6892,7 @@ body:has(.agregado.on) .asist-fab{opacity:0;pointer-events:none;}
     const r = estimar(cp, [{ mid:modeloActual.id, tag, qty:q }]);
     if(!r){ return; }
     $(":scope > div > b", box).textContent = `Llega entre el ${r.desde} y el ${r.hasta}`;
-    $(":scope > div > span", box).textContent = `Envío gratis ${window.BRASAS_AZONA ? window.BRASAS_AZONA(r.nombre) : ""} · ${r.prep <= DESPACHO ? (DESPACHO <= 2 ? "despacho en 24–48 h" : `despacho en ${DESPACHO} días hábiles`) : `incluye ${r.prep} días hábiles de fabricación`}`;
+    $(":scope > div > span", box).textContent = `Envío gratis por Andreani ${window.BRASAS_AZONA ? window.BRASAS_AZONA(r.nombre) : ""} · ${r.prep <= DESPACHO ? (DESPACHO <= 2 ? "despacho en 24–48 h" : `despacho en ${DESPACHO} días hábiles`) : `incluye ${r.prep} días hábiles de fabricación`}`;
     box.classList.add("on");
   }
   const cpIn = $("#cp-v18"); if(cpIn) cpIn.addEventListener("input", ()=> setTimeout(pintarLlega, 0));
@@ -6874,8 +6943,8 @@ body:has(.agregado.on) .asist-fab{opacity:0;pointer-events:none;}
   /* =========================================================
      4. EXTERIOR: solicitud de cotización por mail
      ========================================================= */
-  const MONEDA = { ES:"EUR", IT:"EUR", DE:"EUR", FR:"EUR", US:"USD", CN:"USD" };
-  const NOMBRE_PAIS = { ES:"España", US:"Estados Unidos", IT:"Italia", DE:"Alemania", FR:"Francia", CN:"China" };
+  const MONEDA = { ES:"EUR", IT:"EUR", DE:"EUR", FR:"EUR", US:"USD", AU:"USD", CN:"USD" };
+  const NOMBRE_PAIS = { ES:"España", US:"Estados Unidos", AU:"Australia", IT:"Italia", DE:"Alemania", FR:"Francia", CN:"China" };
   let tasas = null, fuenteTasa = "";
   try{ const g = JSON.parse(lsGet("brasas-tasas2") || "null"); if(g && Date.now() - g.t < 3*3600e3){ tasas = g.r; fuenteTasa = g.f || ""; } }catch(e){}
   async function traerTasas(){
@@ -6888,6 +6957,7 @@ body:has(.agregado.on) .asist-fab{opacity:0;pointer-events:none;}
       if(j && j.rates && j.rates.USD){ tasas = { USD:j.rates.USD, EUR:j.rates.EUR }; lsSet("brasas-tasas2", JSON.stringify({ t:Date.now(), r:tasas })); } }catch(e){}
     return tasas;
   }
+  window.BRASAS_TASAS = () => tasas; window.BRASAS_TASAS_PEDIR = traerTasas;
   const aprox = (ars, mon) => { if(!tasas || !tasas[mon]) return ""; const v = ars * tasas[mon];
     const n = Math.round(v/5)*5; return mon === "EUR" ? `≈ ${n.toLocaleString("es-ES")} € (EUR)` : `≈ US$ ${n.toLocaleString("en-US")} (USD)`; };
   const MEDIOS = [
@@ -6908,6 +6978,14 @@ body:has(.agregado.on) .asist-fab{opacity:0;pointer-events:none;}
   }
   window.BRASAS_COTIZACION = abrirCotizacion;
   function datosCx(){ try{ return JSON.parse(lsGet("brasas-exterior") || "{}") || {}; }catch(e){ return {}; } }
+  const PAISES_CX = ["España","Estados Unidos","Italia","Alemania","Francia","Portugal","Reino Unido","Canadá","México","Chile","Uruguay","Paraguay","Brasil","Colombia","Perú","Australia","Nueva Zelanda"];
+  function paisCx(val){
+    const esLista = PAISES_CX.includes(val);
+    return `<select id="cx-pais" aria-label="País">${PAISES_CX.map(n=>`<option value="${esc(n)}" ${n===val?"selected":""}>${esc(n)}</option>`).join("")}<option value="__otro" ${!esLista?"selected":""}>Otro…</option></select>
+      <input name="pais" id="cx-pais-otro" placeholder="Escribí tu país" autocomplete="country-name" value="${esc(val)}" ${esLista?'style="display:none"':""} required>`;
+  }
+  document.addEventListener("change", e=>{ if(!e.target || e.target.id !== "cx-pais") return; const o = $("#cx-pais-otro"); if(!o) return;
+    if(e.target.value === "__otro"){ o.value = ""; o.style.display = ""; o.focus(); } else { o.value = e.target.value; o.style.display = "none"; } });
   function pintarCx(conservar){
     const card = $("#cx-card"), p = window.BRASAS_PAIS ? window.BRASAS_PAIS() : "ES", mon = MONEDA[p] || "USD";
     if(conservar){ const f = $("#cx-form"); if(f) lsSet("brasas-exterior", JSON.stringify(Object.fromEntries(new FormData(f).entries()))); }
@@ -6921,15 +6999,15 @@ body:has(.agregado.on) .asist-fab{opacity:0;pointer-events:none;}
     card.innerHTML = `<button class="ck-x" aria-label="Cerrar">✕</button><div class="ck-e">★★★★★★</div><h3>Solicitar cotización</h3>
       ${cxItems.length ? `<div class="ck-s">01 · Tu pedido</div>${filas}
       <div class="ck-tot"><div class="total"><span>Productos</span><span>${$$m(total)} ARS${tasas && tasas[mon] ? `<small style="display:block;font-size:14px;color:#e8cf8f;text-align:right">${aprox(total, mon)} aprox.${fuenteTasa ? ` · cotización ${fuenteTasa}${tasas && tasas[mon] ? ` (1 ${mon} = $ ${Math.round(1/tasas[mon]).toLocaleString("es-AR")})` : ""}` : ""}</small>` : ""}</span></div></div>
-      <div class="cx-nota">Los precios y el envío se <b>confirman antes de pagar</b>. Despachamos puerta a puerta con <b>DHL o FedEx</b> y te enviamos la cotización final por mail y WhatsApp.<br>Los aranceles de importación del país de destino, en caso de corresponder, los informa la empresa de courier antes de la entrega.</div>
-      <div class="ck-s">02 · Medio de pago preferido</div>
+      <div class="cx-nota">${window.BRASAS_INTL_ENTREGA ? `<b>Entrega estimada: ${window.BRASAS_INTL_ENTREGA(cxItems)}</b><br>` : ""}Los precios y el envío se <b>confirman antes de pagar</b>. Despachamos puerta a puerta con <b>DHL o FedEx</b> y te enviamos la cotización final por mail y WhatsApp.<br>Los aranceles de importación del país de destino, en caso de corresponder, los informa la empresa de courier antes de la entrega.</div>
+      <div class="ck-s">02 · Medio de pago preferido <small style="text-transform:none;letter-spacing:0;color:var(--hueso-dim)">· lo coordinamos por mail</small></div>
       <div class="cx-medios">${MEDIOS.map(([n,s])=>`<label><input type="radio" name="cx-medio" value="${esc(n)}" ${n===medio?"checked":""}><span><b>${esc(n)}</b><small>${esc(s)}</small></span></label>`).join("")}</div>
       <div class="ck-s">03 · Destino</div>
       <form class="ck-f" id="cx-form" novalidate>
         <label class="w"><span>Nombre y apellido</span><input name="nombre" autocomplete="name" value="${v("nombre", u.nombre||"")}" required></label>
         <label><span>Email</span><input name="email" type="email" autocomplete="email" value="${v("email", u.email||"")}" required></label>
         <label><span>WhatsApp</span><input name="telefono" type="tel" autocomplete="tel" value="${v("telefono")}" required></label>
-        <label><span>País</span><input name="pais" autocomplete="country-name" value="${esc(d.pais || NOMBRE_PAIS[p] || "")}" required></label>
+        <label><span>País</span>${paisCx(d.pais || NOMBRE_PAIS[p] || "")}</label>
         <label><span>Ciudad / localidad</span><input name="localidad" autocomplete="address-level2" value="${v("localidad")}" required></label>
         <label><span>Código postal</span><input name="cp" autocomplete="postal-code" value="${v("cp")}" required></label>
         <label><span>Dirección</span><input name="direccion" autocomplete="street-address" value="${v("direccion")}" required></label>
@@ -7977,7 +8055,7 @@ body:not(.intl) .ficha .envio-block{display:none;}
   const sticky = $(".ficha-sticky");
   const bar = document.createElement("div"); bar.className = "v31-bar"; bar.id = "v31-bar";
   bar.innerHTML = `<div class="b-prod"><b id="v31-bn"></b><small id="v31-bs"></small></div>
-    <div class="b-envio" id="v31-envio"><div class="v31-gratis" id="v31-gratis">✓ Envío gratis<small>Poné tu CP y te decimos cuándo llega</small></div><div class="v31-ml" id="v31-ml" hidden>Envío y pago por MercadoLibre</div></div>
+    <div class="b-envio" id="v31-envio"><div class="v31-gratis" id="v31-gratis">✓ Envío gratis por Andreani<small>Poné tu CP y te decimos cuándo llega</small></div><div class="v31-ml" id="v31-ml" hidden>Envío y pago por MercadoLibre</div></div>
     <div class="b-cant" id="v31-cant"></div>
     <div class="b-total notranslate" translate="no"><small id="v31-tl"></small><b id="v31-tot"></b><small id="v31-t2"></small></div>
     <div class="b-btns" id="v31-btns"></div>`;
@@ -8137,11 +8215,11 @@ body:not(.intl) .ficha .envio-block{display:none;}
   function aplicar(){
     const g = $("#v31-gratis"); if(!g) return;
     if(document.body.classList.contains("intl")){
-      const html = `Envío internacional · DHL o FedEx<small>El costo y la fecha se cotizan según tu país</small>`;
+      const html = window.BRASAS_INTL_HTML ? window.BRASAS_INTL_HTML() : `Envío a domicilio internacional por courier<small>El costo y la fecha se cotizan según tu país</small>`;
       if(g.innerHTML !== html) g.innerHTML = html; return;
     }
     const f = fecha(); if(!f || f.exacta) return;
-    const html = `✓ Envío gratis · ${f.txt.replace(/^Llega aprox\. /, "llega aprox. ")}<small>Poné tu CP para la fecha exacta</small>`;
+    const html = `✓ Envío gratis por Andreani · ${f.txt.replace(/^Llega aprox\. /, "llega aprox. ")}<small>Poné tu CP para la fecha exacta</small>`;
     if(g.innerHTML !== html) g.innerHTML = html;
   }
   let t = 0; const luego = () => { clearTimeout(t); t = setTimeout(aplicar, 30); };
@@ -8405,13 +8483,13 @@ body.intl .v31-bar .b-envio .cp-fila,body.intl .v31-bar .b-envio .llega{display:
   const waN = () => String(typeof WHATSAPP_NUMERO !== "undefined" ? WHATSAPP_NUMERO : "").replace(/\D/g, "");
   const bur = (h, q, a) => window.BRASAS_BURBUJA && window.BRASAS_BURBUJA(h, q, a);
   const RESP_INT = [
-    ["Envíos internacionales", "Enviamos a todo el mundo con <b>DHL o FedEx</b>, puerta a puerta y con seguimiento. El costo depende del país y del peso: pedí la cotización desde la ficha del modelo y te la mandamos por mail."],
+    ["Envíos internacionales", "Enviamos a todos los países con <b>DHL o FedEx</b>, puerta a puerta y con seguimiento. El costo depende del país y del peso: pedí la cotización desde la ficha del modelo y te la mandamos por mail."],
     ["¿Cómo comprar?", `<ol class="pasos"><li>Elegí el modelo, la medida y la cantidad.</li><li>Tocá <b>Solicitar cotización</b> y completá tus datos.</li><li>En menos de 24 h hábiles te mandamos el total con envío y las formas de pago.</li><li>Con el pago confirmado, fabricamos y despachamos con seguimiento.</li></ol>`],
     ["Impuestos y aduana", "Los impuestos de importación dependen de tu país. Si corresponden, la empresa de courier te los informa y cobra antes de la entrega."],
     ["Garantía", "Cada BRASAS® tiene <b>6 meses de garantía</b> por defectos de fabricación, también en el exterior. Si llega con un problema, lo resolvemos con vos."]
   ];
   const RESP_AR = [
-    ["Información de envío", "El envío es <b>gratis a todo el país</b>, a tu domicilio y con número de seguimiento. Para ver la fecha exacta, poné tu código postal en la ficha del modelo."],
+    ["Información de envío", "El envío es <b>gratis a todo el país</b> por Andreani, a tu domicilio y con número de seguimiento. Para ver la fecha exacta, poné tu código postal en la ficha del modelo."],
     ["¿Cómo comprar?", `Todo desde la web:<ol class="pasos"><li>Elegí el modelo, la medida y la cantidad.</li><li>Poné tu código postal y mirá cuándo llega.</li><li>Pagá por transferencia (el mejor precio) o comprá en MercadoLibre.</li><li>Te llegan los datos y el seguimiento por mail.</li></ol>`],
     ["Garantía", "Cada BRASAS® tiene <b>6 meses de garantía</b> por defectos de fabricación. Si entrás con Google, queda registrada a tu nombre."],
     ["Compra protegida", "Si no te llega o no es lo que esperabas, <b>te devolvemos el dinero</b>. Tenés 10 días desde que lo recibís para arrepentirte, y el envío de vuelta lo pagamos nosotros."]
@@ -8436,7 +8514,7 @@ body.intl .v31-bar .b-envio .cp-fila,body.intl .v31-bar .b-envio .llega{display:
 
   /* ---------- exterior: preguntas frecuentes que tengan sentido ---------- */
   const FAQ_INT = [
-    ["¿Hacen envíos a mi país?", "Sí. Enviamos a todo el mundo con DHL o FedEx, puerta a puerta y con número de seguimiento."],
+    ["¿Hacen envíos a mi país?", "Sí. Enviamos a todos los países con DHL o FedEx, puerta a puerta y con número de seguimiento."],
     ["¿Cuánto cuesta el envío?", "Depende del país y del peso del paquete. Pedí la cotización desde esta ficha y te mandamos el total exacto por mail en menos de 24 horas hábiles."],
     ["¿Cuánto tarda en llegar?", "Lo despachamos cuando se confirma el pago. El courier suele tardar entre 5 y 10 días hábiles según el destino; en la cotización te pasamos el plazo para tu país."],
     ["¿Cómo pago?", "Junto con la cotización te mandamos las formas de pago disponibles para tu país."],
@@ -8751,13 +8829,6 @@ body.intl .v31-bar .b-envio .cp-fila,body.intl .v31-bar .b-envio .llega{display:
 .v39-promo-ficha{margin-top:8px;color:#e8cf8f;font-size:13.5px;}
 .v39-promo-ficha b{color:#fff;font-weight:500;}
 /* cupón en el checkout */
-.ck-cupon{margin:-4px 0 18px;font-size:14px;color:var(--hueso-dim);display:flex;flex-wrap:wrap;gap:8px 12px;align-items:center;}
-.ck-cupon .abrir,.ck-cupon [data-cq]{background:none;border:none;color:#e8cf8f;text-decoration:underline;text-underline-offset:3px;cursor:pointer;font:inherit;padding:0;}
-.ck-cupon .f{display:flex;gap:8px;width:100%;}
-.ck-cupon .f input{flex:1;min-width:0;background:#0b0d0f;border:1px solid var(--linea-fuerte);color:#fff;padding:11px 12px;font:inherit;font-size:15px;text-transform:uppercase;letter-spacing:.08em;}
-.ck-cupon .f button{background:none;border:1px solid #e4bc6e;color:#e8cf8f;padding:0 16px;cursor:pointer;font:inherit;font-size:13px;letter-spacing:.12em;text-transform:uppercase;}
-.ck-cupon b{color:#fff;}
-.ck-cupon small{width:100%;} .ck-cupon small.mal{color:#ff9d8a;} .ck-cupon small.bien{color:#7fd6a0;}
 
 /* ===== comunidad: la galería ocupa el alto del texto y todo va sobre la foto ===== */
 @media (min-width:901px){ #circulo .circ-fuego{align-self:stretch;display:flex;flex-direction:column;} }
@@ -8769,7 +8840,11 @@ body.intl .v31-bar .b-envio .cp-fila,body.intl .v31-bar .b-envio .llega{display:
 #circulo .v35-show .cap{right:90px !important;}
 #circulo .v35-show .sl{transition:opacity 1.4s ease,transform 7s ease-out;}
 
-/* comunidad con la sesión iniciada */
+/* comunidad con la sesión iniciada: el botón queda fijo, centrado y sin poder tocarse */
+#btn-unirme-circulo.v39-logueado{cursor:default !important;justify-content:center !important;border-color:rgba(127,214,160,.55) !important;color:#7fd6a0 !important;background:rgba(127,214,160,.06) !important;pointer-events:none;min-width:260px;}
+.v39-mc{display:inline-flex;align-items:center;justify-content:center;margin-left:12px;background:none;border:1px solid rgba(228,188,110,.6);color:#ece6da;padding:15px 24px;font-family:'Jost','Archivo',system-ui,sans-serif;font-size:12.5px;letter-spacing:.2em;text-transform:uppercase;cursor:pointer;vertical-align:top;}
+.v39-mc:hover{border-color:#e4bc6e;background:rgba(228,188,110,.08);}
+@media (max-width:640px){ #btn-unirme-circulo.v39-logueado,.v39-mc{width:100%;margin:0 0 10px;min-width:0;} }
 .v39-sesion{display:flex;flex-wrap:wrap;align-items:center;gap:12px 18px;}
 .v39-sesion .ok{color:#7fd6a0;font-size:15px;}
 .v39-sesion .ok b{color:#fff;font-weight:500;}
@@ -8805,25 +8880,6 @@ body.intl .v31-bar .b-envio .cp-fila,body.intl .v31-bar .b-envio .llega{display:
     if(!n){ n = document.createElement("div"); n.id = "v39-promo-ficha"; n.className = "v39-promo-ficha"; pe.after(n); }
     const t = `★ <b>${esc(p.nombre || "Promo")}</b>: −${p.pct}% extra al finalizar la compra`; if(n.innerHTML !== t) n.innerHTML = t;
   }
-
-  /* ---------- cupón en el checkout ---------- */
-  document.addEventListener("click", async e => {
-    const box = e.target.closest && e.target.closest("#ck-cupon"); if(!box) return;
-    if(e.target.matches("[data-ca]")){ e.target.hidden = true; const f = $(".f", box); f.hidden = false; $("input", f).focus(); return; }
-    if(e.target.matches("[data-cq]")){ window.BRASAS_SET_CUPON && window.BRASAS_SET_CUPON(null); return; }
-    if(e.target.matches("[data-cok]")){
-      const inp = $("#ck-cupon-in"), msg = $("#ck-cupon-msg"), cod = String(inp.value || "").trim().toUpperCase();
-      if(!cod) return inp.focus();
-      msg.className = ""; msg.textContent = "Revisando…";
-      try{
-        const r = await fetch(A.appsScript + (A.appsScript.includes("?") ? "&" : "?") + "accion=cupon&c=" + encodeURIComponent(cod) + "&_=" + Date.now(), { cache:"no-store" });
-        const j = await r.json();
-        if(j.ok){ window.BRASAS_SET_CUPON({ codigo: j.codigo || cod, pct: +j.pct }); try{ gtag("event", "cupon_aplicado", { coupon: cod }); }catch(er){} }
-        else { msg.className = "mal"; msg.textContent = j.error === "vencido" ? "Ese cupón ya venció." : j.error === "agotado" ? "Ese cupón ya se usó todas las veces posibles." : "Ese cupón no existe o no está activo."; }
-      }catch(er){ msg.className = "mal"; msg.textContent = "No pudimos revisarlo. Probá de nuevo."; }
-    }
-  });
-  document.addEventListener("keydown", e => { if(e.key === "Enter" && e.target && e.target.id === "ck-cupon-in"){ e.preventDefault(); const b = $("#ck-cupon [data-cok]"); if(b) b.click(); } });
 
   /* ---------- devolución gratis y compra protegida: condiciones claras ---------- */
   const DEF = {
@@ -8876,12 +8932,15 @@ body.intl .v31-bar .b-envio .cp-fila,body.intl .v31-bar .b-envio .llega{display:
   function sesion(){
     const bt = $("#btn-unirme-circulo"); if(!bt) return;
     let s = $("#v39-sesion");
+    if(!bt.dataset.orig) bt.dataset.orig = bt.innerHTML;
     if(currentUser){
-      bt.style.display = "none";
-      if(!s){ s = document.createElement("div"); s.id = "v39-sesion"; s.className = "v39-sesion"; bt.after(s); }
-      const html = `<span class="ok">✓ Ya iniciaste sesión como <b>${esc(String(currentUser.nombre || currentUser.email || "").split(" ")[0])}</b></span><button type="button" data-mc>Mis compras →</button>`;
-      if(s.innerHTML !== html){ s.innerHTML = html; $("[data-mc]", s).addEventListener("click", () => (window.BRASAS_MIS_COMPRAS || abrirCompras)()); }
-    } else { bt.style.display = ""; if(s) s.remove(); }
+      /* el mismo botón pasa a decir "Sesión iniciada" (no se puede tocar) y al lado, Mis compras */
+      const nom = esc(String(currentUser.nombre || currentUser.email || "").split(" ")[0]);
+      const t = `<span>✓ Ya iniciaste sesión</span>`;
+      if(bt.innerHTML !== t) bt.innerHTML = t;
+      bt.classList.add("v39-logueado"); bt.disabled = true; bt.setAttribute("aria-disabled", "true");
+      if(!s){ s = document.createElement("button"); s.type = "button"; s.id = "v39-sesion"; s.className = "v39-mc"; s.textContent = "Mis compras →"; bt.after(s); s.addEventListener("click", () => (window.BRASAS_MIS_COMPRAS || abrirCompras)()); }
+    } else { if(bt.classList.contains("v39-logueado")){ bt.innerHTML = bt.dataset.orig; bt.classList.remove("v39-logueado"); bt.disabled = false; bt.removeAttribute("aria-disabled"); } if(s) s.remove(); }
   }
   const rau = renderAccionesUsuario; renderAccionesUsuario = function(){ const r = rau.apply(this, arguments); sesion(); return r; };
 
@@ -8942,6 +9001,610 @@ body.intl .v31-bar .b-envio .cp-fila,body.intl .v31-bar .b-envio .llega{display:
   document.addEventListener("brasas-catalogo", e => { CAT = e.detail || CAT; todo(); });
   document.addEventListener("brasas-pais", () => setTimeout(() => { pintarPromo(); promoFicha(); }, 60));
   todo();
+})();
+</script>
+
+<style id="v40-css">
+/* ===== la barra de compra siempre visible mientras hay un producto abierto ===== */
+.ficha-sticky{bottom:0 !important;}
+
+/* ===== medida: primero se elige (nada viene marcado) ===== */
+.variantes-block .paso .ok{display:none !important;}
+.variantes-block .paso .v40-elegi{margin-left:auto;font-family:var(--mono);font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:#e4bc6e;}
+.variantes-block .paso .v40-elegi.ok2{color:#7fd6a0;}
+body.v40-sinmed #variantes .variante-btn{border-color:rgba(228,188,110,.7) !important;animation:v40Pulso 1.8s ease-in-out infinite;}
+@keyframes v40Pulso{0%,100%{box-shadow:0 0 0 0 rgba(228,188,110,0);}50%{box-shadow:0 0 0 4px rgba(228,188,110,.22);}}
+#variantes.v40-sacude{animation:v40Sacude .45s ease;}
+@keyframes v40Sacude{0%,100%{transform:none;}20%{transform:translateX(-7px);}40%{transform:translateX(7px);}60%{transform:translateX(-4px);}80%{transform:translateX(4px);}}
+@media (prefers-reduced-motion:reduce){ body.v40-sinmed #variantes .variante-btn,#variantes.v40-sacude{animation:none;} }
+body.v40-sinmed #precio-grande,body.v40-sinmed #precio-medio-elegido,body.v40-sinmed #v39-promo-ficha,body.v40-sinmed .precio-extra{display:none !important;}
+.v40-desde{display:none;}
+body.v40-sinmed .v40-desde{display:block;font-size:clamp(28px,3vw,38px);color:#fff;line-height:1.1;}
+body.v40-sinmed .v40-desde small{display:block;font-size:15px;color:#e8cf8f;margin-top:8px;line-height:1.4;}
+body.v40-sinmed #v31-tot{opacity:.35;}
+body.v40-sinmed #v31-bs{color:#e4bc6e !important;}
+
+/* ===== checkout: confirmación de medidas ===== */
+.v40-check{display:flex;gap:12px;align-items:flex-start;margin:6px 0 14px;padding:14px 16px;border:1px solid rgba(228,188,110,.5);background:rgba(228,188,110,.05);cursor:pointer;font-size:15.5px;line-height:1.5;color:#ece6da;}
+.v40-check input{width:22px;height:22px;flex:0 0 auto;margin-top:1px;accent-color:#e4bc6e;cursor:pointer;}
+.v40-check.falta{border-color:#ff9d8a;background:rgba(255,157,138,.08);animation:v40Sacude .45s ease;}
+.v40-check small{display:block;color:var(--hueso-dim);font-size:13.5px;}
+.v40-mail{display:block;margin-top:6px;background:none;border:none;padding:0;color:#e8cf8f;font:inherit;font-size:14px;text-align:left;cursor:pointer;text-decoration:underline;text-underline-offset:3px;}
+.v40-mail b{color:#fff;}
+.ck-it .v40-arm{display:block;color:#e8cf8f;font-size:13.5px;margin-top:3px;}
+
+/* ===== lectura cómoda (letras chicas un poco más grandes) ===== */
+.h2-datos span{font-size:11px !important;}
+.h2-datos b{font-size:22px !important;}
+.ficha-tecnica span b,.paso{font-size:12px !important;}
+.precio-box .medios-box .pago-op .nm b{font-size:14px !important;}
+.precio-box .medios-box .pago-op .pr{font-size:14px !important;}
+.v31-bar .b-prod b{font-size:13px !important;}
+.v31-bar .b-prod small,.v31-bar .b-total small{font-size:13px !important;}
+.v31-bar .b-envio .v31-gratis,.v31-bar .b-envio .llega b{font-size:14px !important;}
+.v36-conf{font-size:14.5px !important;}
+.ck-f label span{font-size:13.5px !important;}
+.ck-f input,.ck-f select{font-size:16px !important;}
+</style>
+<script id="v40-js">
+(function(){
+  "use strict";
+  const $ = (s, r=document) => r.querySelector(s), $$ = (s, r=document) => [...r.querySelectorAll(s)];
+  const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+
+  /* =========================================================
+     1. MEDIDA: no viene ninguna marcada; hay que elegirla (y aparece su foto de cotas)
+     ========================================================= */
+  let elegida = false;
+  const paso = $(".variantes-block .paso");
+  const aviso = document.createElement("span"); aviso.className = "v40-elegi"; if(paso) paso.appendChild(aviso);
+  const desde = document.createElement("div"); desde.className = "v40-desde";
+  const pg = $("#precio-grande"); if(pg) pg.before(desde);
+  const varios = () => modeloActual && Object.keys(modeloActual.variantes || {}).length > 1;
+  function pintar(){
+    const sin = !!(modeloActual && varios() && !elegida && !document.body.classList.contains("intl"));
+    document.body.classList.toggle("v40-sinmed", sin);
+    aviso.textContent = !modeloActual ? "" : sin ? "Seleccioná medida" : varios() ? `✓ ${((modeloActual.variantes[tagActivo()] || {}).label) || ""}` : "";
+    aviso.classList.toggle("ok2", !sin);
+    if(sin){
+      $$("#variantes .variante-btn.activa").forEach(b => b.classList.remove("activa"));
+      const ps = Object.values(modeloActual.variantes).map(v => Math.round(precioTransfer(v) || 0)).filter(Boolean);
+      desde.innerHTML = ps.length ? `Desde ${money(Math.min(...ps))}<small>Seleccioná la medida para ver el precio exacto y sus medidas armado.</small>` : "";
+      const bs = $("#v31-bs"); if(bs) bs.textContent = "Seleccioná medida";
+    }
+  }
+  const ab = abrirFicha;
+  abrirFicha = function(){ elegida = false; const r = ab.apply(this, arguments); pintar(); setTimeout(pintar, 50); setTimeout(pintar, 400); return r; };
+  /* tocar una medida = elegida */
+  document.addEventListener("click", e => { const b = e.target.closest && e.target.closest("#variantes .variante-btn"); if(!b) return; elegida = true; document.body.classList.remove("v40-sinmed"); setTimeout(pintar, 0); }, true);
+  /* mientras no eligió, ningún otro código la marca sola */
+  const vs = $("#variantes"); if(vs) new MutationObserver(() => { if(document.body.classList.contains("v40-sinmed") && $("#variantes .variante-btn.activa")) $$("#variantes .variante-btn.activa").forEach(b => b.classList.remove("activa")); }).observe(vs, { subtree:true, attributes:true, attributeFilter:["class"], childList:true });
+  const bn = $("#v31-bn"); if(bn) new MutationObserver(() => { if(document.body.classList.contains("v40-sinmed")){ const bs = $("#v31-bs"); if(bs && bs.textContent !== "Seleccioná medida") bs.textContent = "Seleccioná medida"; } }).observe(bn.parentNode, { subtree:true, childList:true, characterData:true });
+  /* comprar sin medida: lo lleva a elegirla */
+  document.addEventListener("click", e => {
+    const b = e.target.closest && e.target.closest("#btn-agregar-carrito, #btn-comprar-ahora, #fs-comprar");
+    if(!b || !document.body.classList.contains("v40-sinmed")) return;
+    e.preventDefault(); e.stopImmediatePropagation();
+    const v = $("#variantes"); if(v){ v.scrollIntoView({ behavior:"smooth", block:"center" }); v.classList.remove("v40-sacude"); void v.offsetWidth; v.classList.add("v40-sacude"); }
+    try{ toast("Primero seleccioná la medida"); }catch(er){}
+  }, true);
+
+  /* =========================================================
+     2. CHECKOUT: medidas de cada producto a la vista + "Revisé las medidas"
+     ========================================================= */
+  const armado = v => { const m = String((v && v.armado) || "").trim().match(/^(\d+(?:[.,]\d+)?)\s*[x×*]\s*(\d+(?:[.,]\d+)?)\s*[x×*]\s*(\d+(?:[.,]\d+)?)\s*(cm|mm|m)?$/i); return m ? `Armado: alto ${m[1]} · ancho ${m[2]} · largo ${m[3]} ${(m[4] || "cm").toLowerCase()}` : ""; };
+  function checkout(){
+    const card = $("#ck-card"); if(!card) return;
+    $$(".ck-it[data-k]", card).forEach(it => {
+      if($(".v40-arm", it)) return;
+      const [mid, tag] = it.dataset.k.split("|"), m = MODELOS.find(x => x.id === mid), v = m && m.variantes[tag], t = armado(v);
+      const vv = $(".v", it); if(t && vv) vv.insertAdjacentHTML("afterend", `<span class="v40-arm">${esc(t)}</span>`);
+    });
+  }
+  const ckc = $("#ck-card") || document.body;
+  new MutationObserver(() => { clearTimeout(checkout.t); checkout.t = setTimeout(checkout, 10); }).observe(ckc, { childList:true, subtree:true });
+  /* =========================================================
+     3. EMAIL MAL ESCRITO: "gmial.com" → "¿Quisiste decir gmail.com?"
+     ========================================================= */
+  const DOM = ["gmail.com","hotmail.com","outlook.com","yahoo.com","yahoo.com.ar","hotmail.com.ar","live.com","icloud.com","fibertel.com.ar","speedy.com.ar","arnet.com.ar"];
+  const dist = (a, b) => { const d = Array.from({ length:a.length + 1 }, (_, i) => [i]); for(let j = 1; j <= b.length; j++) d[0][j] = j;
+    for(let i = 1; i <= a.length; i++) for(let j = 1; j <= b.length; j++) d[i][j] = Math.min(d[i-1][j] + 1, d[i][j-1] + 1, d[i-1][j-1] + (a[i-1] === b[j-1] ? 0 : 1)); return d[a.length][b.length]; };
+  function sugerir(inp){
+    const v = String(inp.value || "").trim().toLowerCase(), at = v.lastIndexOf("@"); let n = inp.parentNode.querySelector(".v40-mail");
+    if(at < 1){ if(n) n.remove(); return; }
+    const dom = v.slice(at + 1); let mejor = null, dm = 9;
+    if(!DOM.includes(dom)) DOM.forEach(x => { const k = dist(dom, x); if(k < dm){ dm = k; mejor = x; } });
+    if(!mejor || dm > 2 || !dom){ if(n) n.remove(); return; }
+    const sug = v.slice(0, at + 1) + mejor;
+    if(!n){ n = document.createElement("button"); n.type = "button"; n.className = "v40-mail"; inp.after(n); n.addEventListener("click", () => { inp.value = n.dataset.s; n.remove(); inp.dispatchEvent(new Event("change", { bubbles:true })); }); }
+    n.dataset.s = sug; n.innerHTML = `¿Quisiste decir <b>${esc(sug)}</b>? Tocá para corregir`;
+  }
+  document.addEventListener("blur", e => { const i = e.target; if(i && i.name === "email" && i.closest && i.closest("#checkout, #mayo, .mayo")) sugerir(i); }, true);
+})();
+</script>
+
+<style id="v41-css">
+/* ============ identidad argentina, sutil ============ */
+body::before{content:"";position:fixed;top:0;left:0;right:0;height:3px;z-index:10001;pointer-events:none;
+  background:linear-gradient(90deg,#74acdf 0 33.4%,#fff 33.4% 66.6%,#74acdf 66.6%);opacity:.95;}
+.lujo-hero2::after{content:"";position:absolute;right:-5%;bottom:-10%;width:min(52vw,620px);aspect-ratio:1;pointer-events:none;z-index:1;opacity:.035;
+  background:url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%22-100 -100 200 200%22%3E%3Cg fill=%22%23e4bc6e%22%3E%3Ccircle r=%2230%22/%3E%3Cpolygon points=%2233.9,-2.4 33.9,2.4 96.0,0.0%22/%3E%3Cpolygon points=%2233.7,4.6 32.9,8.6 76.0,17.5%22/%3E%3Cpolygon points=%2232.2,10.8 30.4,15.2 88.7,36.7%22/%3E%3Cpolygon points=%2229.4,17.2 27.1,20.6 63.5,45.3%22/%3E%3Cpolygon points=%2225.7,22.3 22.3,25.7 67.9,67.9%22/%3E%3Cpolygon points=%2220.6,27.1 17.2,29.4 41.4,66.1%22/%3E%3Cpolygon points=%2215.2,30.4 10.8,32.2 36.7,88.7%22/%3E%3Cpolygon points=%228.6,32.9 4.6,33.7 12.9,76.9%22/%3E%3Cpolygon points=%222.4,33.9 -2.4,33.9 0.0,96.0%22/%3E%3Cpolygon points=%22-4.6,33.7 -8.6,32.9 -17.5,76.0%22/%3E%3Cpolygon points=%22-10.8,32.2 -15.2,30.4 -36.7,88.7%22/%3E%3Cpolygon points=%22-17.2,29.4 -20.6,27.1 -45.3,63.5%22/%3E%3Cpolygon points=%22-22.3,25.7 -25.7,22.3 -67.9,67.9%22/%3E%3Cpolygon points=%22-27.1,20.6 -29.4,17.2 -66.1,41.4%22/%3E%3Cpolygon points=%22-30.4,15.2 -32.2,10.8 -88.7,36.7%22/%3E%3Cpolygon points=%22-32.9,8.6 -33.7,4.6 -76.9,12.9%22/%3E%3Cpolygon points=%22-33.9,2.4 -33.9,-2.4 -96.0,0.0%22/%3E%3Cpolygon points=%22-33.7,-4.6 -32.9,-8.6 -76.0,-17.5%22/%3E%3Cpolygon points=%22-32.2,-10.8 -30.4,-15.2 -88.7,-36.7%22/%3E%3Cpolygon points=%22-29.4,-17.2 -27.1,-20.6 -63.5,-45.3%22/%3E%3Cpolygon points=%22-25.7,-22.3 -22.3,-25.7 -67.9,-67.9%22/%3E%3Cpolygon points=%22-20.6,-27.1 -17.2,-29.4 -41.4,-66.1%22/%3E%3Cpolygon points=%22-15.2,-30.4 -10.8,-32.2 -36.7,-88.7%22/%3E%3Cpolygon points=%22-8.6,-32.9 -4.6,-33.7 -12.9,-76.9%22/%3E%3Cpolygon points=%22-2.4,-33.9 2.4,-33.9 -0.0,-96.0%22/%3E%3Cpolygon points=%224.6,-33.7 8.6,-32.9 17.5,-76.0%22/%3E%3Cpolygon points=%2210.8,-32.2 15.2,-30.4 36.7,-88.7%22/%3E%3Cpolygon points=%2217.2,-29.4 20.6,-27.1 45.3,-63.5%22/%3E%3Cpolygon points=%2222.3,-25.7 25.7,-22.3 67.9,-67.9%22/%3E%3Cpolygon points=%2227.1,-20.6 29.4,-17.2 66.1,-41.4%22/%3E%3Cpolygon points=%2230.4,-15.2 32.2,-10.8 88.7,-36.7%22/%3E%3Cpolygon points=%2232.9,-8.6 33.7,-4.6 76.9,-12.9%22/%3E%3C/g%3E%3C/svg%3E") center/contain no-repeat;}
+.v36-ar{transform-origin:left center;animation:v41Ondea 3.4s ease-in-out infinite alternate;}
+@keyframes v41Ondea{from{transform:skewY(-5deg) scaleX(1);}to{transform:skewY(4deg) scaleX(.93);}}
+.lujo-footer .base{position:relative;}
+.lujo-footer::after{content:"";display:block;height:3px;background:linear-gradient(90deg,#74acdf 0 33.4%,#fff 33.4% 66.6%,#74acdf 66.6%);opacity:.9;}
+
+/* ============ portada ============ */
+.h2-eyebrow{white-space:nowrap;}
+.h2-lead{max-width:none !important;}
+@media (max-width:520px){ .h2-eyebrow{font-size:11.5px !important;letter-spacing:.16em !important;} .h2-lead{font-size:12.5px !important;letter-spacing:.16em !important;} }
+.h2-datos span,.h2-datos span b{font-family:'Jost','Archivo',system-ui,sans-serif !important;font-size:12.5px !important;font-weight:400 !important;letter-spacing:.16em !important;text-transform:uppercase !important;color:#c4bfb5 !important;font-variant-numeric:tabular-nums;}
+.h2-datos span{display:flex;align-items:baseline;gap:10px;}
+.h2-datos{gap:12px 30px !important;}
+@media (max-width:520px){ .h2-datos span,.h2-datos span b{font-size:11.5px !important;letter-spacing:.14em !important;} .h2-datos{gap:10px 22px !important;} }
+
+/* celular: la portada llega hasta antes del botón; botón, Consultas y Carrito aparecen al empezar a bajar */
+@media (max-width:860px){
+  .h2-cta,#asist-fab,.flot{transition:opacity .6s ease,visibility .6s ease !important;}
+  body.v41-top .h2-cta,body.v41-top #asist-fab,body.v41-top .flot{opacity:0 !important;visibility:hidden !important;pointer-events:none !important;}
+  /* animación de inicio más liviana */
+  .topbar,.asist-fab,.toast,.modal-login,.overlay,.modal-resenas,.modal-compras,.modal-carrito,.ck{backdrop-filter:none !important;-webkit-backdrop-filter:none !important;}
+  .overlay,.modal-login,.modal-resenas,.modal-compras,.modal-carrito{background:rgba(5,5,4,.92) !important;}
+  #lujo-intro .marca{clip-path:none !important;opacity:0;animation:lujoAparecer 1s .1s forwards !important;}
+  .v36-foto{transform:none !important;transition:opacity 1.2s ease !important;}
+  .lujo-hero2 h1,.h2-eyebrow,.h2-lead,.h2-datos{will-change:auto;}
+}
+html{overflow-x:clip;}
+/* con sesión iniciada, la barra de arriba entra en el ancho del celular (si no, la página se agranda y hay que hacer zoom out) */
+@media (max-width:860px){
+  .user-chip{display:none !important;}
+  #btn-logout{font-size:0 !important;}
+  #btn-logout::before{content:"Salir";font-size:11px;letter-spacing:.14em;text-transform:uppercase;}
+  .topbar #acciones-usuario{gap:12px !important;min-width:0;}
+  .topbar:has(#btn-logout) .logo{letter-spacing:.22em !important;font-size:14px !important;}
+}
+
+/* ============ catálogo ============ */
+.modelo-card .lujo-serie{position:absolute !important;top:auto !important;bottom:0 !important;left:0 !important;right:auto !important;margin:0 !important;
+  font-size:9px !important;letter-spacing:.06em !important;line-height:1.3 !important;padding:2px 6px !important;border:0 !important;border-radius:0 !important;
+  background:rgba(255,255,255,.3) !important;color:#000 !important;backdrop-filter:none !important;text-shadow:none !important;box-shadow:none !important;font-weight:600;}
+.modelo-info .desde{font-size:22px !important;}
+@media (max-width:520px){ .modelo-info .desde{font-size:21px !important;} }
+.modelo-info .cuotas-destacada{display:flex;align-items:center;gap:8px;color:#7fd6a0 !important;font-weight:600 !important;font-size:15px !important;letter-spacing:.01em !important;}
+.modelo-info .cuotas-destacada .v41-cam{width:24px;height:15px;flex:0 0 auto;}
+body.intl .modelo-info .cuotas-destacada{color:#e8cf8f !important;}
+.mini-stars:empty{display:none;}
+
+/* ============ carrito flotante = mismo estilo que Consultas y que el banner de arriba ============ */
+.flot .car{width:auto !important;height:auto !important;border-radius:40px !important;padding:13px 20px !important;gap:8px !important;background:rgba(8,10,12,.92) !important;border:1px solid rgba(228,188,110,.5) !important;color:#fff !important;
+  font-family:var(--mono);font-size:12.5px;letter-spacing:.14em;text-transform:uppercase;box-shadow:0 0 0 1px rgba(228,188,110,.15),0 14px 40px -12px rgba(228,188,110,.55);}
+.flot .car svg{display:none !important;}
+.flot .car::before{content:"Carrito";}
+.flot .car .n{position:static !important;min-width:0 !important;height:auto !important;padding:0 !important;border:0 !important;background:none !important;color:#e8cf8f !important;font-size:12.5px !important;}
+.flot .car .n::before{content:"· ";}
+.flot .car .tip{display:none !important;}
+@media (max-width:640px){ .flot .car{padding:12px 16px !important;font-size:11.5px;} }
+
+/* ============ avisos en el celular: del medio hacia abajo, sin salirse del ancho ============ */
+@media (max-width:700px){
+  .toast{top:auto !important;bottom:26vh !important;left:16px !important;right:16px !important;transform:none !important;width:auto !important;max-width:none !important;text-align:center;white-space:normal !important;animation:v41Toast .35s ease !important;}
+}
+@keyframes v41Toast{from{opacity:0;}}
+
+/* ============ ficha ============ */
+.flecha-foto{display:none !important;}
+.foto-principal{cursor:crosshair !important;}
+@media (hover:none),(max-width:860px){ .foto-principal{cursor:default !important;} .lupa,.zoom-panel{display:none !important;} }
+@keyframes v41Flash{0%{box-shadow:0 0 0 0 rgba(228,188,110,.95),inset 0 0 0 3px #e4bc6e;}100%{box-shadow:0 0 0 22px rgba(228,188,110,0),inset 0 0 0 0 rgba(228,188,110,0);}}
+.v41-flash{animation:v41Flash 1.2s ease-out;}
+.ft-caja{display:block;}
+.ft-caja svg{width:min(250px,100%) !important;height:auto !important;}
+
+/* ============ Comunidad ============ */
+.circ-invita h3 em{font-style:normal !important;color:transparent !important;-webkit-text-fill-color:transparent;
+  background:linear-gradient(110deg,#7b7872 0%,#928e86 38%,#f6f2ea 50%,#928e86 62%,#7b7872 100%);background-size:260% 100%;-webkit-background-clip:text;background-clip:text;animation:v41Destello 5s ease-in-out infinite;}
+@keyframes v41Destello{0%,50%{background-position:125% 0;}100%{background-position:-125% 0;}}
+#btn-unirme-circulo.v39-logueado{width:100%;max-width:340px;justify-content:center !important;text-align:center;}
+.v39-mc{display:none !important;}
+.login-card .login-beneficios{display:none !important;}
+.v41-login-p{margin:0 0 24px;font-size:16px;line-height:1.5;color:#d2cdc3;}
+.login-card h3{margin-bottom:12px !important;}
+
+/* ============ pie ============ */
+.lujo-footer .cols .col .k{font-family:'Jost','Archivo',system-ui,sans-serif !important;font-size:13px !important;letter-spacing:.24em !important;text-transform:uppercase;color:#a8a296 !important;margin-bottom:14px;}
+.lujo-footer .cols .col .v{font-size:15.5px !important;line-height:1.9 !important;color:#d2cdc3 !important;}
+.lujo-footer .pie-legal button,.lujo-footer .pie-legal a{font-family:'Jost','Archivo',system-ui,sans-serif !important;font-size:13px !important;letter-spacing:.14em;text-transform:uppercase;}
+.lujo-footer .pie-datos,.lujo-footer .base{font-family:'Jost','Archivo',system-ui,sans-serif !important;font-size:13px !important;letter-spacing:.12em;color:#a8a296;}
+.v41-mapabox{display:flex;align-items:center;gap:18px;margin:0 0 14px;}
+.v41-mapa{width:84px;height:auto;flex:0 0 auto;overflow:visible;}
+.v41-mapa path{fill:rgba(228,188,110,.1);stroke:rgba(228,188,110,.6);stroke-width:1.4;stroke-linejoin:round;}
+.v41-mapa .p0{fill:#e4bc6e;stroke:none;}
+.v41-mapa .p1{fill:none;stroke:#e4bc6e;stroke-width:1.4;transform-origin:center;transform-box:fill-box;animation:v41Punto 2.4s ease-out infinite;}
+@keyframes v41Punto{from{transform:scale(1);opacity:.9;}to{transform:scale(4.2);opacity:0;}}
+.v41-leyenda{font-family:'Jost','Archivo',system-ui,sans-serif;font-size:14px;letter-spacing:.2em;text-transform:uppercase;color:#e8cf8f;line-height:1.6;}
+@media (prefers-reduced-motion:reduce){ .v36-ar,.circ-invita h3 em,.v41-mapa .p1{animation:none !important;} }
+</style>
+
+<script id="v41-js">
+(function(){
+  "use strict";
+  const $ = (s, r=document) => r.querySelector(s), $$ = (s, r=document) => [...r.querySelectorAll(s)];
+  const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+  const lsGet = k => { try{ return localStorage.getItem(k); }catch(e){ return null; } };
+  const intl = () => !!(window.BRASAS_PAIS && window.BRASAS_PAIS() !== "AR");
+
+  /* =========================================================
+     1. CELULAR: portada limpia hasta empezar a bajar
+     ========================================================= */
+  const mq = window.matchMedia ? matchMedia("(max-width:860px)") : { matches:false };
+  function arriba(){
+    const sinScroll = (window.scrollY || document.documentElement.scrollTop || 0) < 40;
+    document.body.classList.toggle("v41-top", !!(mq.matches && sinScroll && !$(".overlay.abierto")));
+  }
+  window.addEventListener("scroll", arriba, { passive:true }); window.addEventListener("resize", arriba); arriba();
+  window.addEventListener("load", () => setTimeout(arriba, 50));
+
+  /* =========================================================
+     2. FICHA: galería, cotas, medida
+     ========================================================= */
+  /* las fotos no se abren (en escritorio hacen zoom; en el celular, el zoom es con los dedos) */
+  document.addEventListener("click", e => { if(e.target.closest && e.target.closest("#foto-principal")){ e.stopPropagation(); e.stopImmediatePropagation(); } }, true);
+  /* celular: deslizar para cambiar de foto */
+  (function(){
+    let x0 = null;
+    document.addEventListener("touchstart", e => { x0 = e.target.closest && e.target.closest("#foto-principal") ? e.touches[0].clientX : null; }, { passive:true });
+    document.addEventListener("touchend", e => {
+      if(x0 === null) return; const dx = e.changedTouches[0].clientX - x0; x0 = null; if(Math.abs(dx) < 40) return;
+      const minis = $$("#miniaturas .mini:not(.video-mini)"), act = minis.findIndex(m => m.classList.contains("activa")); if(!minis.length) return;
+      const sig = minis[(act + (dx < 0 ? 1 : -1) + minis.length) % minis.length]; if(sig) sig.click();
+    }, { passive:true });
+  })();
+  /* al tocar una medida: se ve la caja con las cotas de esa medida y destella para que se note el cambio */
+  function destello(el){ if(!el) return; el.classList.remove("v41-flash"); void el.offsetWidth; el.classList.add("v41-flash"); }
+  document.addEventListener("click", e => {
+    const b = e.target.closest && e.target.closest("#variantes .variante-btn"); if(!b) return;
+    setTimeout(() => {
+      const caja = $("#ficha-tecnica .ft-caja") || $("#ficha-tecnica");
+      destello($("#foto-principal"));
+    }, 150);
+  });
+  /* los nombres de los productos no se traducen */
+  const NOMBRES = ".modelo-info .nombre,#ficha-titulo,#v31-bn,.v31-bar .b-prod b,.ck-it .n,.ck-it .nm,.cx-it .n,.agregado .n,.mc-it .n,.compra-it .n,#fs-nombre,.vc-nombre";
+  function noTraducir(){ $$(NOMBRES).forEach(e => { if(!e.classList.contains("notranslate")){ e.classList.add("notranslate"); e.setAttribute("translate", "no"); } }); }
+  new MutationObserver(() => { clearTimeout(noTraducir.t); noTraducir.t = setTimeout(noTraducir, 80); }).observe(document.body, { childList:true, subtree:true });
+
+  /* =========================================================
+     3. COMUNIDAD: la ventana de Google, directa
+     ========================================================= */
+  function login(){
+    const card = $(".login-card"); if(!card) return;
+    const h = $("h3", card); if(h && !h.dataset.v41){ h.dataset.v41 = "1"; h.textContent = "Iniciá sesión con Google"; }
+    if(h && !$(".v42-lista", card)) h.insertAdjacentHTML("afterend", `<ol class="v42-lista"><li>Garantía registrada a tu nombre</li><li>Accedé a tus compras</li><li>Seguí tu pedido, paso a paso</li></ol>`);
+  }
+  login();
+  if(typeof abrirLogin === "function"){ const al = abrirLogin; abrirLogin = function(){ const r = al.apply(this, arguments); login(); aplicarTextos(); return r; }; }
+
+  /* =========================================================
+     4. PIE: mapa de Argentina con Olavarría
+     ========================================================= */
+  const MAPA = `<svg class="v41-mapa" viewBox="-4 -4 126 255" aria-label="Mapa de Argentina con las islas Malvinas: taller en Olavarría" role="img"><path d="M87.8 219.6L88.7 220.0L89.8 219.8L90.2 220.0L90.5 220.3L90.0 220.6L89.7 221.1L91.1 221.8L91.1 221.3L91.2 220.6L92.9 220.4L93.8 221.4L93.2 221.5L93.5 222.0L93.9 222.3L93.7 222.8L92.7 223.1L91.8 223.2L91.4 223.6L90.8 224.0L88.7 224.5L89.0 224.9L88.9 225.7L86.1 225.0L86.5 226.2L85.9 226.4L85.4 226.3L84.9 226.4L84.6 227.2L83.8 226.7L83.1 226.0L83.8 224.7L85.1 223.3L85.8 222.8L86.3 222.8L86.3 221.9L86.3 221.2L87.5 220.2L87.4 219.6ZM79.4 221.0L80.2 221.1L81.0 220.6L81.5 220.4L82.0 220.6L82.7 220.8L84.0 220.5L84.6 220.2L85.3 220.7L84.8 221.3L84.3 222.0L83.9 222.2L83.6 222.6L82.7 223.5L81.5 224.7L80.3 224.9L79.6 224.9L79.4 225.5L79.0 226.0L78.4 226.2L77.0 226.4L76.3 226.0L75.4 225.4L76.6 224.6L77.6 224.6L78.4 224.0L79.1 223.8L79.7 223.3L79.4 222.9L78.9 223.0L78.1 223.2L77.7 222.8L78.3 222.7L79.4 222.4L79.3 221.9L78.6 221.6L78.1 221.2L77.7 220.2L78.5 220.5L79.4 221.0ZM95.0 63.6L94.8 64.3L94.4 65.0L93.7 65.8L93.5 66.5L93.8 67.4L93.8 68.5L93.7 69.0L93.3 69.4L93.5 70.3L93.3 71.0L93.0 71.8L92.5 72.6L92.4 73.2L92.8 73.8L92.7 74.6L92.5 75.3L92.2 75.7L91.7 76.0L91.8 76.9L91.8 77.3L91.7 77.8L91.8 78.3L92.0 78.8L92.0 79.3L91.6 80.4L91.4 81.1L91.7 84.1L91.3 84.9L90.5 84.9L90.1 86.5L89.5 89.3L89.6 89.9L90.1 91.0L90.2 91.7L90.3 92.2L90.4 93.2L90.2 93.6L89.7 93.9L90.0 95.1L90.3 95.7L91.1 96.8L94.1 98.4L95.4 99.3L96.8 100.6L97.6 101.8L97.6 102.9L96.5 104.5L96.4 105.8L96.6 106.8L97.0 107.6L98.1 108.8L98.9 109.2L100.0 109.1L100.3 109.7L100.5 112.0L100.5 112.9L100.1 113.6L98.0 117.3L96.2 119.5L95.6 120.7L95.4 122.0L94.8 122.6L91.7 124.6L86.8 126.3L82.9 127.3L82.1 127.6L75.8 128.6L74.6 128.7L73.0 128.6L71.7 128.8L70.3 128.5L69.0 128.2L68.3 127.4L67.4 127.3L67.6 128.7L67.4 129.9L67.7 130.6L68.2 130.7L68.6 131.0L69.1 131.5L68.4 131.6L68.6 131.9L68.9 133.0L68.6 134.9L67.9 135.3L67.5 135.8L67.1 137.6L66.9 138.8L67.1 139.6L68.0 141.1L67.6 142.2L67.1 142.8L64.7 143.9L63.8 144.4L62.3 144.7L59.9 144.7L59.1 144.7L57.0 143.6L55.5 143.0L54.1 142.5L52.8 142.2L53.0 141.8L52.4 141.6L51.5 142.1L51.1 142.7L51.0 143.2L51.0 144.3L51.2 145.3L51.8 147.8L51.9 149.1L51.6 150.7L52.0 151.7L52.5 152.2L53.7 152.6L54.1 152.9L54.6 152.9L54.4 153.6L54.4 154.0L55.3 154.2L56.2 154.1L57.1 153.9L57.4 152.9L56.3 152.8L57.2 152.3L58.4 151.9L58.9 151.8L59.3 152.1L59.9 153.1L60.1 154.0L60.1 155.1L60.0 156.1L59.5 156.9L57.5 157.5L57.0 157.3L56.5 156.5L56.3 155.7L55.8 155.2L54.9 154.8L53.9 154.9L53.0 155.7L52.1 155.9L51.7 156.6L54.1 157.7L55.1 158.0L55.9 158.1L55.5 158.5L53.6 159.4L52.8 159.8L52.0 160.5L50.8 162.2L50.4 162.6L50.2 163.0L50.1 164.2L50.5 166.1L50.1 166.9L50.3 167.8L50.2 168.4L49.8 169.3L48.1 170.7L47.8 171.7L48.4 172.2L48.4 172.7L48.2 173.2L47.5 173.2L45.0 172.9L44.0 173.4L43.2 174.0L42.7 174.5L40.9 174.8L38.7 177.4L37.9 178.9L37.0 180.3L36.7 180.9L36.7 181.8L36.8 182.6L36.9 183.1L37.3 183.8L38.0 184.7L41.5 188.0L42.3 188.3L46.1 188.7L46.9 189.1L47.4 189.9L47.6 190.5L47.4 192.2L47.2 192.7L46.7 193.1L45.8 193.8L44.8 194.1L45.5 194.3L46.5 194.1L47.2 194.9L46.6 195.2L46.0 196.0L43.8 197.9L42.6 198.5L41.5 199.2L40.0 200.0L39.5 200.4L38.7 201.4L37.5 202.4L36.2 204.6L36.4 205.3L35.7 209.1L35.4 209.6L34.9 210.0L33.5 210.8L32.9 210.9L32.0 210.5L31.6 210.0L31.1 209.2L30.5 208.3L30.7 209.1L30.5 209.7L29.1 209.9L28.7 210.2L30.0 210.1L30.9 210.2L31.6 210.8L32.0 211.3L31.0 211.8L30.0 212.2L28.9 213.0L28.3 213.9L28.0 214.5L27.8 215.7L27.7 216.6L27.2 217.2L26.5 217.8L27.0 217.6L27.7 218.3L28.2 219.8L28.4 220.9L28.2 221.6L27.3 221.7L26.5 221.7L25.9 221.9L26.7 222.0L27.5 222.5L28.4 222.3L28.8 222.6L30.4 225.1L31.5 226.4L32.1 227.2L31.8 227.6L31.7 227.1L31.0 227.0L30.2 226.8L29.0 226.5L27.4 226.0L25.7 226.0L24.4 225.5L23.0 225.0L19.9 225.0L17.2 224.9L14.5 224.9L12.7 224.9L11.5 224.9L11.4 224.1L10.9 223.6L10.3 223.1L9.5 222.7L9.1 222.2L8.7 221.6L8.9 221.0L9.3 219.8L9.3 219.2L9.0 218.8L8.9 218.3L9.3 217.8L9.5 216.9L9.3 216.0L9.1 215.2L8.8 214.9L8.1 214.7L7.5 214.9L6.4 214.9L5.5 215.3L4.8 215.8L4.3 215.6L4.2 215.1L3.9 214.7L3.7 213.7L3.4 212.8L3.0 211.9L2.3 211.1L2.3 210.4L2.2 209.5L2.5 208.6L2.3 207.9L1.9 207.1L2.0 206.2L2.4 205.7L2.6 205.1L4.5 205.0L4.4 204.1L4.7 203.5L5.1 202.9L6.0 202.3L6.8 202.0L7.3 201.6L7.6 200.8L7.7 200.3L7.5 199.2L8.2 198.5L9.0 198.1L9.4 197.1L9.2 196.2L8.7 195.5L8.1 195.2L8.1 194.4L8.3 193.8L8.7 193.0L9.1 192.2L9.1 191.6L9.4 191.3L10.5 190.5L10.8 189.7L11.6 189.4L11.3 188.6L11.3 188.1L11.3 187.5L11.4 186.7L11.9 186.4L12.6 185.8L12.8 185.4L12.8 184.8L12.6 183.7L12.5 182.9L12.1 182.1L12.2 181.3L12.9 180.9L13.2 180.2L13.0 179.7L12.5 179.4L12.4 178.5L12.6 177.4L13.9 177.0L14.0 176.4L14.9 175.6L14.8 174.9L14.3 174.4L13.8 173.7L13.4 173.0L12.2 172.6L10.8 172.5L10.7 171.8L11.3 171.6L12.3 171.5L13.1 171.5L13.6 171.4L14.3 171.3L14.8 171.6L15.4 171.4L15.6 170.4L16.0 169.9L16.0 169.4L15.7 169.0L15.0 168.9L12.1 168.6L12.1 167.5L12.2 166.9L12.4 166.2L12.7 165.6L13.0 165.2L12.7 164.7L12.3 163.9L12.6 163.6L12.5 162.7L12.1 162.3L11.6 161.6L11.6 160.9L12.1 160.8L12.5 160.1L12.3 159.6L11.7 159.4L10.8 159.1L10.2 158.3L10.4 156.7L10.3 155.8L10.2 155.2L10.5 154.8L10.8 154.5L10.6 153.6L10.4 153.2L10.7 152.5L10.9 152.1L11.4 152.2L11.9 152.1L12.5 151.7L12.4 150.7L12.0 149.3L11.6 148.4L11.8 147.7L11.7 146.5L11.7 145.7L11.8 143.5L11.8 142.8L11.4 142.0L11.5 141.3L11.8 140.7L12.0 140.0L12.2 139.4L12.8 139.0L12.7 138.4L12.2 138.0L12.1 137.5L12.5 136.9L13.1 136.3L13.1 135.6L13.0 134.9L12.8 134.0L12.7 133.5L13.1 133.2L13.8 133.2L13.8 132.6L14.2 131.7L14.5 130.9L14.5 130.3L14.4 128.6L14.8 127.9L15.2 127.6L15.8 127.4L16.4 127.0L17.2 126.8L17.5 126.4L17.7 125.8L17.8 125.4L17.5 125.0L17.1 124.7L16.9 123.7L16.8 122.8L16.8 121.7L16.4 120.7L15.9 119.6L15.8 118.6L16.0 118.1L16.1 117.3L15.7 116.2L16.0 115.6L16.2 114.8L16.0 113.4L15.8 112.8L16.0 112.2L16.3 111.6L16.5 110.8L17.0 110.2L17.5 109.7L18.1 109.6L18.5 109.1L19.1 108.1L19.5 107.6L20.1 107.5L20.4 107.0L20.4 106.3L20.3 105.7L20.5 104.9L20.3 103.7L20.3 103.0L20.1 102.5L20.1 101.9L19.6 101.4L19.5 101.0L20.0 100.6L20.4 100.2L20.8 98.6L20.9 98.1L21.1 97.5L21.3 96.7L21.5 96.1L21.9 95.4L22.1 95.0L22.4 94.3L22.7 93.8L23.5 93.6L23.6 93.1L23.6 92.4L23.4 91.2L23.4 89.8L23.4 88.8L23.7 87.8L23.9 87.3L23.8 86.5L23.3 86.2L22.9 86.4L22.3 85.9L22.1 85.3L22.2 84.6L22.5 84.1L22.6 83.5L22.1 82.9L21.7 81.6L21.8 80.4L21.4 80.2L21.2 79.3L20.9 78.9L20.7 78.3L20.6 77.6L21.0 77.2L21.3 76.6L20.8 76.1L20.1 75.8L19.7 74.5L19.3 73.8L19.4 72.7L19.5 71.9L19.7 71.2L19.7 70.7L20.2 70.5L20.7 70.0L20.9 69.5L20.7 68.8L20.9 68.3L21.2 67.2L21.6 65.9L21.8 65.4L21.9 64.8L23.0 64.8L23.3 64.2L23.4 63.7L23.5 63.1L23.0 62.7L23.1 62.3L23.2 61.2L23.2 60.4L22.8 58.8L22.6 57.2L22.8 56.6L23.3 55.9L23.7 55.5L24.2 53.2L24.3 52.1L24.6 51.5L24.8 50.4L25.5 49.5L25.7 48.8L26.2 48.6L26.6 47.9L27.1 47.2L27.6 46.8L27.7 46.2L27.9 45.5L28.3 44.2L28.6 43.3L28.9 43.0L29.3 41.8L29.5 41.1L29.9 40.8L30.6 41.1L31.3 40.6L32.0 40.3L32.5 39.8L32.5 39.1L32.2 38.5L31.6 37.5L31.0 36.4L30.9 35.7L31.0 35.2L31.3 34.6L32.0 33.7L31.9 33.0L31.4 30.6L31.2 30.0L30.9 28.8L30.9 28.3L31.3 26.9L31.5 26.4L32.1 26.1L31.9 25.5L31.7 24.6L31.1 24.0L31.1 23.3L31.4 22.4L31.9 21.8L32.3 21.4L32.7 21.2L32.9 20.7L34.1 20.0L35.1 19.6L36.9 18.6L38.2 18.0L38.4 17.3L39.0 15.0L39.7 12.2L40.2 10.4L39.1 9.0L39.9 7.8L40.0 7.0L41.4 6.0L41.6 5.5L41.7 4.9L42.3 4.5L43.1 4.1L43.9 3.8L44.2 3.4L44.4 2.6L44.6 1.7L45.1 1.5L45.5 1.7L46.9 3.1L47.4 3.7L47.9 3.8L48.9 3.7L51.6 3.7L52.8 4.0L53.3 4.2L54.2 4.7L54.7 5.7L54.9 6.6L55.1 7.3L55.5 8.6L55.8 9.1L56.2 7.4L56.5 6.6L57.0 5.7L57.9 3.5L58.6 3.0L59.0 3.2L59.6 3.0L62.0 3.0L64.5 2.9L65.1 4.1L65.5 4.6L65.8 5.1L66.2 5.6L67.2 6.2L68.1 7.5L69.0 9.4L69.8 10.8L70.6 11.7L71.3 12.3L71.9 12.7L72.2 13.0L72.9 13.7L74.0 14.5L74.7 15.2L75.0 15.9L76.2 16.7L78.1 17.5L79.5 17.9L80.4 17.8L81.7 18.5L83.3 19.7L84.4 20.6L84.7 21.1L85.8 21.9L88.5 23.6L89.7 24.0L90.2 24.4L90.6 24.9L91.2 24.8L91.9 25.0L93.0 25.5L93.8 26.2L94.8 27.6L95.1 28.2L95.3 28.7L95.2 29.1L94.9 29.6L94.3 30.1L94.1 30.5L94.0 31.0L93.5 31.9L93.4 32.6L93.0 33.0L92.2 33.6L92.0 34.2L91.7 34.8L91.5 35.4L91.5 36.1L91.6 36.9L91.4 37.4L91.3 38.0L90.9 38.5L90.8 38.9L90.2 39.4L89.8 40.2L89.5 40.6L89.1 40.9L89.0 41.4L89.2 42.3L91.7 42.0L93.8 42.3L96.3 43.1L97.9 43.4L98.7 43.2L99.3 43.2L99.7 43.6L100.2 43.6L100.9 43.4L101.4 43.6L101.8 44.1L102.6 43.2L103.0 42.7L103.4 42.3L104.0 42.2L104.7 42.4L105.2 42.6L105.6 43.0L106.5 42.6L106.7 42.1L106.7 41.5L106.9 41.1L107.3 40.8L107.7 40.0L108.2 39.8L109.0 39.7L109.4 39.5L109.7 38.8L110.1 38.5L110.4 38.2L110.6 37.8L111.2 37.4L111.6 36.5L112.1 34.8L112.4 32.6L112.5 29.4L113.1 29.7L113.8 29.5L114.6 29.4L115.1 29.0L115.5 29.4L116.3 29.9L116.8 30.7L117.1 32.3L117.5 33.2L118.0 34.2L118.0 34.7L117.7 35.2L117.7 35.8L117.5 37.5L117.5 38.1L117.7 39.1L117.5 39.8L117.0 40.9L116.5 41.1L115.8 41.8L115.4 42.0L114.9 42.1L114.5 42.8L114.1 43.1L113.4 43.3L112.8 43.3L112.2 43.9L111.5 43.9L110.9 44.4L110.7 45.2L110.0 45.6L109.8 46.1L108.8 46.6L108.2 47.0L107.8 47.6L107.4 48.0L106.8 48.3L106.0 48.9L106.2 49.6L106.2 50.2L105.5 50.0L105.0 50.1L104.9 50.6L104.5 51.0L104.2 51.7L103.8 52.2L103.1 52.8L102.5 53.7L102.1 54.7L101.6 55.4L101.1 55.8L100.7 56.3L100.5 56.9L99.9 57.9L98.9 59.2L98.0 60.1L97.2 60.5L96.8 61.1L96.7 61.7L96.2 62.4L95.3 63.2L95.0 63.6ZM30.6 246.1L30.6 244.4L30.7 242.2L30.7 240.2L30.7 238.2L30.7 236.2L30.7 234.2L30.7 232.0L30.7 229.8L31.1 230.1L32.4 231.6L32.8 232.2L33.0 233.0L32.5 232.5L31.9 232.8L31.6 233.2L31.4 233.7L31.6 234.3L32.1 234.5L33.5 234.6L34.3 236.5L34.7 236.9L35.2 237.3L36.3 238.2L37.3 239.2L38.5 240.1L39.8 240.9L41.0 241.4L42.2 242.1L43.4 243.0L44.7 243.7L46.1 244.2L47.6 244.6L49.8 244.4L50.4 244.5L50.8 244.8L50.4 245.6L49.9 246.3L49.1 246.5L48.4 246.6L47.7 246.6L47.0 246.5L46.3 246.6L45.7 246.8L45.1 247.0L44.4 247.0L43.8 247.2L43.1 247.4L42.4 247.3L40.6 246.6L39.5 246.4L35.6 246.2L34.4 246.0L33.1 245.8L32.5 245.8L31.5 245.9L30.8 245.9ZM54.5 245.1L55.2 245.2L56.5 245.1L57.1 245.1L58.4 245.1L57.9 245.8L55.8 245.7L55.1 246.0L54.0 246.4L53.5 246.1L53.7 245.5L54.3 245.3Z"/><circle class="p0" cx="79.1" cy="113.1" r="2.6"/><circle class="p1" cx="79.1" cy="113.1" r="2.6"/></svg>`;
+  function pie(){
+    const col = $(".lujo-footer .cols .col:first-child"); if(!col) return;
+    if(!$(".v41-mapabox", col)){ const k = $(".k", col); if(k) k.insertAdjacentHTML("afterend", `<div class="v41-mapabox">${MAPA}<div class="v41-leyenda">Olavarría · Buenos Aires</div></div>`); }
+    const v = $(".v", col);
+    if(v && /36°53/.test(v.innerHTML)){ v.innerHTML = v.innerHTML.replace(/Olavarría, provincia de Buenos Aires<br>\s*36°53′S · 60°19′O<br>/, ""); }
+    const dat = $("#pie-datos"); if(dat && !dat.dataset.v41){ dat.dataset.v41 = "1"; const s = $("span", dat); if(s) s.style.display = "none"; }
+  }
+  const v0 = $(".lujo-footer .cols .col:first-child .v"); if(v0) new MutationObserver(pie).observe(v0, { childList:true });
+  pie();
+
+  /* =========================================================
+     5. TEXTOS EDITABLES DESDE EL EXCEL (pestaña TEXTOS)
+     ========================================================= */
+  const TXT = [["PORTADA", "PORTADA-ETIQUETA", "BRASAS® · Est. 2017", "Renglón chico arriba del título de la portada"], ["PORTADA", "PORTADA-TITULO-1", "Hecho a mano.", "Título grande de la portada, primera línea"], ["PORTADA", "PORTADA-TITULO-2", "Uno a uno.", "Título grande de la portada, segunda línea (en gris)"], ["PORTADA", "PORTADA-LEMA", "Cada etapa, bajo protocolo.", "Frase debajo del título"], ["PORTADA", "PORTADA-FABRICADO", "Diseñado y fabricado en", "Línea dorada con la bandera argentina"], ["PORTADA", "PORTADA-BOTON", "Ver colección", "Botón de la portada"], ["PORTADA", "PORTADA-DATO-1-NUMERO", "2017", "Primer dato al pie de la portada: número"], ["PORTADA", "PORTADA-DATO-1-TEXTO", "Fabricando desde", "Primer dato: texto"], ["PORTADA", "PORTADA-DATO-2-TEXTO", "unidades entregadas", "Segundo dato: texto (el número +5.000 sale de las ventas)"], ["PORTADA", "PORTADA-DATO-3-NUMERO", "6", "Tercer dato: número"], ["PORTADA", "PORTADA-DATO-3-TEXTO", "etapas de fabricación", "Tercer dato: texto"], ["PORTADA", "PORTADA-DATO-4-NUMERO", "Envíos", "Cuarto dato: palabra grande"], ["PORTADA", "PORTADA-DATO-4-TEXTO", "a todo el mundo", "Cuarto dato: texto"], ["COLECCIÓN", "COLECCION-TITULO", "Colección", "Título de la sección de productos (el año se agrega solo)"], ["COLECCIÓN", "COLECCION-ENVIO", "Envío gratis por Andreani", "Texto verde con camioncito en cada producto"], ["COLECCIÓN", "COLECCION-BOTON", "Descubrir", "Texto al pie de cada producto"], ["FICHA", "FICHA-ASESOR-TITULO", "¿Necesitás asesoramiento?", "Ficha de producto: título del recuadro para consultar (abajo, a la derecha)"], ["FICHA", "FICHA-ASESOR-BAJADA", "Contanos qué vas a cocinar y para cuántas personas: te recomendamos la medida y te respondemos por WhatsApp.", "Ficha de producto: frase debajo de ese título"], ["PROTOCOLO", "PROTOCOLO-TITULO", "Protocolo de fabricación", "Título de la sección de etapas"], ["PROTOCOLO", "PROTOCOLO-ETAPA-1", "Corte", "Nombre de la etapa 1"], ["PROTOCOLO", "PROTOCOLO-ETAPA-2", "Plegado", "Nombre de la etapa 2"], ["PROTOCOLO", "PROTOCOLO-ETAPA-3", "Soldadura", "Nombre de la etapa 3"], ["PROTOCOLO", "PROTOCOLO-ETAPA-4", "Terminación", "Nombre de la etapa 4"], ["PROTOCOLO", "PROTOCOLO-ETAPA-5", "Control", "Nombre de la etapa 5"], ["PROTOCOLO", "PROTOCOLO-ETAPA-6", "Despacho", "Nombre de la etapa 6"], ["COMUNIDAD", "COMUNIDAD-TITULO-1", "Comunidad", "Título de la sección Comunidad (blanco)"], ["COMUNIDAD", "COMUNIDAD-TITULO-2", "BRASAS®", "Título de la sección Comunidad (gris con destello)"], ["COMUNIDAD", "COMUNIDAD-BAJADA", "Entrá con tu cuenta de Google y tu BRASAS® queda registrada a tu nombre.", "Frase debajo del título"], ["COMUNIDAD", "COMUNIDAD-VENTAJA-1", "Garantía registrada a tu nombre", "Ventaja 1"], ["COMUNIDAD", "COMUNIDAD-VENTAJA-2", "Seguí tu pedido, paso a paso", "Ventaja 2"], ["COMUNIDAD", "COMUNIDAD-VENTAJA-3", "Tus datos y tu carrito, siempre guardados", "Ventaja 3"], ["COMUNIDAD", "COMUNIDAD-VENTAJA-4", "Primero en conocer modelos nuevos y series limitadas", "Ventaja 4"], ["COMUNIDAD", "LOGIN-TITULO", "Iniciá sesión con Google", "Título de la ventana que se abre al tocar el botón de Google"], ["COMUNIDAD", "LOGIN-ITEM-1", "Garantía registrada a tu nombre", "Ventana de ingreso: punto 1 de la lista"], ["COMUNIDAD", "LOGIN-ITEM-2", "Accedé a tus compras", "Ventana de ingreso: punto 2 de la lista"], ["COMUNIDAD", "LOGIN-ITEM-3", "Seguí tu pedido, paso a paso", "Ventana de ingreso: punto 3 de la lista"], ["PIE", "PIE-FIRMA-1", "Si no está perfecto,", "Frase grande del pie, primera parte"], ["PIE", "PIE-FIRMA-2", "no sale del taller.", "Frase grande del pie, segunda parte (en gris)"], ["PIE", "PIE-TALLER-TITULO", "Taller", "Título de la primera columna del pie"], ["PIE", "PIE-MAPA-LEYENDA", "Olavarría · Buenos Aires", "Texto al lado del mapa de Argentina"], ["PIE", "PIE-ATENCION-TITULO", "Atención", "Título de la segunda columna del pie"], ["PIE", "PIE-ATENCION-1", "Autoservicio web oficial · las 24 h", "Segunda columna, primera línea"], ["PIE", "PIE-ATENCION-2", "Atención personalizada, si la necesitás", "Segunda columna, última línea"], ["PIE", "PIE-PAGOS-TITULO", "Medios de pago", "Título de la tercera columna del pie"], ["PIE", "PIE-COPYRIGHT", "© 2017–{año} BRASAS® Argentina · Marca registrada", "Línea de derechos al final. {año} se completa solo"], ["PIE", "PIE-LEMA-FINAL", "★★★★★★  Fabricado a mano, uno a uno", "Última línea del sitio"]];
+  let CAT = {}; try{ CAT = JSON.parse(lsGet("brasas-catalogo") || "{}") || {}; }catch(e){}
+  document.addEventListener("brasas-catalogo", e => { CAT = e.detail || CAT; aplicarTextos(); setTimeout(aplicarTextos, 600); });
+  const tn = el => { const out = []; if(!el) return out; const w = document.createTreeWalker(el, NodeFilter.SHOW_TEXT); let n; while((n = w.nextNode())) if(n.nodeValue.trim()) out.push(n); return out; };
+  const nodo = (el, i) => { const t = tn(el); return t.length ? [i < 0 ? t[t.length + i] : t[i]] : []; };
+  function marcarDatos(){ $$(".h2-datos span").forEach(s => { if(s.dataset.v41d) return; const t = s.textContent;
+    s.dataset.v41d = /Fabricando/i.test(t) ? "1" : /unidades/i.test(t) ? "2" : /Etapas/i.test(t) ? "3" : /Env[ií]os/i.test(t) ? "4" : ""; }); }
+  const dato = n => $(`.h2-datos span[data-v41d="${n}"]`);
+  const FIND = {
+    "PORTADA-ETIQUETA": () => nodo($(".h2-eyebrow"), -1),
+    "PORTADA-TITULO-1": () => nodo($(".lujo-hero2 h1"), 0),
+    "PORTADA-TITULO-2": () => nodo($(".lujo-hero2 h1 em"), 0),
+    "PORTADA-LEMA": () => nodo($(".h2-lead"), 0),
+    "PORTADA-FABRICADO": () => nodo($(".h2-ar"), 0),
+    "PORTADA-BOTON": () => nodo($(".h2-cta"), 0),
+    "PORTADA-DATO-1-NUMERO": () => nodo($("b", dato(1)), 0), "PORTADA-DATO-1-TEXTO": () => nodo(dato(1), -1),
+    "PORTADA-DATO-2-TEXTO": () => nodo(dato(2), -1),
+    "PORTADA-DATO-3-NUMERO": () => nodo($("b", dato(3)), 0), "PORTADA-DATO-3-TEXTO": () => nodo(dato(3), -1),
+    "PORTADA-DATO-4-NUMERO": () => nodo($("b", dato(4)), 0), "PORTADA-DATO-4-TEXTO": () => nodo(dato(4), -1),
+    "COLECCION-TITULO": () => nodo($(".landing h2"), 0),
+    "COLECCION-ENVIO": () => intl() ? [] : $$(".modelo-info .cuotas-destacada").flatMap(e => nodo(e, -1)),
+    "COLECCION-BOTON": () => $$(".modelo-info .ver-mas").flatMap(e => nodo(e, 0)),
+    "PROTOCOLO-TITULO": () => nodo($(".prot-head h3"), 0),
+    "COMUNIDAD-TITULO-1": () => nodo($(".circ-invita h3"), 0), "COMUNIDAD-TITULO-2": () => nodo($(".circ-invita h3 em"), 0),
+    "COMUNIDAD-BAJADA": () => nodo($(".circ-invita .v35-sub"), 0),
+    "FICHA-ASESOR-TITULO": () => nodo($("#asesor .preg-box .t"), 0), "FICHA-ASESOR-BAJADA": () => nodo($(".v42-bajada"), 0),
+    "LOGIN-TITULO": () => nodo($(".login-card h3"), 0), "LOGIN-ITEM-1": () => nodo($$(".v42-lista li")[0], 0), "LOGIN-ITEM-2": () => nodo($$(".v42-lista li")[1], 0), "LOGIN-ITEM-3": () => nodo($$(".v42-lista li")[2], 0),
+    "PIE-FIRMA-1": () => nodo($(".lujo-footer .firma p"), 0), "PIE-FIRMA-2": () => nodo($(".lujo-footer .firma p span"), 0),
+    "PIE-TALLER-TITULO": () => nodo($(".lujo-footer .cols .col:nth-child(1) .k"), 0), "PIE-MAPA-LEYENDA": () => nodo($(".v41-leyenda"), 0),
+    "PIE-ATENCION-TITULO": () => nodo($(".lujo-footer .cols .col:nth-child(2) .k"), 0),
+    "PIE-ATENCION-1": () => nodo($(".lujo-footer .cols .col:nth-child(2) .v"), 0), "PIE-ATENCION-2": () => nodo($(".lujo-footer .cols .col:nth-child(2) .v"), -1),
+    "PIE-PAGOS-TITULO": () => nodo($(".lujo-footer .cols .col:nth-child(3) .k"), 0),
+    "PIE-COPYRIGHT": () => nodo($(".lujo-footer .base span:first-child"), 0), "PIE-LEMA-FINAL": () => nodo($(".lujo-footer .base span:last-child"), 0)
+  };
+  for(let i = 1; i <= 6; i++) FIND["PROTOCOLO-ETAPA-" + i] = () => nodo($$(".prot-nombre")[i-1], 0);
+  for(let i = 1; i <= 4; i++) FIND["COMUNIDAD-VENTAJA-" + i] = () => nodo($$(".circ-invita li")[i-1], -1);
+  function poner(n, val){ const m = n.nodeValue.match(/^(\s*)[\s\S]*?(\s*)$/); const nv = (m ? m[1] : "") + val + (m ? m[2] : ""); if(n.nodeValue !== nv) n.nodeValue = nv; }
+  function aplicarTextos(){
+    marcarDatos();
+    const ed = (CAT && CAT.textosSitio) || {}, anio = new Date().getFullYear();
+    TXT.forEach(([sec, id, def]) => {
+      let val = String(ed[id] == null ? "" : ed[id]).trim();
+      if(id === "PIE-COPYRIGHT" && !val) val = def;      /* el año se actualiza solo */
+      if(!val || !FIND[id]) return;
+      val = val.replace(/\{año\}/g, anio);
+      FIND[id]().forEach(n => poner(n, val));
+    });
+  }
+  window.BRASAS_APLICAR_TEXTOS = aplicarTextos;
+  const rl = renderLanding; renderLanding = function(){ const r = rl.apply(this, arguments); aplicarTextos(); return r; };
+  setTimeout(aplicarTextos, 300); setTimeout(aplicarTextos, 1500);
+
+  /* =========================================================
+     6. EXTERIOR: precios en la moneda del país, con envío a domicilio por courier
+     ========================================================= */
+  const MON = { ES:"EUR", IT:"EUR", DE:"EUR", FR:"EUR", US:"USD", AU:"USD", CN:"USD" };
+  const mon = () => MON[window.BRASAS_PAIS ? window.BRASAS_PAIS() : "US"] || "USD";
+  function tasas(){ const t = window.BRASAS_TASAS && window.BRASAS_TASAS(); if(t) return t;
+    try{ const g = JSON.parse(lsGet("brasas-tasas2") || "null"); if(g && g.r) return g.r; }catch(e){} return null; }
+  let pidio = false, intentos = 0;
+  function pedirTasas(){ if(pidio || intentos >= 3 || !window.BRASAS_TASAS_PEDIR) return; pidio = true; intentos++; window.BRASAS_TASAS_PEDIR().then(() => { pidio = false; if(intl()){ renderLanding(); if(typeof modeloActual !== "undefined" && modeloActual) renderPrecioYCuotas(); } }).catch(() => { pidio = false; }); }
+  const arsVar = v => Math.round(precioTransfer(v) / 1000) * 1000;
+  function enMoneda(ars){ const t = tasas(), m = mon(); if(!t || !t[m]){ pedirTasas(); return null; }
+    const n = Math.round(ars * t[m] / 5) * 5; return `${m} ${n.toLocaleString(m === "EUR" ? "es-ES" : "en-US")}`; }
+  const COURIER = "Envío a domicilio internacional por courier";
+  function infoStock(it){ const m = MODELOS.find(x => x.id === it.mid), v = m && m.variantes[it.tag]; if(!v) return null;
+    const stock = v.stockTag !== undefined && v.stockTag !== null ? +v.stockTag : (m.stock === null ? 0 : m.stock === undefined ? 2 : +m.stock);
+    return { stock: Math.max(0, stock), plazo: +v.plazo || +(window.BRASAS_AJUSTES || {})._prodBase || 7 }; }
+  /* 21 días de envío + el plazo de fabricación solo si no hay stock */
+  function entregaIntl(items){
+    const H = window.BRASAS_HABILES, F = window.BRASAS_FFECHA; if(!H || !F) return { txt:"", fab:0 };
+    let fab = 0; items.forEach(it => { const i = infoStock(it); if(!i) return; const faltan = Math.max(0, (+it.qty || 1) - i.stock); if(faltan > 0) fab = Math.max(fab, i.plazo * faltan); });
+    const d = new Date(fab ? H(new Date(), fab) : new Date()); d.setDate(d.getDate() + 21);
+    return { txt: F(d), fab };
+  }
+  window.BRASAS_INTL_ENTREGA = items => { const r = entregaIntl(items); return `${r.txt} (21 días de envío${r.fab ? ` + ${r.fab} días hábiles de fabricación` : ""})`; };
+  function itemActual(){ const q = $("#cant-v25"); return [{ mid: modeloActual.id, tag: tagActivo(), qty: Math.max(1, +(q && q.value) || 1) }]; }
+  window.BRASAS_INTL_HTML = () => { if(typeof modeloActual === "undefined" || !modeloActual) return `${COURIER}`; const r = entregaIntl(itemActual());
+    return `${COURIER}<small>Llega aprox. ${esc(r.txt)}${r.fab ? " · incluye fabricación" : ""}</small>`; };
+
+  const rl2 = renderLanding;
+  renderLanding = function(){
+    const r = rl2.apply(this, arguments);
+    if(intl()){
+      $$("#grid-modelos .modelo-card").forEach(card => {
+        const m = MODELOS.find(x => x.id === card.dataset.modelo); if(!m) return;
+        const min = Math.min(...Object.values(m.variantes).map(arsVar)), p = enMoneda(min);
+        const de = $(".desde", card); if(de && p) de.textContent = "Desde " + p;
+        const cu = $(".cuotas-destacada", card); if(cu) cu.textContent = COURIER;
+      });
+    }
+    return r;
+  };
+  const rp = renderPrecioYCuotas;
+  renderPrecioYCuotas = function(){
+    const r = rp.apply(this, arguments);
+    if(intl() && modeloActual){
+      const v = modeloActual.variantes[tagActivo()], p = v && enMoneda(arsVar(v));
+      const g = $("#precio-grande"); if(g && p){ g._rueda = (g._rueda||0) + 1; g.textContent = p; }
+      const pi = $("#precio-intl"); if(pi) pi.innerHTML = `${esc(COURIER)}<small style="display:block;margin-top:6px">${(window.BRASAS_INTL_HTML().split("<small>")[1] || "").replace("</small>", "")}</small>`;
+      const cd = $("#precio-cuotas-destacada"); if(cd) cd.style.display = "none";
+      const pm = $("#precio-medio-elegido"); if(pm) pm.style.display = "none";
+      const pg = $("#pago-intl"); if(pg) pg.textContent = "El pago lo coordinamos por mail: transferencia internacional, USDT / USDC o Western Union.";
+    } else { const cd = $("#precio-cuotas-destacada"); if(cd) cd.style.display = ""; const pm = $("#precio-medio-elegido"); if(pm) pm.style.display = ""; }
+    return r;
+  };
+  document.addEventListener("brasas-pais", () => setTimeout(() => { renderLanding(); aplicarTextos(); }, 80));
+  document.addEventListener("click", e => { if(e.target.closest && e.target.closest(".cant button")) setTimeout(() => { if(intl() && modeloActual) renderPrecioYCuotas(); }, 20); });
+  if(intl()) setTimeout(() => { renderLanding(); }, 400);
+})();
+</script>
+<style id="v42-css">
+/* ===== sin marco pulsante en las medidas ===== */
+body.v40-sinmed #variantes .variante-btn{animation:none !important;}
+/* destello de la foto: blanco y un poco más corto */
+@keyframes v42Flash{0%{box-shadow:inset 0 0 0 3px rgba(255,255,255,.95),0 0 0 0 rgba(255,255,255,.55);}100%{box-shadow:inset 0 0 0 0 rgba(255,255,255,0),0 0 0 14px rgba(255,255,255,0);}}
+.v41-flash{animation:v42Flash .85s ease-out !important;}
+.ft-caja.v41-flash{animation:none !important;}
+/* medidas: tres números grandes + caja con el peso adentro */
+.ficha-tecnica .ft-caja{display:block;}
+.ficha-tecnica .ft-caja svg{width:100% !important;margin:6px auto 0 !important;}
+.ficha-tecnica .v42-n{font-variant-numeric:tabular-nums;}
+@media (min-width:1100px){
+  .overlay{padding:12px 20px !important;}
+  .ficha{max-width:min(1480px,97vw) !important;padding:16px 26px 18px !important;}
+  .ficha{--foto:max(340px,min(clamp(380px,24.5vw,470px),calc(100vh - 400px)));}
+  .ficha-body{display:grid !important;grid-template-columns:calc(var(--foto) + 72px) minmax(0,1fr);column-gap:30px;align-items:start;}
+  .col-izq{min-width:0;}
+  .galeria-col{display:flex;gap:10px;}
+  .miniaturas{width:60px;gap:7px;}
+  .miniaturas .mini{width:56px !important;height:56px !important;}
+  .foto-principal-wrap,.foto-principal{width:var(--foto) !important;height:var(--foto) !important;}
+  .col-izq .v31-detalle{margin-top:14px;}
+  .v31-detalle .t{margin:0 0 6px !important;}
+  .v31-detalle .asesor-consejo{margin:0 0 10px !important;font-size:15px !important;line-height:1.4 !important;}
+  .v31-detalle .descripcion{font-size:14.5px !important;line-height:1.5 !important;max-height:200px;overflow-y:auto;}
+  .v31-detalle .descripcion p{margin:0 0 4px !important;}
+  .info-col{display:grid !important;grid-template-columns:minmax(0,1fr) clamp(340px,20.5vw,390px);column-gap:28px;align-content:start;min-width:0;}
+  .info-col>*{grid-column:1;min-width:0;}
+  .info-col>.ficha-tecnica{grid-column:2;grid-row:1 / span 14;margin:30px 0 0 !important;padding:0 !important;border:0 !important;display:none;align-self:start;}
+  .info-col>.ficha-tecnica.on{display:block !important;border:1px solid rgba(228,188,110,.22) !important;padding:14px 16px 16px !important;background:rgba(228,188,110,.03);border-radius:4px;}
+  .ficha-tecnica .ft-caja>b{display:block;margin-bottom:6px;}
+  .ficha-tecnica>span:not(.ft-caja){display:block;margin-top:10px;}
+  .info-col .breadcrumb{margin:0 0 4px !important;}
+  .info-col #ficha-titulo{font-size:34px !important;line-height:1.05 !important;margin:0 0 8px !important;}
+  .info-col .rep-row{margin:0 0 10px !important;}
+  .precio-box.v31{padding:12px 18px !important;margin:0 0 10px !important;}
+  .precio-box.v31 .precio-grande{font-size:40px !important;}
+  .precio-box .precio-medio-elegido{margin:2px 0 0 !important;font-size:14px !important;}
+  .precio-box .precio-extra{margin-top:6px !important;padding-top:6px !important;}
+  .medios-box .medio,.medios-box>*{padding-top:6px !important;padding-bottom:6px !important;}
+  .v36-conf{margin:0 0 10px !important;gap:4px !important;}
+  .v36-conf>div{font-size:13px !important;line-height:1.35 !important;}
+  .variantes-block{margin:0 0 8px !important;padding:0 !important;}
+  .variantes-block .paso{margin-bottom:8px !important;}
+  #variantes .variante-btn{padding:9px 16px !important;min-height:0 !important;}
+}
+</style>
+<script id="v42-js">
+(function(){
+  "use strict";
+  /* los números de las medidas ruedan al cambiar de medida (y el peso, redondeado hacia arriba, adentro de la caja) */
+  const prev = {};
+  const ease = p => 1 - Math.pow(1 - p, 3);
+  window.BRASAS_RODAR_MEDIDAS = function(ft){
+    if(!ft) return;
+    const items = [...ft.querySelectorAll(".v42-n[data-k]")].map(e => ({ el:e, k:e.dataset.k, a:+e.dataset.v, u:e.dataset.u, kg:false }));
+    const svg = ft.querySelector("svg[data-kg]"), pn = svg && svg.querySelector(".v42-pn");
+    if(pn){ items.push({ el:pn, k:"kg", a:+svg.dataset.kg || 0, kg:true }); }
+    if(!items.length) return;
+    const t0 = performance.now(), ms = 620;
+    items.forEach(it => { it.de = prev[it.k] !== undefined ? prev[it.k] : 0; prev[it.k] = it.a; });
+    const fmt = (it, n) => { const r = Math.round(n); return it.kg ? r + " kg" : r + " " + (it.u || "cm"); };
+    items.forEach(it => { it.el.textContent = fmt(it, it.de); });
+    (function paso(now){
+      const p = Math.min(1, (now - t0) / ms);
+      items.forEach(it => { if(it.el.isConnected) it.el.textContent = fmt(it, it.de + (it.a - it.de) * ease(p)); });
+      if(p < 1 && items[0].el.isConnected) requestAnimationFrame(paso); else items.forEach(it => { if(it.el.isConnected) it.el.textContent = fmt(it, it.a); });
+    })(t0);
+  };
+})();
+</script>
+<style id="v42b-css">
+/* ===== ventana de ingreso ===== */
+.v42-lista{list-style:none;counter-reset:n;margin:0 0 24px;padding:0;text-align:left;}
+.v42-lista li{counter-increment:n;display:flex;align-items:baseline;gap:14px;padding:12px 0;border-bottom:1px solid rgba(255,255,255,.08);font-size:17px;color:#e6e1d7;line-height:1.35;}
+.v42-lista li:first-child{border-top:1px solid rgba(255,255,255,.08);}
+.v42-lista li::before{content:counter(n);flex:0 0 auto;width:26px;height:26px;border:1px solid rgba(228,188,110,.6);border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-family:'Jost','Archivo',sans-serif;font-size:13px;color:#e4bc6e;transform:translateY(-1px);}
+
+/* ===== datos: franja debajo de la portada, valor grande y texto chico (mono) en una sola línea ===== */
+.h2-datos{display:flex !important;flex-wrap:nowrap !important;justify-content:space-between;align-items:baseline;gap:0 18px !important;max-width:1180px;margin:0 auto !important;padding:30px 26px !important;opacity:1 !important;animation:none !important;position:relative;}
+.h2-datos span{display:flex !important;align-items:baseline;gap:.6em !important;white-space:nowrap;}
+.h2-datos span,.h2-datos span:not(:has(b)){font-family:var(--mono) !important;font-size:clamp(9.5px,.9vw,13px) !important;letter-spacing:.18em !important;text-transform:uppercase !important;color:#aeb6bf !important;font-weight:400 !important;}
+.h2-datos span b{font-family:'Archivo',system-ui,sans-serif !important;font-size:clamp(20px,2vw,29px) !important;letter-spacing:0 !important;text-transform:none !important;color:#fff !important;font-weight:600 !important;font-variant-numeric:tabular-nums;}
+.h2-datos span[data-v41d="1"]{flex-direction:row-reverse;justify-content:flex-end;}
+@media (max-width:760px){ .h2-datos{flex-direction:column;align-items:flex-start;gap:12px 0 !important;padding:26px 22px !important;} .h2-datos span{font-size:11.5px !important;letter-spacing:.16em !important;} .h2-datos span b{font-size:24px !important;} }
+
+/* ===== tarjeta del catálogo: N.º abajo, en blanco, junto al envío y el precio ===== */
+.modelo-card .modelo-info{position:relative;}
+.modelo-card .modelo-info .lujo-serie{position:absolute !important;right:16px !important;bottom:16px !important;left:auto !important;top:auto !important;display:block !important;background:none !important;color:#fff !important;padding:0 !important;margin:0 !important;font-size:9px !important;letter-spacing:.16em !important;font-weight:500 !important;}
+.mini-stars.vacia{color:#5b574f;}
+.mini-stars.vacia span{color:#8a857b;}
+
+/* ===== pie: una sola tipografía, simétrico ===== */
+.lujo-footer,.lujo-footer *{font-family:'Archivo',system-ui,sans-serif !important;}
+.lujo-footer .firma{position:relative;text-align:center;padding:64px 26px 34px !important;}
+.lujo-footer .firma p{margin:0 auto !important;font-style:normal !important;font-weight:700 !important;max-width:760px;}
+.lujo-footer .firma-estrellas{text-align:center;margin-bottom:14px;}
+.v42-est{position:absolute;top:56px;width:30px;height:84px;transform-origin:50% 0;animation:v42Balanceo 5s ease-in-out infinite alternate;opacity:.95;pointer-events:none;}
+.v42-est.i{left:clamp(14px,3vw,56px);} .v42-est.d{right:clamp(14px,3vw,56px);animation-delay:-2.5s;}
+.lujo-hero2 .v42-est{top:52px;z-index:2;}
+@media (max-width:760px){ .lujo-hero2 .v42-est{display:none;} }
+@keyframes v42Balanceo{from{transform:rotate(-2.2deg) skewX(-1.5deg);}to{transform:rotate(2.2deg) skewX(1.5deg);}}
+.lujo-footer .cols{align-items:start;gap:0 !important;padding-bottom:34px !important;}
+.lujo-footer .cols .col{text-align:center;padding:4px 26px;}
+.lujo-footer .cols .col:nth-child(2){order:1;} .lujo-footer .cols .col:nth-child(1){order:2;border-left:1px solid rgba(228,188,110,.16);border-right:1px solid rgba(228,188,110,.16);} .lujo-footer .cols .col:nth-child(3){order:3;}
+.lujo-footer .cols .col .k{font-size:12px !important;letter-spacing:.26em !important;color:#c9a24a !important;margin-bottom:16px !important;}
+.lujo-footer .cols .col .v{font-size:14.5px !important;line-height:2 !important;color:#b9b4aa !important;letter-spacing:.01em;}
+.lujo-footer a,.lujo-footer .pie-wa{color:#e4bc6e !important;text-decoration:none !important;border-bottom:1px solid rgba(228,188,110,.35);animation:v42Link 3.6s ease-in-out infinite;}
+@keyframes v42Link{0%,100%{opacity:.72;}50%{opacity:1;}}
+.v41-mapabox{flex-direction:column !important;gap:10px !important;margin:0 0 16px !important;}
+.v41-mapa{width:150px !important;}
+.v41-mapa path{fill:rgba(228,188,110,.12) !important;stroke:rgba(228,188,110,.8) !important;stroke-width:.7 !important;}
+.v41-leyenda{font-size:12px !important;letter-spacing:.24em !important;}
+/* legales */
+.pie-legal .in{justify-content:center !important;padding-top:16px !important;}
+.pie-legal a,.pie-legal button{font-size:11.5px !important;letter-spacing:.12em !important;text-transform:uppercase;color:#8d887e !important;border:0 !important;animation:none !important;}
+.pie-legal a:hover,.pie-legal button:hover{color:#e4bc6e !important;}
+.pie-legal .arrep{color:#4f4b44 !important;font-size:10.5px !important;}
+.pie-legal .arrep:hover{color:#8d887e !important;}
+.pie-datos>*::before{display:none !important;}
+.pie-datos span{display:none !important;}
+.pie-datos{justify-content:center !important;padding-top:6px !important;padding-bottom:16px !important;}
+.pie-datos a{font-size:11.5px !important;letter-spacing:.12em !important;color:#8d887e !important;border:0 !important;}
+.lujo-footer .base div{justify-content:space-between;font-size:11.5px !important;letter-spacing:.12em !important;color:#8d887e !important;text-transform:uppercase;}
+@media (max-width:760px){
+  .lujo-footer .cols{grid-template-columns:1fr !important;gap:26px 0 !important;}
+  .lujo-footer .cols .col:nth-child(1){border:0;border-top:1px solid rgba(228,188,110,.16);border-bottom:1px solid rgba(228,188,110,.16);padding:22px 0;}
+  .lujo-footer .firma{padding-left:46px !important;padding-right:46px !important;}
+  .v42-est{width:20px;height:56px;top:50px;} .v42-est.i{left:12px;} .v42-est.d{right:12px;}
+  .pie-legal .in{flex-direction:column;gap:8px !important;} .pie-legal .in>*::before{display:none !important;}
+  .lujo-footer .base div{flex-direction:column;align-items:center;text-align:center;}
+}
+@media (prefers-reduced-motion:reduce){ .v42-est,.lujo-footer a{animation:none !important;} }
+</style>
+<script id="v42b-js">
+(function(){
+  "use strict";
+  const ar = document.querySelector(".pie-legal .arrep"); if(ar) ar.parentNode.appendChild(ar);
+  const svg = (c, n) => { const id = "e" + n + c; return `<svg class="v42-est ${c}" viewBox="0 0 30 84" aria-hidden="true"><defs><clipPath id="${id}"><path d="M4 4 H26 V72 L15 64 L4 72 Z"/></clipPath></defs><rect x="1" y="0" width="28" height="3.2" rx="1.6" fill="#c9a24a"/><g clip-path="url(#${id})"><rect x="4" y="4" width="22" height="70" fill="#74acdf"/><rect x="4" y="28" width="22" height="20" fill="#fff"/><circle cx="15" cy="38" r="4" fill="#f6c34a"/></g></svg>`; };
+  [[document.querySelector(".lujo-footer .firma"), 1], [document.querySelector(".lujo-hero2"), 2]].forEach(([el, n]) => {
+    if(el && !el.querySelector(".v42-est")) el.insertAdjacentHTML("afterbegin", svg("i", n) + svg("d", n));
+  });
+  /* la franja de datos va debajo de la portada, para que aparezca al bajar */
+  const hero = document.querySelector(".lujo-hero2"), datos = document.querySelector(".h2-datos");
+  if(hero && datos && datos.parentNode === hero) hero.after(datos);
+})();
+</script>
+<style id="v42c-css">
+/* la línea de datos de la portada aparece recién al empezar a bajar */
+/* ficha: mitad descripción · mitad asesoramiento + preguntas frecuentes */
+@media (min-width:761px){
+  .fold-abajo:has(.v42-bajo){display:block;padding-top:0 !important;}
+  .v42-bajo{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:0 56px;align-items:start;margin-top:22px;padding-top:24px;border-top:1px solid rgba(255,255,255,.08);}
+  .fold-abajo:has(.v42-bajo){border-top:0 !important;margin-top:0 !important;}
+  .v42-bajo .v31-detalle{margin:0 !important;max-width:none !important;width:auto !important;}
+  .v42-bajo .v31-detalle .t{margin-bottom:8px;}
+  .v42-bajo .v31-detalle .descripcion{max-height:none !important;overflow:visible !important;font-size:16px !important;line-height:1.6 !important;}
+  .v42-bajo .v31-ayuda{width:100%;}
+  .v42-bajo .v31-ayuda .asesor{display:flex !important;flex-direction:column;}
+  .v42-bajo .v31-ayuda,.v42-bajo .v31-ayuda .asesor{padding-left:0 !important;margin-left:0 !important;max-width:none !important;width:100% !important;}
+  .v42-bajo .v31-ayuda .asesor > *{width:100% !important;max-width:none !important;}
+  .v42-bajo .v31-ayuda .asesor > .preg-box{order:1;margin:0 0 30px !important;}
+  .v42-bajo .v31-ayuda .asesor > .t{order:2;}
+  .v42-bajo .v31-ayuda .asesor > .faq{order:3;}
+  .v42-bajo .preg-box .t{color:#e4bc6e;}
+}
+.v42-bajada{margin:0 0 12px;font-size:15px;line-height:1.5;color:#bdb8ae;}
+</style>
+<script id="v42c-js">
+(function(){
+  "use strict";
+  const $ = (s, r=document) => r.querySelector(s);
+  const top = () => document.body.classList.toggle("v42-top", (window.scrollY || 0) < 40);
+  window.addEventListener("scroll", top, { passive:true }); top();
+
+  const mq = window.matchMedia("(max-width:760px)");
+  function armar(){
+    const fold = $(".fold-abajo"), det = $("#v31-detalle"), ay = $(".v31-ayuda"); if(!fold || !det || !ay) return;
+    let bajo = $(".v42-bajo"); if(!bajo){ bajo = document.createElement("div"); bajo.className = "v42-bajo"; fold.prepend(bajo); }
+    if(!mq.matches){ if(det.parentNode !== bajo) bajo.prepend(det); if(ay.parentNode !== bajo) bajo.appendChild(ay); }
+    else if(ay.parentNode === bajo){ fold.appendChild(ay); }
+  }
+  armar(); if(mq.addEventListener) mq.addEventListener("change", () => setTimeout(armar, 0));
+
+  function textos(){
+    const pb = $("#asesor .preg-box"); if(!pb) return;
+    const t = $(".t", pb);
+    if(t && !t.dataset.v42){ t.dataset.v42 = "1"; t.textContent = "¿Necesitás asesoramiento?"; t.insertAdjacentHTML("afterend", `<p class="v42-bajada">Contanos qué vas a cocinar y para cuántas personas: te recomendamos la medida y te respondemos por WhatsApp.</p>`); }
+    const ta = $("textarea", pb); if(ta && !ta.dataset.v42){ ta.dataset.v42 = "1"; ta.placeholder = "Ej.: tengo un balcón chico y cocino para 4. ¿Cuál me conviene?"; }
+  }
+  textos();
+  const as = $("#asesor"); if(as) new MutationObserver(textos).observe(as, { childList:true });
+  if(typeof abrirFicha === "function"){ const af = abrirFicha; abrirFicha = function(){ const r = af.apply(this, arguments); setTimeout(() => { textos(); armar(); window.BRASAS_APLICAR_TEXTOS && window.BRASAS_APLICAR_TEXTOS(); }, 60); return r; }; }
 })();
 </script>
 </body>
