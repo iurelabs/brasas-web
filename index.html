@@ -2200,7 +2200,7 @@ document.getElementById("btn-wa-directo").addEventListener("click", ()=>{
   window.open(`https://wa.me/${WHATSAPP_NUMERO}?text=${encodeURIComponent(`Hola! Me interesa el ${((modeloActual.variantes[tagActivo()]||{}).nombre||modeloActual.nombre)}, ¿me pasás más info?`)}`, "_blank");
 });
 document.getElementById("btn-wa-comprobante").addEventListener("click", ()=>{
-  window.open(`https://wa.me/${WHATSAPP_NUMERO}?text=${encodeURIComponent(`Hola! Te paso mi número de pedido y el comprobante de pago de mi compra de ${((modeloActual.variantes[tagActivo()]||{}).nombre||modeloActual.nombre)}.`)}`, "_blank");
+  window.open(`https://wa.me/${WHATSAPP_NUMERO}?text=${encodeURIComponent("Hola BRASAS®! A continuación te comparto el comprobante de pago por mi pedido.")}`, "_blank");
 });
 
 renderConfigCuotas();
@@ -3974,7 +3974,7 @@ window.BRASAS_AJUSTES = {
     const u = ultimaOrden();
     burbuja(`Perfecto. ¿Cuál es tu número de orden? Empieza con <b>BR-</b>.`, "bot", [
       ...(u ? [{ t:`Usar ${u}`, fn:()=> responder(u, true) }] : []),
-      { t:"No lo tengo", fn:()=>{ esperando = null; burbuja("No hay problema. Mandanos el comprobante y tu nombre por WhatsApp:", "bot", [{ t:"Enviar comprobante por WhatsApp", wa:"Hola! Te envío el comprobante de pago de mi compra." }]); } }
+      { t:"No lo tengo", fn:()=>{ esperando = null; burbuja("No hay problema. Mandanos el comprobante y tu nombre por WhatsApp:", "bot", [{ t:"Enviar comprobante por WhatsApp", wa:"Hola BRASAS®! A continuación te comparto el comprobante de pago por mi pedido." }]); } }
     ]);
   }
   function flujoPedido(){
@@ -3988,7 +3988,7 @@ window.BRASAS_AJUSTES = {
     if(esperando === "comprobante" || esperando === "pedido"){
       const n = (q.match(/BR-[\w-]+/i) || [q.trim()])[0].toUpperCase(); const tipo = esperando; esperando = null;
       return tipo === "comprobante"
-        ? { h:`Tocá el botón y adjuntá la foto o el PDF del comprobante en el chat de WhatsApp.`, a:[{ t:"Enviar comprobante por WhatsApp", wa:`ORDEN N.º ${n}\nHola! Te envío el comprobante de pago.` }] }
+        ? { h:`Tocá el botón y adjuntá la foto o el PDF del comprobante en el chat de WhatsApp.`, a:[{ t:"Enviar comprobante por WhatsApp", wa:`Hola BRASAS®! A continuación te comparto el comprobante de pago por mi pedido ${n}.` }] }
         : { h:`Te paso con el taller para ver el estado de tu pedido.`, a:[{ t:"Consultar mi pedido por WhatsApp", wa:`ORDEN N.º ${n}\nHola! Quería saber el estado de mi pedido.` }] };
     }
     if(tiene(t,/\b(hola|buenas|buen dia|buenas tardes|buenas noches)\b/) && t.length < 20) return { h:"¡Hola! ¿En qué te ayudo? Podés preguntarme por envíos, pagos o qué modelo te conviene." };
@@ -4764,8 +4764,11 @@ body:has(.ck.abierto) .asist-fab{opacity:0;pointer-events:none;}
     ckOrden = pedido;
     pintarPago(pedido);
     ck.scrollTop = 0;
+    try{ window.BRASAS_FESTEJO && window.BRASAS_FESTEJO(); }catch(e){}
   }
 
+  const waComp = (o, medio) => `Hola BRASAS®! A continuación te comparto el comprobante de ${/transfer/i.test(medio || "transferencia") ? "transferencia" : "pago"} por mi pedido ${o}.`;
+  window.BRASAS_WA_COMPROBANTE = waComp;
   function textoPedido(p){
     return `ORDEN N.º ${p.orden}\n\n${p.items.map(i=>`• ${i.producto} (${i.variante}) × ${i.cantidad}`).join("\n")}\nTotal: ${money(p.total)} · ${p.medio}\n\n${p.cliente.nombre}\n${p.cliente.direccion}, ${p.cliente.ciudad}, ${p.cliente.provincia} (CP ${p.cliente.cp})${p.cliente.referencias ? `\nRef.: ${p.cliente.referencias}` : ""}\nCel: ${p.cliente.telefono} · DNI ${p.cliente.dni}`;
   }
@@ -4794,12 +4797,11 @@ body:has(.ck.abierto) .asist-fab{opacity:0;pointer-events:none;}
           <li><b>Subí el comprobante</b>&nbsp;acá abajo (o mandalo por WhatsApp).</li>
           <li><b>Confirmamos el pago</b>&nbsp;apenas se acredita.</li>
           <li><b>Gestionamos el envío</b>&nbsp;con Andreani.</li>
-          <li><b>Te mandamos el seguimiento</b>&nbsp;por email, y también lo ves en Mis compras.</li>
+          <li><b>Te mandamos el seguimiento</b>&nbsp;${currentUser && currentUser.email ? `por email, y también lo ves en <a href="#mis-compras" class="ck-mc">Mis compras</a>` : "por email"}.</li>
           <li><b>Te llega tu BRASAS®</b>${p.entrega ? `&nbsp;entre el ${esc(String(p.entrega).replace(" a ", " y el "))}` : "&nbsp;unos días después"}.</li>
         </ol>
-        <div class="ck-prot">🛡 Tu compra está protegida por la <b>Compra protegida BRASAS®</b> · <button type="button" class="ck-prot-b">ver qué cubre</button></div>
         ${A.appsScript ? `<label class="ck-subir" id="ck-subir"><input type="file" accept="image/*,application/pdf" hidden><b>Subir comprobante</b><small>Foto o PDF · se envía directo al taller</small></label>` : ""}
-        <div class="ck-wa">${A.appsScript ? "¿Preferís WhatsApp? " : ""}<a href="${waLink(`${textoPedido(p)}\n\nTe envío el comprobante de pago.`)}" target="_blank" rel="noopener">${A.appsScript ? "Enviar comprobante por WhatsApp ↗" : ""}</a></div>
+        <div class="ck-wa">${A.appsScript ? "¿Preferís WhatsApp? " : ""}<a href="${waLink(waComp(p.orden, p.medio))}" target="_blank" rel="noopener">${A.appsScript ? "Enviar comprobante por WhatsApp ↗" : ""}</a></div>
         ${A.appsScript ? "" : `<a class="ck-wa-btn" href="${waLink(`${textoPedido(p)}\n\nTe envío el comprobante de pago.`)}" target="_blank" rel="noopener">Enviar pedido y comprobante por WhatsApp</a>`}`
       : transf ? `
         <p style="text-align:center;color:#cfcac0;font-size:15.5px;line-height:1.6;margin-top:22px">Te enviamos los datos bancarios en minutos.</p>
@@ -4810,7 +4812,6 @@ body:has(.ck.abierto) .asist-fab{opacity:0;pointer-events:none;}
         <a class="ck-wa-btn" href="${waLink(`${textoPedido(p)}\n\nQuiero pagar con ${p.medio}.`)}" target="_blank" rel="noopener">Continuar por WhatsApp</a>`}
       <p class="ck-legal" style="margin-top:22px">${A.appsScript ? `Te enviamos este resumen a <b>${esc(p.cliente.email)}</b>.` : ""} Guardá tu número de orden.</p>
       <button class="cta ck-go" id="ck-listo" style="margin-top:14px">Listo</button>`;
-    const pb = $(".ck-prot-b", card); if(pb) pb.addEventListener("click", ()=>{ const t = String((typeof CAT !== "undefined" && CAT.textos && CAT.textos.protegida) || "").trim(); if(window.BRASAS_POP) window.BRASAS_POP("Compra protegida BRASAS®", esc(t || "Tu compra queda respaldada de punta a punta.").replace(/\n/g, "<br>")); });
     $(".ck-x", card).addEventListener("click", cerrarCk);
     $("#ck-listo", card).addEventListener("click", cerrarCk);
     $$(".ck-copiar", card).forEach(bt=> bt.addEventListener("click", async ()=>{
@@ -5026,7 +5027,7 @@ body:has(.ck.abierto) .asist-fab{opacity:0;pointer-events:none;}
 .bandera:hover,.bandera:focus-visible{opacity:1;transform:translateY(-1px);outline:none;}
 .bandera.on{opacity:1;border-color:rgb(228,188,110);box-shadow:0 0 0 1px rgba(228,188,110,.6),0 0 14px -2px rgba(228,188,110,.7);}
 .banderas .mas{display:none;}
-@media (max-width:760px){
+@media all{
   .banderas{gap:0;padding:0 4px;}
   .banderas .bandera:not(.on){display:none;}
   .banderas.abierto{z-index:70;}
@@ -5035,7 +5036,6 @@ body:has(.ck.abierto) .asist-fab{opacity:0;pointer-events:none;}
     box-shadow:0 18px 40px -12px rgba(0,0,0,.9);}
   .banderas .lista .bandera{display:block !important;width:36px;height:25px;}
 }
-@media (min-width:761px){ .banderas .lista{display:contents;} .banderas > .bandera.actual{display:none;} }
 .bv-idiomas button{display:flex;align-items:center;justify-content:center;gap:10px;}
 .bv-idiomas button .bandera{opacity:1;pointer-events:none;width:28px;height:19px;}
 
@@ -7510,6 +7510,9 @@ body:has(.modal-compras.abierto) .flot,body:has(.modal-resenas.abierto) .flot,bo
 .mcx-b:hover{border-color:#e4bc6e;color:#fff;} .mcx-b.oro{border-color:#e4bc6e;color:#e8cf8f;} .mcx-b:disabled{opacity:.5;}
 .mcx .hecho{color:#7fd6a0;font-size:13.5px;}
 .mcx-gr{flex:1 1 100%;display:grid;gap:8px;} .mcx-gr textarea{width:100%;min-height:70px;background:#0b0d0f;border:1px solid var(--linea-fuerte);color:#fff;padding:10px;font:inherit;font-size:14.5px;}
+.mcx-comp{margin:12px 0 0;padding:12px 14px;border:1px dashed rgba(212,175,55,.45);border-radius:10px;font-size:13.5px;}
+.mcx-comp .acc{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px;}
+.mcx-llega small{display:block;color:var(--hueso-dim);font-size:12px;margin-top:2px;}
 .mcx-act{font-size:12.5px;color:var(--hueso-dim);margin:-8px 0 10px;}
 .mcx header{align-items:baseline;} .mcx header .num{font-family:var(--serif);font-size:20px;letter-spacing:.02em;text-transform:none;color:#fff;} .mcx header .fe{font-size:12.5px;}
 .mcx-estado{display:flex;align-items:center;flex-wrap:wrap;gap:8px 16px;margin:-2px 0 14px;}
@@ -7563,6 +7566,18 @@ body:has(.modal-compras.abierto) .flot,body:has(.modal-resenas.abierto) .flot,bo
   const cacheK = () => "brasas-mc-" + (mayoU() ? "u-" + mayoU().usuario : String((currentUser && currentUser.email) || "").toLowerCase());
   const leerCache = () => { try{ return JSON.parse(localStorage.getItem(cacheK()) || "null"); }catch(e){ return null; } };
   const guardarCache = l => { try{ localStorage.setItem(cacheK(), JSON.stringify(l)); }catch(e){} };
+  /* un pedido recién hecho aparece al instante (desde este dispositivo), sin esperar al servidor */
+  function sumarLocales(lst){
+    if(mayoU()) return lst;
+    try{
+      const loc = JSON.parse(localStorage.getItem("brasas-ordenes") || "[]"), tiene = {}; lst.forEach(c=> tiene[c.orden] = 1);
+      const ocultos = JSON.parse(localStorage.getItem("brasas-mc-quitadas") || "[]");
+      const nuevos = loc.filter(o=> o && o.orden && !tiene[o.orden] && ocultos.indexOf(o.orden) < 0 && Date.now() - new Date(o.fecha).getTime() < 3 * 864e5).map(o=>({
+        orden:o.orden, fecha:new Date(o.fecha).getTime() || Date.now(), total:o.total || 0, medio:o.medio || "", estado:"recibido", quitable:true,
+        items:(o.items || []).map(i=>({ tag:i.tag || "", producto:i.producto || i.nombre || "", variante:i.variante || i.medida || "", cantidad:i.cantidad || i.qty || 1, precio:i.precio || 0, foto:i.foto || "" })) }));
+      return nuevos.concat(lst);
+    }catch(e){ return lst; }
+  }
   async function abrirMisCompras(){
     if(!card) return;
     if(!credOk() && !mayoU()){ pendienteAbrir = true; abrirLogin(); return; }
@@ -7572,12 +7587,12 @@ body:has(.modal-compras.abierto) .flot,body:has(.modal-resenas.abierto) .flot,bo
     modal.classList.add("abierto");
     const lista = $("#compras-lista", card);
     if(!A.appsScript){ lista.innerHTML = `<div class="mc-vacio">Todavía no tenés compras registradas.</div>`; return; }
-    const previa = leerCache(); if(previa && previa.length) pintar(previa, true);     // al instante lo último que vio; se actualiza atrás
+    const previa = leerCache(); const ini = sumarLocales(previa || []); if(ini.length) pintar(ini, !!(previa && previa.length) || ini.length > 0);     // al instante lo último que vio; se actualiza atrás
     try{
       const r = await fetch(urlScript(mayoU() ? "accion=miscompras&usuario=" + encodeURIComponent(mayoU().usuario) + "&_=" + Date.now() : "accion=miscompras&credencial=" + encodeURIComponent(currentUser.cred || "") + "&_=" + Date.now()), { cache:"no-store" });
       const j = await r.json();
       if(!j.ok){ if(j.error === "acceso" && mayoU()){ modal.classList.remove("abierto"); window.BRASAS_MAYO_SALIR && window.BRASAS_MAYO_SALIR(); return; } if(j.error === "google"){ currentUser.cred = ""; pendienteAbrir = true; modal.classList.remove("abierto"); abrirLogin(); return; } throw new Error(j.error); }
-      guardarCache(j.compras || []); pintar(j.compras || []);
+      const lst = sumarLocales(j.compras || []); guardarCache(lst); pintar(lst);
     }catch(e){ if(!(previa && previa.length)) lista.innerHTML = `<div class="mc-error">No pudimos traer tus compras ahora. Probá de nuevo en un rato.</div>`; }
   }
   window.BRASAS_MIS_COMPRAS = abrirMisCompras;
@@ -7591,13 +7606,14 @@ body:has(.modal-compras.abierto) .flot,body:has(.modal-resenas.abierto) .flot,bo
   const estrellas = n => `<span class="mcx-est">${"★".repeat(n)}${"☆".repeat(5 - n)}</span>`;
   /* camino del pedido: cada etapa se tilda cuando sucede */
   const fCorta = t => new Date(t).toLocaleDateString("es-AR", { day:"numeric", month:"short" }).replace(/\./g,"");
-  const waVend = c => `https://wa.me/${String(A.whatsapp || (typeof WHATSAPP_NUMERO !== "undefined" ? WHATSAPP_NUMERO : "")).replace(/\D/g,"")}?text=${encodeURIComponent(`Hola! Te escribo por mi pedido N.º ${c.orden}.`)}`;
+  const FRASE = "La fecha de entrega ya contempla el tiempo de preparación.";
+  const waVend = c => `https://wa.me/${String(A.whatsapp || (typeof WHATSAPP_NUMERO !== "undefined" ? WHATSAPP_NUMERO : "")).replace(/\D/g,"")}?text=${encodeURIComponent(`Hola BRASAS®! Te escribo por mi pedido N.º ${c.orden}`)}`;
   function ruta(c){
     const pagado = !!(c.pagado || c.despachado || c.entregado);
     const et = [
       { t:"Pedido recibido", d:fCorta(c.fecha), ok:true },
       { t: pagado ? "Pago confirmado" : c.comprobante ? "Comprobante recibido" : "Pendiente de pago", d: c.pagado ? fCorta(c.pagado) : (c.comprobante && !pagado ? "lo estamos verificando" : (!pagado ? "transferí y subí el comprobante" : "")), ok:pagado },
-      { t:"En preparación", d: c.despachado || c.entregado ? "" : (pagado ? "estamos fabricándolo" : ""), ok:!!(c.despachado || c.entregado) },
+      { t:"En preparación", d: c.despachado || c.entregado ? "" : (pagado ? "estamos preparando tu pedido" : ""), ok:!!(c.despachado || c.entregado) },
       { t: c.despachado || c.entregado ? "Despachado por Andreani" : c.seguimiento ? "Envío contratado" : "Despacho por Andreani", d: c.despachado ? fCorta(c.despachado) : "", ok:!!(c.despachado || c.entregado), link: c.seguimiento ? { u:c.seguimientoUrl, t:`Seguir envío · ${c.seguimiento}` } : null },
       { t:"Entregado", d: c.entregado ? fCorta(c.entregado) : "", ok:!!c.entregado }
     ];
@@ -7605,9 +7621,16 @@ body:has(.modal-compras.abierto) .flot,body:has(.modal-resenas.abierto) .flot,bo
     return `<ol class="mcx-ruta">${et.map((x,k)=>`<li class="${x.ok ? "ok" : k === act ? "act" : ""}"><i>${x.ok ? "✓" : ""}</i><div><b>${x.t}</b>${x.d ? `<small>${x.d}</small>` : ""}${x.link && x.link.u ? `<a href="${esc(x.link.u)}" target="_blank" rel="noopener">${esc(x.link.t)} →</a>` : ""}</div></li>`).join("")}</ol>`;
   }
   function estadoLinea(c){
-    const [k, t] = (c.estado === "cancelado" || c.cancelado) ? ["cancel", "Pedido cancelado"] : c.entregado ? ["ok", `Entregado el ${fFecha(c.entregado)}`] : c.despachado ? ["viaje", "En camino por Andreani"] : (c.pagado) ? ["pend", "Pago confirmado · en preparación"] : c.comprobante ? ["pend", "Verificando tu pago"] : ["pend", "Esperando tu pago"];
-    const llega = !c.entregado && c.estado !== "cancelado" && c.entrega ? `<span class="mcx-llega">Llega aprox. entre el <b>${esc(c.entrega.replace(" a "," y el "))}</b></span>` : "";
+    const [k, t] = (c.estado === "cancelado" || c.cancelado) ? ["cancel", "Pedido cancelado"] : c.entregado ? ["ok", `Entregado el ${fFecha(c.entregado)}`] : c.despachado ? ["viaje", "En camino por Andreani"] : (c.pagado) ? ["pend", "Pago confirmado · estamos preparando tu pedido"] : c.comprobante ? ["pend", "Verificando tu pago"] : ["pend", "Esperando tu pago"];
+    const llega = !c.entregado && c.estado !== "cancelado" && c.entrega ? `<span class="mcx-llega">Llega aprox. entre el <b>${esc(c.entrega.replace(" a "," y el "))}</b><small>${FRASE}</small></span>` : "";
     return `<div class="mcx-estado"><span class="mcx-pill ${k}"><i></i>${t}</span>${llega}</div>`;
+  }
+  const waComp = c => `https://wa.me/${String(A.whatsapp || (typeof WHATSAPP_NUMERO !== "undefined" ? WHATSAPP_NUMERO : "")).replace(/\D/g,"")}?text=${encodeURIComponent(`Hola BRASAS®! A continuación te comparto el comprobante de ${/transfer/i.test(c.medio || "transferencia") ? "transferencia" : "pago"} por mi pedido ${c.orden}.`)}`;
+  function compBloque(c){
+    if(c.pagado || c.despachado || c.entregado || c.estado === "cancelado" || c.cancelado || mayoU()) return "";
+    return `<div class="mcx-comp"><b>${c.comprobante ? "Comprobante recibido: lo estamos verificando" : "Pagá por transferencia y mandanos el comprobante"}</b>
+      <div class="acc"><label class="mcx-b oro">${c.comprobante ? "Subir otro comprobante" : "Subir comprobante"}<input type="file" accept="image/*,application/pdf" hidden data-comp></label>
+      <a class="mcx-b wa" target="_blank" rel="noopener" href="${esc(waComp(c))}">Enviar por WhatsApp</a></div></div>`;
   }
   function garantia(c){
     if(!c.entregado) return `<div class="mcx-gar">Garantía de fábrica: <b>365 días</b>, desde que lo recibís.</div>`;
@@ -7630,6 +7653,7 @@ body:has(.modal-compras.abierto) .flot,body:has(.modal-resenas.abierto) .flot,bo
           </div></div>`).join("")}
         ${c.destino || c.ahorro ? `<div class="mcx-dato">${c.destino ? `Envío a <b>${esc(c.destino)}</b>` : ""}${c.destino && c.ahorro ? " · " : ""}${c.ahorro ? `<span class="ah">Ahorraste ${money(c.ahorro)} por cantidad</span>` : ""}</div>` : ""}
         ${c.estado === "cancelado" ? "" : ruta(c) + garantia(c)}
+        ${compBloque(c)}
         <footer>
           <div class="tot">${c.total ? `<span>Total</span><b>${money(c.total)}</b>${c.medio ? `<small>${esc(c.medio)}</small>` : ""}` : ""}</div>
           <div class="acc">
@@ -7661,10 +7685,21 @@ body:has(.modal-compras.abierto) .flot,body:has(.modal-resenas.abierto) .flot,bo
       const qt = $("[data-quitar]", art);
       if(qt) qt.addEventListener("click", async ()=>{
         if(!qt.classList.contains("si")){ qt.classList.add("si"); qt.textContent = c.estado === "cancelado" ? "Confirmar: quitar" : "Confirmar: cancelar pedido"; setTimeout(()=>{ if(document.body.contains(qt) && qt.classList.contains("si") && !qt.disabled){ qt.classList.remove("si"); qt.textContent = c.estado === "cancelado" ? "Quitar del historial" : "Cancelar y quitar"; } }, 5000); return; }
-        qt.disabled = true; qt.textContent = "Quitando…";
+        try{ const q = JSON.parse(localStorage.getItem("brasas-mc-quitadas") || "[]"); q.push(orden); localStorage.setItem("brasas-mc-quitadas", JSON.stringify(q.slice(-40))); }catch(e){}
+        const rest = compras.filter(x=> x.orden !== orden); guardarCache(rest); pintar(rest); toast("Listo: pedido quitado de tu historial");      // al instante; el servidor se entera atrás
         const j = await post({ tipo:"quitar_compra", orden });
-        if(j.ok){ const rest = compras.filter(x=> x.orden !== orden); guardarCache(rest); pintar(rest); toast("Listo: pedido quitado de tu historial"); }
-        else { qt.disabled = false; qt.classList.remove("si"); qt.textContent = "Cancelar y quitar"; toast(j.error === "ya pagado" ? "Ese pedido ya está pago: no se puede cancelar. Escribinos por WhatsApp." : "No se pudo quitar. Probá de nuevo."); }
+        if(!j.ok){ guardarCache(compras); pintar(compras); toast(j.error === "ya pagado" ? "Ese pedido ya está pago: no se puede cancelar. Escribinos por WhatsApp." : "No se pudo quitar. Probá de nuevo."); }
+      });
+      const cp = $("[data-comp]", art);
+      if(cp) cp.addEventListener("change", async ()=>{
+        const f = cp.files && cp.files[0]; if(!f) return;
+        if(!/^(image\/(jpeg|png|webp)|application\/pdf)$/.test(f.type)) return toast("Subí una foto JPG/PNG o un PDF");
+        const lab = cp.closest("label"), txt0 = lab.firstChild.textContent; lab.firstChild.textContent = "Subiendo…";
+        let data, mime = f.type;
+        if(f.type === "application/pdf"){ data = await new Promise(ok=>{ const r = new FileReader(); r.onload = ()=> ok(r.result); r.readAsDataURL(f); }); }
+        else { data = await achicar(f); mime = "image/jpeg"; }
+        const j = await post({ tipo:"comprobante", orden, nombre: (currentUser && currentUser.nombre) || "", email: (currentUser && currentUser.email) || "", total: c.total, archivo: String(data).split(",")[1], mime, archivoNombre: f.name });
+        if(j.ok){ c.comprobante = Date.now(); guardarCache(compras); toast("¡Listo! Recibimos tu comprobante"); pintar(compras); } else { lab.firstChild.textContent = txt0; toast("No se pudo subir. Probá de nuevo o mandalo por WhatsApp."); }
       });
       const rec = $("[data-recibi]", art);
       if(rec) rec.addEventListener("click", async ()=>{ rec.disabled = true; rec.textContent = "Guardando…"; const j = await post({ tipo:"recibido", orden }); if(j.ok){ c.entregado = Date.now(); c.items.forEach(i=>{ if(!i.opinado) i.puedeOpinar = true; }); guardarCache(compras); pintar(compras); } else { rec.disabled = false; rec.textContent = "Lo recibí"; toast("No se pudo guardar. Probá de nuevo."); } });
@@ -10766,7 +10801,7 @@ body.v46-ml-on #v46-acc{display:none;}
 
   const fuente = (() => {
     try{
-      const q = new URLSearchParams(location.search), u = q.get("utm_source"); if(u) return u.slice(0, 30).toLowerCase();
+      const q = new URLSearchParams(location.search), u = q.get("ref") || q.get("utm_source"); if(u) return u.slice(0, 30).toLowerCase();
       const r = (document.referrer ? new URL(document.referrer).hostname : "").toLowerCase();
       if(/instagram/.test(r) || /#tienda/i.test(location.hash)) return "instagram";
       if(/facebook|fb\./.test(r)) return "facebook"; if(/google/.test(r)) return "google"; if(/whatsapp|wa\.me/.test(r)) return "whatsapp"; if(/mercadoli/.test(r)) return "mercadolibre";
@@ -10873,6 +10908,13 @@ body.v46-ml-on #v46-acc{display:none;}
 #v51 .ac{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px;}
 #v51 .ac button{background:#1a1814;border:1px solid #d4af37;color:#d4af37;padding:10px 14px;cursor:pointer;font-weight:600;font-size:13px;}
 #v51 .ac button.pri{background:#d4af37;color:#0c0c0c;} #v51 .ac button:disabled{opacity:.35;cursor:default;}
+#v51 .nt{width:100%;box-sizing:border-box;background:#000;border:1px solid #3a352d;color:#fff;padding:8px 10px;font:14px Archivo,sans-serif;min-height:54px;margin-top:6px;resize:vertical;}
+#v51 .ac button.sec{border-color:#3a352d;color:#cfc9bd;font-weight:500;} #v51 .ac button.mal{border-color:#7a3030;color:#f09a9a;}
+#v51 .ac select{background:#1a1814;border:1px solid #3a352d;color:#cfc9bd;padding:10px 8px;font-size:13px;}
+#v51 .sm{display:flex;align-items:center;gap:6px;margin-top:10px;font-size:12.5px;color:#8a8478;} #v51 .sm input{width:auto;min-width:0;}
+#v51 .it{display:flex;gap:10px;align-items:center;margin-top:6px;} #v51 .it i{width:42px;height:42px;background:#1a1814 center/cover;border:1px solid #2a2723;flex:none;}
+#v51 .gar{grid-column:1/-1;width:100%;border-collapse:collapse;font-size:14px;} #v51 .gar th{font:11px var(--mono,monospace);letter-spacing:.14em;text-transform:uppercase;color:#d4af37;text-align:left;padding:8px;border-bottom:1px solid #2a2723;}
+#v51 .gar td{padding:9px 8px;border-bottom:1px solid #1d1b18;} #v51 .gar .ok{color:#7fd6a0;} #v51 .gar .no{color:#f09a9a;}
 #v51 .vv{grid-column:1/-1;text-align:center;color:#8a8478;padding:40px;}
 @media(max-width:600px){#v51 .vl{grid-template-columns:1fr;padding:4px 12px 90px;}#v51 .vh,#v51 .vc,#v51 .vf{padding-left:12px;padding-right:12px;}#v51 h2{font-size:22px;}}
 </style>
@@ -10885,7 +10927,7 @@ body.v46-ml-on #v46-acc{display:none;}
   const money = n => "$ " + Math.round(n || 0).toLocaleString("es-AR");
   const url = q => A.appsScript + (A.appsScript.includes("?") ? "&" : "?") + q;
   const cred = () => { try{ return (typeof currentUser !== "undefined" && currentUser && currentUser.cred) || ""; }catch(e){ return ""; } };
-  let ventas = [], filtro = "todas", busca = "", admin = false, chequeado = "", timer = 0;
+  let ventas = [], filtro = "pendientes", busca = "", admin = false, chequeado = "", timer = 0;
   const btn = document.createElement("button"); btn.id = "v51-btn"; btn.type = "button"; btn.innerHTML = "Ventas<b id='v51-n'>0</b>";
   const pan = document.createElement("div"); pan.id = "v51"; pan.innerHTML = `<div class="vh"><h2>Ventas</h2><span class="fe" id="v51-ts"></span><button class="vx" type="button" aria-label="Cerrar">×</button></div><div class="vc" id="v51-c"></div><div class="vf" id="v51-f"></div><div class="vl" id="v51-l"></div>`;
   document.addEventListener("DOMContentLoaded", ()=>{ document.body.append(btn, pan); });
@@ -10907,12 +10949,20 @@ body.v46-ml-on #v46-acc{display:none;}
   function pintar(){
     const cnt = e => ventas.filter(v => e.test(v.estado)).length;
     $("#v51-c").innerHTML = [["Esperando pago", cnt(/esperando|comprobante/)], ["Para despachar", cnt(/^pagado$/)], ["En camino", cnt(/^despachado$/)], ["Entregadas", cnt(/^entregado$/)], ["Vendido (pagado+)", money(ventas.filter(v => /pagado|despachado|entregado/.test(v.estado)).reduce((s, v) => s + v.total, 0))]].map(x => `<div><b>${esc(x[1])}</b><span>${x[0]}</span></div>`).join("");
-    const F = [["todas","Todas",/./],["pago","Esperando pago",/esperando|comprobante/],["pagadas","Para despachar",/^pagado$/],["camino","En camino",/^despachado$/],["entregadas","Entregadas",/^entregado$/]];
+    const F = [["pendientes","Pendientes",/^(?!entregado|cancelado)/],["pago","Esperando pago",/esperando|comprobante/],["pagadas","Para despachar",/^pagado$/],["camino","En camino",/^despachado$/],["entregadas","Entregadas",/^entregado$/],["canceladas","Canceladas",/^cancelado$/],["garantias","Garantías",/^entregado$/]];
     $("#v51-f").innerHTML = F.map(f => `<button class="f ${filtro === f[0] ? "on" : ""}" data-f="${f[0]}" type="button">${f[1]}</button>`).join("") + `<input id="v51-q" placeholder="Buscar nombre, mail, orden, seguimiento…" value="${esc(busca)}"><button class="f" id="v51-r" type="button">↻ Actualizar</button>`;
     const re = (F.find(f => f[0] === filtro) || F[0])[2], q = busca.trim().toLowerCase();
     const l = ventas.filter(v => re.test(v.estado) && (!q || [v.orden, v.nombre, v.email, v.telefono, v.seguimiento, v.ciudad, v.provincia].join(" ").toLowerCase().includes(q)));
-    $("#v51-l").innerHTML = l.length ? l.map(card).join("") : `<div class="vv">No hay ventas para mostrar.</div>`;
+    $("#v51-l").innerHTML = !l.length ? `<div class="vv">No hay ventas para mostrar.</div>` : filtro === "garantias" ? garantias(l) : l.map(card).join("");
     $("#v51-ts").textContent = "actualizado " + new Date().toLocaleTimeString("es-AR", { hour:"2-digit", minute:"2-digit" });
+  }
+  const fd = t => t ? new Date(t).toLocaleDateString("es-AR", { day:"2-digit", month:"2-digit", year:"numeric" }) : "—";
+  function garantias(l){
+    const f = l.slice().sort((a, b) => (b.entregado || 0) - (a.entregado || 0));
+    return `<table class="gar"><thead><tr><th>Orden</th><th>Cliente</th><th>Producto</th><th>Fecha de compra</th><th>Entregada</th><th>Garantía hasta</th><th></th></tr></thead><tbody>` + f.map(v => {
+      const vig = v.garantiaHasta > Date.now(), dias = Math.ceil((v.garantiaHasta - Date.now()) / 864e5);
+      return `<tr><td>${esc(v.orden)}</td><td>${esc(v.nombre)}</td><td>${v.items.map(i => i.cantidad + " × " + esc(i.producto) + " (" + esc(i.variante) + ")").join("<br>")}</td><td>${fd(v.fecha)}</td><td>${fd(v.entregado)}</td><td>${fd(v.garantiaHasta)}</td><td class="${vig ? "ok" : "no"}">${vig ? "vigente · " + dias + " d" : "vencida"}</td></tr>`;
+    }).join("") + `</tbody></table>`;
   }
   function card(v){
     const suc = v.entregaTipo === "sucursal";
@@ -10922,31 +10972,37 @@ body.v46-ml-on #v46-acc{display:none;}
       <div class="t1"><span class="on1">${esc(v.orden)}</span><span class="st ${clase(est)}">${etq(est)}</span></div>
       <div class="fe">${fecha(v.fecha)}${v.pagado ? " · pagó " + fecha(v.pagado) : ""}${v.despachado ? " · despachó " + fecha(v.despachado) : ""}${v.entregado ? " · entregó " + fecha(v.entregado) : ""}</div>
       <div class="tot">${money(v.total)} <small>· ${esc(v.medio)}${v.ahorro ? " · ahorro " + money(v.ahorro) : ""}</small></div>
-      <div class="bl"><em>Productos</em>${v.items.map(i => `${i.cantidad} × ${esc(i.producto)} <span style="color:#8a8478">(${esc(i.variante)})</span>`).join("<br>")}</div>
+      <div class="bl"><em>Productos y precio</em>${v.items.map(i => `<div class="it"><i style="${i.foto ? "background-image:url('" + esc(i.foto) + "')" : ""}"></i><span>${i.cantidad} × ${esc(i.producto)} <span style="color:#8a8478">(${esc(i.variante)})</span>${i.precio ? `<br><span style="color:#8a8478">${money(i.precio)} c/u = ${money(i.precio * i.cantidad)}</span>` : ""}</span></div>`).join("")}${v.entregado ? `<br><span style="color:#7fd6a0">Garantía hasta el ${fd(v.garantiaHasta)} · ${v.garantiaHasta > Date.now() ? "vigente" : "vencida"}</span>` : ""}</div>
       <div class="bl"><em>Cliente</em>${esc(v.nombre)}${v.dni ? " · DNI " + esc(v.dni) : ""}<br>${v.email ? `<a href="mailto:${esc(v.email)}">${esc(v.email)}</a>` : ""}${v.telefono ? ` · <a href="https://wa.me/${esc(String(v.telefono).replace(/\D/g, ""))}" target="_blank" rel="noopener">${esc(v.telefono)}</a>` : ""}${v.cuenta ? `<br><span style="color:#7fd6a0">Cuenta Google ✓</span>` : ""}</div>
       <div class="bl"><em>Entrega · ${suc ? "a sucursal" : "a domicilio"}</em>${dir}<br>${esc(v.ciudad)}, ${esc(v.provincia)} · CP ${esc(v.cp)}${v.referencias ? `<br><span style="color:#8a8478">${esc(v.referencias)}</span>` : ""}</div>
       <div class="bl"><em>Seguimiento Andreani</em>${v.seguimiento ? `<a href="${esc(v.seguimientoUrl)}" target="_blank" rel="noopener">${esc(v.seguimiento)}</a>` : `<span style="color:#8a8478">sin cargar</span>`}
         <div class="seg"><input class="sn" placeholder="Pegá acá el número (Ctrl+V)" autocomplete="off"><button class="g" data-a="seguimiento" type="button" style="background:#d4af37;color:#0c0c0c;border:0;padding:0 14px;font-weight:600;cursor:pointer">${v.seguimiento ? "Cambiar" : "Guardar"}</button></div></div>
+      <div class="bl"><em>Nota privada (el cliente no la ve)</em><textarea class="nt" maxlength="600" placeholder="Ej: pidió envío después del 20, pagó en dos partes…">${esc(v.nota || "")}</textarea><div class="ac" style="margin-top:6px"><button data-a="nota" class="sec" type="button">Guardar nota</button></div></div>
+      <label class="sm"><input type="checkbox" class="nm"> No avisar al cliente por mail (solo anotar)</label>
       <div class="ac"><button data-a="pagado" class="${/esperando|comprobante/.test(est) ? "pri" : ""}" ${v.pagado || est === "cancelado" ? "disabled" : ""} type="button">Pago acreditado</button>
         <button data-a="despachado" class="${est === "pagado" ? "pri" : ""}" ${v.despachado || est === "cancelado" ? "disabled" : ""} type="button">Despachado</button>
         <button data-a="entregado" ${v.entregado || est === "cancelado" ? "disabled" : ""} type="button">Entregado</button>
-        <button data-a="copiar" type="button">Copiar datos de etiqueta</button></div></div>`;
+        ${v.seguimiento ? `<button data-a="reenviar" class="sec" type="button">Reenviar seguimiento</button>` : ""}
+        <button data-a="copiar" class="sec" type="button">Copiar datos de etiqueta</button>
+        ${est === "cancelado" ? "" : `<button data-a="cancelar" class="mal" type="button">Cancelar orden</button>`}
+        <select class="rv" aria-label="Deshacer un paso"><option value="">Deshacer…</option>${[["entregado","Entregado"],["despachado","Despachado"],["pagado","Pago acreditado"],["seguimiento","Seguimiento"],["cancelado","Cancelada"]].filter(x => v[x[0]]).map(x => `<option value="${x[0]}">Quitar: ${x[1]}</option>`).join("")}</select></div></div>`;
   }
-  async function accion(o, a, n, boton){
+  async function accion(o, a, n, boton, sinmail, campo){
     const v = ventas.find(x => x.orden === o); if(!v) return;
     if(a === "copiar"){
       const t = ["CP: " + v.cp, "Localidad: " + v.ciudad, "Provincia: " + v.provincia, v.entregaTipo === "sucursal" ? "ENTREGA EN SUCURSAL: " + v.sucursal : "Dirección: " + [v.calle + " " + v.numero, v.piso && "piso " + v.piso, v.depto && "depto " + v.depto].filter(Boolean).join(", "), "Referencias: " + (v.referencias || "—"), "Nombre: " + v.nombre, "DNI: " + (v.dni || "—"), "Celular: " + v.telefono, "Email: " + v.email].join("\n");
       try{ await navigator.clipboard.writeText(t); boton.textContent = "¡Copiado!"; setTimeout(() => boton.textContent = "Copiar datos de etiqueta", 1500); }catch(e){ prompt("Copiá los datos:", t); } return;
     }
-    const nom = { pagado:"marcar PAGO ACREDITADO", despachado:"marcar DESPACHADO", entregado:"marcar ENTREGADO", seguimiento:"guardar el seguimiento " + n };
-    if(a !== "seguimiento" && !confirm("¿" + nom[a] + " en la orden " + o + "? Se le avisa por mail al cliente.")) return;
+    const nom = { pagado:"marcar PAGO ACREDITADO", despachado:"marcar DESPACHADO", entregado:"marcar ENTREGADO", seguimiento:"guardar el seguimiento " + n, reenviar:"REENVIAR el seguimiento", cancelar:"CANCELAR la orden (vuelve el stock)", revertir:"quitar el paso '" + campo + "'" };
+    if(a !== "seguimiento" && a !== "nota" && !confirm("¿" + nom[a] + " en la orden " + o + "?" + (/pagado|despachado|entregado|reenviar/.test(a) && !sinmail ? " Se le avisa por mail al cliente." : " No se le avisa al cliente."))) return;
     if(a === "seguimiento" && !/^[A-Za-z0-9-]{6,40}$/.test(n.replace(/\s+/g, ""))){ alert("Pegá solo el número de seguimiento (letras y números, mínimo 6)."); return; }
-    boton.disabled = true; const tx = boton.textContent; boton.textContent = "…";
+    const esSel = boton.tagName === "SELECT"; boton.disabled = true; const tx = esSel ? "" : boton.textContent; if(!esSel) boton.textContent = "…";
     try{
-      const r = await fetch(url("accion=ventaaccion&credencial=" + encodeURIComponent(cred()) + "&a=" + a + "&o=" + encodeURIComponent(o) + (n ? "&n=" + encodeURIComponent(n) : "") + "&_=" + Date.now()), { cache:"no-store" }), j = await r.json();
-      if(!j.ok){ if(j.error === "google"){ try{ currentUser.cred = ""; abrirLogin(); }catch(e){} } else alert(j.titulo ? j.titulo + "\n" + (j.msg || "") : "No se pudo: " + (j.error || "error")); boton.disabled = false; boton.textContent = tx; return; }
+      const r = await fetch(url("accion=ventaaccion&credencial=" + encodeURIComponent(cred()) + "&a=" + a + "&o=" + encodeURIComponent(o) + (n ? "&n=" + encodeURIComponent(n) : "") + (sinmail ? "&s=1" : "") + (campo ? "&c=" + campo : "") + "&_=" + Date.now()), { cache:"no-store" }), j = await r.json();
+      if(!j.ok){ if(j.error === "google"){ try{ currentUser.cred = ""; abrirLogin(); }catch(e){} } else alert(j.titulo ? j.titulo + "\n" + (j.msg || "") : "No se pudo: " + (j.error || "error")); boton.disabled = false; if(!esSel) boton.textContent = tx; return; }
+      if(a === "nota"){ boton.disabled = false; boton.textContent = "Guardado ✓"; setTimeout(() => boton.textContent = tx, 1500); await cargar(true); return; }
       await cargar(true); pintar();
-    }catch(e){ alert("No hubo conexión. Probá de nuevo."); boton.disabled = false; boton.textContent = tx; }
+    }catch(e){ alert("No hubo conexión. Probá de nuevo."); boton.disabled = false; if(!esSel) boton.textContent = tx; }
   }
   async function abrir(){
     if(!cred()){ try{ if(typeof currentUser === "undefined" || !currentUser) abrirLogin(); else { currentUser.cred = ""; abrirLogin(); } }catch(e){} return; }
@@ -10962,8 +11018,9 @@ body.v46-ml-on #v46-acc{display:none;}
     if(t.closest(".vx")) return cerrar();
     const f = t.closest("[data-f]"); if(f){ filtro = f.dataset.f; return pintar(); }
     if(t.closest("#v51-r")){ cargar(true).then(pintar); return; }
-    const b = t.closest(".vo button[data-a]"); if(b){ const o = b.closest(".vo").dataset.o; accion(o, b.dataset.a, b.dataset.a === "seguimiento" ? b.closest(".vo").querySelector(".sn").value.trim() : "", b); }
+    const b = t.closest(".vo button[data-a]"); if(b){ const c = b.closest(".vo"), o = c.dataset.o, a = b.dataset.a; accion(o, a, a === "seguimiento" ? c.querySelector(".sn").value.trim() : a === "nota" ? c.querySelector(".nt").value.trim() : "", b, c.querySelector(".nm").checked); }
   });
+  pan.addEventListener("change", e => { const sl = e.target.closest && e.target.closest("select.rv"); if(sl && sl.value){ const c = sl.closest(".vo"); const k = sl.value; sl.value = ""; accion(c.dataset.o, "revertir", "", sl, true, k); } });
   pan.addEventListener("input", e => { if(e.target.id === "v51-q"){ busca = e.target.value; const p = e.target.selectionStart; pintar(); const q = $("#v51-q"); q.focus(); q.setSelectionRange(p, p); } });
   /* ¿esta cuenta es admin? se consulta una vez por sesión de Google */
   setInterval(() => { const c = cred(); if(c && c !== chequeado){ chequeado = c; cargar(true).then(ok => { if(ok && /#ventas/i.test(location.hash)) abrir(); }); } if(!c && admin){ admin = false; btn.classList.remove("on"); } }, 2500);
@@ -11257,7 +11314,7 @@ body.v46-ml-on #v46-acc{display:none;}
 <script>
 (function(){
   "use strict";
-  const BUILD = "20261015-201331";
+  const BUILD = "20261015-222151";
   window.BRASAS_BUILD = BUILD;
   const $ = (s, r) => (r || document).querySelector(s);
   const esc = t => String(t).replace(/[&<>"]/g, c => ({ "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;" }[c]));
@@ -11477,6 +11534,141 @@ body.v46-ml-on #v46-acc{display:none;}
   }).observe(ml, { attributes:true, attributeFilter:["class"] });
   /* al entrar con Google, se limpia el modo */
   document.addEventListener("brasas-sesion", ()=>{ modoCarrito = false; quitarLink(); });
+})();
+</script>
+<script>
+(function(){
+  "use strict";
+  /* Zoom exacto: la lupa es un cuadrado y el panel es otro cuadrado que muestra EXACTAMENTE ese recorte, ampliado */
+  const principal = document.getElementById("foto-principal"), panel = document.getElementById("zoom-panel"), lupa = document.getElementById("lupa");
+  if(!principal || !panel || !lupa) return;
+  const ZOOM = 2.9;                       // aumento del recorte (antes ~1,9×)
+  const dims = new Map();
+  const urlDe = el => { const m = /url\((['"]?)(.*?)\1\)/.exec(el.style.backgroundImage || ""); return m ? m[2] : ""; };
+  function medir(url){
+    if(dims.has(url)) return dims.get(url);
+    dims.set(url, null);
+    const im = new Image(); im.onload = () => dims.set(url, { w: im.naturalWidth, h: im.naturalHeight }); im.src = url;
+    return null;
+  }
+  /* los demás manejadores del mouse (base y capas) reescriben la lupa y el panel en cada movimiento; este se aplica al final del cuadro para que mande */
+  let ultimo = null, pend = false;
+  principal.addEventListener("mousemove", ev => { ultimo = { clientX: ev.clientX, clientY: ev.clientY }; if(!pend){ pend = true; requestAnimationFrame(() => { pend = false; if(ultimo) zoom(ultimo); }); } });
+  function zoom(ev){
+    const url = urlDe(principal); if(!url) return;
+    const d = medir(url); if(!d || !d.w || !d.h) return;
+    const pr = principal.getBoundingClientRect(); if(!pr.width) return;
+    const wrap = principal.closest(".foto-principal-wrap") || principal, wr = wrap.getBoundingClientRect();
+    const col = document.getElementById("v46-right");
+    const izq = wr.right + 14, der = (col ? col.getBoundingClientRect().left : izq + 340) - 14;
+    const P = Math.round(Math.max(230, Math.min(360, der - izq, pr.height)));        // el panel es cuadrado
+    const L = P / ZOOM;                                                              // lado del recorte en la foto
+    /* dónde cae la imagen dentro del cuadro (contain + posición) */
+    const s = Math.min(pr.width / d.w, pr.height / d.h), dw = d.w * s, dh = d.h * s;
+    const pos = (principal.style.backgroundPosition || "50% 50%").match(/(-?[\d.]+)%\s+(-?[\d.]+)%/);
+    const px = pos ? +pos[1] / 100 : .5, py = pos ? +pos[2] / 100 : .5;
+    const ox = (pr.width - dw) * px, oy = (pr.height - dh) * py;
+    /* lupa: cuadrada, centrada en el mouse y dentro del cuadro */
+    const x = ev.clientX - pr.left, y = ev.clientY - pr.top;
+    const lx = Math.min(pr.width - L, Math.max(0, x - L / 2)), ly = Math.min(pr.height - L, Math.max(0, y - L / 2));
+    lupa.style.setProperty("width", L + "px"); lupa.style.setProperty("height", L + "px");
+    lupa.style.setProperty("left", lx + "px"); lupa.style.setProperty("top", ly + "px");
+    /* panel: mismo recorte, ampliado */
+    const set = (k, v) => panel.style.setProperty(k, v, "important");
+    set("width", P + "px"); set("height", P + "px"); set("aspect-ratio", "auto");
+    set("background-color", getComputedStyle(principal).backgroundColor);
+    set("background-repeat", "no-repeat");
+    set("background-size", (dw * ZOOM) + "px " + (dh * ZOOM) + "px");
+    set("background-position", (-(lx - ox) * ZOOM) + "px " + (-(ly - oy) * ZOOM) + "px");
+  }
+})();
+</script>
+<script>
+(function(){
+  "use strict";
+  /* ===== v57 · sesión de Google que sobrevive a recargas (30 días) ===== */
+  const A = window.BRASAS_AJUSTES || {}; if(!A.appsScript) return;
+  const K = "brasas-sesion";
+  const lg = k => { try{ return localStorage.getItem(k); }catch(e){ return null; } };
+  const ls = (k, v) => { try{ if(v == null) localStorage.removeItem(k); else localStorage.setItem(k, v); }catch(e){} };
+  const guardada = () => { try{ const s = JSON.parse(lg(K) || "null"); return s && s.token && +s.exp > Date.now() + 60000 ? s : null; }catch(e){ return null; } };
+  function aplicar(){
+    try{
+      const s = guardada();
+      if(!s || typeof currentUser === "undefined" || !currentUser || !currentUser.email) return;
+      if(String(currentUser.email).toLowerCase() !== String(s.email).toLowerCase()) return;
+      if(!currentUser.cred || !(Date.now() < (currentUser.credVence || 0) - 60000)){ currentUser.cred = s.token; currentUser.credVence = s.exp; currentUser.google = true; }
+    }catch(e){}
+  }
+  aplicar();
+  let pedida = "";
+  async function pedirSesion(jwt){
+    if(!jwt || pedida === jwt || String(jwt).indexOf("BS1.") === 0) return; pedida = jwt;
+    try{
+      const r = await fetch(A.appsScript + (A.appsScript.includes("?") ? "&" : "?") + "accion=sesion&credencial=" + encodeURIComponent(jwt) + "&_=" + Date.now(), { cache:"no-store" });
+      const j = await r.json();
+      if(j && j.ok && j.token){
+        ls(K, JSON.stringify({ token:j.token, exp:j.exp, email:String(j.email || "").toLowerCase() }));
+        if(currentUser && currentUser.cred === jwt){ currentUser.cred = j.token; currentUser.credVence = j.exp; }
+      }
+    }catch(e){ pedida = ""; }
+  }
+  const rauPrev = renderAccionesUsuario;
+  renderAccionesUsuario = function(){
+    const r = rauPrev.apply(this, arguments);
+    try{ if(currentUser && currentUser.google && currentUser.cred) pedirSesion(currentUser.cred); else aplicar(); }catch(e){}
+    return r;
+  };
+  /* salir: se borra la sesión guardada */
+  document.addEventListener("click", e => { if(e.target.closest && e.target.closest("#btn-logout")){ ls(K, null); pedida = ""; } }, true);
+  /* si el servidor dijo que la sesión ya no vale (otro dispositivo, vencida), se limpia para volver a pedir Google */
+  setInterval(() => { try{ if(currentUser && currentUser.cred === "" && lg(K)){ ls(K, null); pedida = ""; } }catch(e){} }, 2500);
+  try{ if(typeof currentUser !== "undefined" && currentUser) renderAccionesUsuario(); }catch(e){}
+})();
+</script>
+<style>
+/* ===== v58 · festejo al confirmar el pedido ===== */
+.v58-check{display:block;width:70px;height:70px;margin:0 auto 14px;}
+.v58-check circle{fill:rgba(79,208,138,.08);stroke:#4fd08a;stroke-width:3;stroke-dasharray:160;stroke-dashoffset:160;transform-origin:center;transform:rotate(-90deg);animation:v58c .75s .1s cubic-bezier(.3,.7,.2,1) forwards;}
+.v58-check path{fill:none;stroke:#4fd08a;stroke-width:4.2;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:44;stroke-dashoffset:44;animation:v58t .5s .7s ease-out forwards;}
+.v58-check{animation:v58pop .5s 1.1s ease-out;}
+@keyframes v58c{to{stroke-dashoffset:0;}} @keyframes v58t{to{stroke-dashoffset:0;}}
+@keyframes v58pop{0%{transform:scale(1);}45%{transform:scale(1.14);}100%{transform:scale(1);}}
+.v58-conf{position:fixed;inset:0;pointer-events:none;z-index:99998;overflow:hidden;}
+.v58-conf i{position:absolute;left:50%;top:38%;width:9px;height:15px;opacity:0;border-radius:1px;
+  animation:v58x var(--t) cubic-bezier(.15,.6,.3,1) forwards, v58y var(--t) linear forwards;}
+.v58-conf i.r{width:9px;height:9px;border-radius:50%;}
+@keyframes v58x{0%{translate:0 0;}100%{translate:var(--dx) 0;}}
+@keyframes v58y{0%{opacity:1;transform:translateY(0) rotate(0) rotateX(0);}30%{transform:translateY(var(--up)) rotate(calc(var(--g) * .4)) rotateX(180deg);}100%{opacity:1;transform:translateY(70vh) rotate(var(--g)) rotateX(720deg);}}
+@media (prefers-reduced-motion:reduce){ .v58-conf{display:none;} }
+.modal-compras{z-index:292 !important;}
+.ck-pasos a.ck-mc,.ck-mc{display:inline !important;color:#e4bc6e;text-decoration:underline;text-underline-offset:3px;}
+</style>
+<script>
+(function(){
+  "use strict";
+  const COLORES = ["#e4bc6e", "#f2d699", "#c9a24a", "#fff3c4", "#d9a93d", "#ffffff"];
+  const CHECK = '<svg class="v58-check" viewBox="0 0 64 64" aria-hidden="true"><circle cx="32" cy="32" r="25.5"/><path d="M20 33.5l8.5 8.5L44.5 24"/></svg>';
+  window.BRASAS_FESTEJO = function(){
+    const ok = document.querySelector("#ck-card .ck-ok");
+    if(ok && !ok.querySelector(".v58-check")) ok.insertAdjacentHTML("afterbegin", CHECK);
+    if(window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const box = document.createElement("div"); box.className = "v58-conf"; box.setAttribute("aria-hidden", "true");
+    const rnd = (a, b) => a + Math.random() * (b - a), n = 110;
+    let h = "";
+    for(let i = 0; i < n; i++){
+      const lado = Math.random() < .5 ? -1 : 1, dx = lado * rnd(6, 48), up = -rnd(14, 34), t = rnd(2.6, 4.4), d = rnd(0, .35);
+      h += `<i class="${Math.random() < .25 ? "r" : ""}" style="background:${COLORES[i % COLORES.length]};--dx:${dx.toFixed(1)}vw;--up:${up.toFixed(1)}vh;--g:${Math.round(rnd(300, 1000))}deg;--t:${t.toFixed(2)}s;animation-delay:${d.toFixed(2)}s;left:${rnd(44, 56).toFixed(1)}%"></i>`;
+    }
+    box.innerHTML = h; document.body.appendChild(box);
+    setTimeout(() => box.remove(), 5200);
+  };
+  /* "Mis compras" dentro de los pasos del pedido: abre la lista de compras de la cuenta */
+  document.addEventListener("click", e => {
+    const a = e.target.closest && e.target.closest(".ck-mc"); if(!a) return;
+    e.preventDefault();
+    if(window.BRASAS_MIS_COMPRAS) window.BRASAS_MIS_COMPRAS();
+  });
 })();
 </script>
 </body>
