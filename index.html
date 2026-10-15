@@ -5667,18 +5667,28 @@ window.BRASAS_CAJA = function(alto, ancho, largo, u, tema, op){
     estrellas: Math.max(1, Math.min(5, +o.estrellas || 5)), texto: String(o.texto || ""), fecha: Date.parse((o.fecha || "") + "T12:00:00") || Date.now(), fotos:[], aprobado:true, deCliente:false, ml:true });
 
   function desdeCache(){ try{ const c = JSON.parse(lsGet("brasas-catalogo") || "null"); return construir(c); }catch(e){ return false; } }
+  /* Pide el catálogo con reintentos: la 1ª vez (sin copia guardada) Apps Script puede tardar o fallar; no hay que recargar a mano */
+  const URL_CAT = () => A.appsScript + (A.appsScript.includes("?") ? "&" : "?") + "accion=catalogo";
+  async function pedirCat(ms){
+    const ctl = new AbortController(); const to = setTimeout(()=>ctl.abort(), ms);
+    try{ const r = await fetch(URL_CAT(), { signal:ctl.signal, cache:"no-store" }); return await r.json(); }
+    finally{ clearTimeout(to); }
+  }
+  let preCat = null, reintentosTarde = 0;
   async function traer(){
     if(!A.appsScript) return false;
-    try{
-      const ctl = new AbortController(); const to = setTimeout(()=>ctl.abort(), 15000);
-      const r = await fetch(A.appsScript + (A.appsScript.includes("?") ? "&" : "?") + "accion=catalogo", { signal:ctl.signal, cache:"no-store" });
-      clearTimeout(to);
-      const j = await r.json();
-      if(construir(j)){ lsSet("brasas-catalogo", JSON.stringify(j)); return true; }
-    }catch(e){}
+    for(const ms of [20000, 25000, 30000]){
+      try{
+        const j = preCat ? await preCat : await pedirCat(ms); preCat = null;
+        if(j && construir(j)){ lsSet("brasas-catalogo", JSON.stringify(j)); return true; }
+      }catch(e){ preCat = null; }
+      await new Promise(r=>setTimeout(r, 1200));
+    }
     if(!catalogoActivo) avisoGrilla("error");
+    if(!catalogoActivo && reintentosTarde++ < 4) setTimeout(traer, 15000);      // sigue intentando solo, sin que el cliente recargue
     return false;
   }
+  if(A.appsScript && !lsGet("brasas-catalogo")) { preCat = pedirCat(20000); preCat.catch(()=>{}); }     // arranca el pedido ya, sin esperar al resto de la página
   window.BRASAS_TRAER_CATALOGO = traer;
 
   /* =========================================================
@@ -10025,7 +10035,7 @@ body.v46-ml-on #v46-acc{display:none;}
   const pctDe = n => escala().reduce((a, e) => n >= e.n ? e.p : a, 0);
   const maxN = () => escala().slice(-1)[0].n;
   /* descuentos por cantidad solo con cuenta: sin cuenta (y con el interruptor de la pestaña WEB en SI) todos pagan el precio de 1 unidad */
-  const bloq = () => { try{ return !!(CAT && CAT.web && CAT.web.descLogin) && !(typeof currentUser !== "undefined" && currentUser && currentUser.email); }catch(e){ return false; } };
+  const bloq = () => { try{ return !!(CAT && CAT.web && CAT.web.descLogin !== false) && !(typeof currentUser !== "undefined" && currentUser && currentUser.email); }catch(e){ return false; } };
   window.BRASAS_DESC_BLOQUEADOS = bloq;
   const unitN = (base, n) => (n < 2 || bloq()) ? base : roundK(base * (1 - pctDe(n) / 100));
   /* textos que se recalculan con la escala: {max} {min} {desde} {top} {escala} */
@@ -11245,7 +11255,7 @@ body.v46-ml-on #v46-acc{display:none;}
 <script>
 (function(){
   "use strict";
-  const BUILD = "20261015-184527";
+  const BUILD = "20261015-191856";
   window.BRASAS_BUILD = BUILD;
   const $ = (s, r) => (r || document).querySelector(s);
   const esc = t => String(t).replace(/[&<>"]/g, c => ({ "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;" }[c]));
@@ -11312,7 +11322,7 @@ body.v46-ml-on #v46-acc{display:none;}
     const inp = $("#cant-v25"); if(inp) inp.dispatchEvent(new Event("input", { bubbles:true }));
     try{ if(window.BRASAS_CHECKOUT_REPINTAR) window.BRASAS_CHECKOUT_REPINTAR(); }catch(e2){}
     notas();
-    try{ if(typeof toast === "function" && e && window.BRASAS_DESC_BLOQUEADOS && !window.BRASAS_DESC_BLOQUEADOS() && ((CAT.web && CAT.web.descLogin))) toast("Descuentos por cantidad desbloqueados"); }catch(e3){}
+    try{ if(typeof toast === "function" && e && window.BRASAS_DESC_BLOQUEADOS && !window.BRASAS_DESC_BLOQUEADOS() && (CAT.web && CAT.web.descLogin !== false)) toast("Descuentos por cantidad desbloqueados"); }catch(e3){}
     document.dispatchEvent(new CustomEvent("brasas-sesion"));
   }
   if(typeof renderAccionesUsuario === "function"){ const prev = renderAccionesUsuario; renderAccionesUsuario = function(){ const r = prev.apply(this, arguments); setTimeout(alCambiar, 0); return r; }; }
