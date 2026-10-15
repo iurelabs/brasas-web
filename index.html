@@ -2354,21 +2354,21 @@ renderLanding();
   const MERCADOS = {
     AR:{ nombre:"Argentina",      bandera:"🇦🇷", moneda:"ARS", region:"Argentina" },
     /* Europa — euros */
-    ES:{ nombre:"España",         bandera:"🇪🇸", moneda:"EUR", envioUSD:260, dias:"15 a 25", region:"Europa" },
-    IT:{ nombre:"Italia",         bandera:"🇮🇹", moneda:"EUR", envioUSD:270, dias:"15 a 25", region:"Europa" },
-    DE:{ nombre:"Alemania",       bandera:"🇩🇪", moneda:"EUR", envioUSD:270, dias:"15 a 25", region:"Europa" },
-    FR:{ nombre:"Francia",        bandera:"🇫🇷", moneda:"EUR", envioUSD:270, dias:"15 a 25", region:"Europa" },
-    PT:{ nombre:"Portugal",       bandera:"🇵🇹", moneda:"EUR", envioUSD:260, dias:"15 a 25", region:"Europa" },
-    NL:{ nombre:"Países Bajos",   bandera:"🇳🇱", moneda:"EUR", envioUSD:270, dias:"15 a 25", region:"Europa" },
-    BE:{ nombre:"Bélgica",        bandera:"🇧🇪", moneda:"EUR", envioUSD:270, dias:"15 a 25", region:"Europa" },
-    AT:{ nombre:"Austria",        bandera:"🇦🇹", moneda:"EUR", envioUSD:280, dias:"15 a 25", region:"Europa" },
-    IE:{ nombre:"Irlanda",        bandera:"🇮🇪", moneda:"EUR", envioUSD:280, dias:"15 a 25", region:"Europa" },
-    GB:{ nombre:"Reino Unido",    bandera:"🇬🇧", moneda:"EUR", envioUSD:280, dias:"15 a 25", region:"Europa" },
-    CH:{ nombre:"Suiza",          bandera:"🇨🇭", moneda:"EUR", envioUSD:290, dias:"15 a 25", region:"Europa" },
+    ES:{ nombre:"España",         bandera:"🇪🇸", moneda:"EUR", envioUSD:260, dias:"15 a 18", region:"Europa" },
+    IT:{ nombre:"Italia",         bandera:"🇮🇹", moneda:"EUR", envioUSD:270, dias:"15 a 18", region:"Europa" },
+    DE:{ nombre:"Alemania",       bandera:"🇩🇪", moneda:"EUR", envioUSD:270, dias:"15 a 18", region:"Europa" },
+    FR:{ nombre:"Francia",        bandera:"🇫🇷", moneda:"EUR", envioUSD:270, dias:"15 a 18", region:"Europa" },
+    PT:{ nombre:"Portugal",       bandera:"🇵🇹", moneda:"EUR", envioUSD:260, dias:"15 a 18", region:"Europa" },
+    NL:{ nombre:"Países Bajos",   bandera:"🇳🇱", moneda:"EUR", envioUSD:270, dias:"15 a 18", region:"Europa" },
+    BE:{ nombre:"Bélgica",        bandera:"🇧🇪", moneda:"EUR", envioUSD:270, dias:"15 a 18", region:"Europa" },
+    AT:{ nombre:"Austria",        bandera:"🇦🇹", moneda:"EUR", envioUSD:280, dias:"15 a 18", region:"Europa" },
+    IE:{ nombre:"Irlanda",        bandera:"🇮🇪", moneda:"EUR", envioUSD:280, dias:"15 a 18", region:"Europa" },
+    GB:{ nombre:"Reino Unido",    bandera:"🇬🇧", moneda:"EUR", envioUSD:280, dias:"15 a 18", region:"Europa" },
+    CH:{ nombre:"Suiza",          bandera:"🇨🇭", moneda:"EUR", envioUSD:290, dias:"15 a 18", region:"Europa" },
     EU:{ nombre:"Otro país de Europa", bandera:"🇪🇺", moneda:"EUR", envioUSD:null, dias:"a cotizar", region:"Europa" },
     /* América */
-    US:{ nombre:"Estados Unidos", bandera:"🇺🇸", moneda:"USD", envioUSD:290, dias:"15 a 25", region:"América" },
-    CA:{ nombre:"Canadá",         bandera:"🇨🇦", moneda:"USD", envioUSD:300, dias:"15 a 25", region:"América" },
+    US:{ nombre:"Estados Unidos", bandera:"🇺🇸", moneda:"USD", envioUSD:290, dias:"15 a 18", region:"América" },
+    CA:{ nombre:"Canadá",         bandera:"🇨🇦", moneda:"USD", envioUSD:300, dias:"15 a 18", region:"América" },
     MX:{ nombre:"México",         bandera:"🇲🇽", moneda:"USD", envioUSD:220, dias:"12 a 20", region:"América" },
     UY:{ nombre:"Uruguay",        bandera:"🇺🇾", moneda:"USD", envioUSD:90,  dias:"7 a 12",  region:"América" },
     CL:{ nombre:"Chile",          bandera:"🇨🇱", moneda:"USD", envioUSD:110, dias:"8 a 14",  region:"América" },
@@ -2379,7 +2379,7 @@ renderLanding();
     /* Oceanía y otros */
     AU:{ nombre:"Australia",      bandera:"🇦🇺", moneda:"USD", envioUSD:330, dias:"18 a 30", region:"Oceanía y otros" },
     NZ:{ nombre:"Nueva Zelanda",  bandera:"🇳🇿", moneda:"USD", envioUSD:340, dias:"18 a 30", region:"Oceanía y otros" },
-    IL:{ nombre:"Israel",         bandera:"🇮🇱", moneda:"USD", envioUSD:290, dias:"15 a 25", region:"Oceanía y otros" },
+    IL:{ nombre:"Israel",         bandera:"🇮🇱", moneda:"USD", envioUSD:290, dias:"15 a 18", region:"Oceanía y otros" },
     OT:{ nombre:"Resto del mundo",bandera:"🌎", moneda:"USD", envioUSD:null, dias:"a cotizar", region:"Oceanía y otros" }
   };
   window.BRASAS_MERCADOS = MERCADOS;
@@ -3790,7 +3790,8 @@ window.BRASAS_AJUSTES = {
   }
   function sumarHabiles(d, n){ const x = new Date(d); while(n > 0){ x.setDate(x.getDate()+1); if(x.getDay() !== 0 && x.getDay() !== 6) n--; } return x; }
   const fFecha = d => d.toLocaleDateString("es-AR", { weekday:"short", day:"numeric", month:"short" }).replace(/\./g,"");
-  const diasPrep = () => { const s = modeloActual && modeloActual.stock; return (s === undefined || +s > 0) ? +A.despachoConStock || 1 : +A.produccionDias || 7; };
+  const diasPrep = () => { const pa = window.BRASAS_PREPARACION_ACTUAL && window.BRASAS_PREPARACION_ACTUAL(); if(pa) return pa; return diasPrepViejo(); };
+  const diasPrepViejo = () => { const s = modeloActual && modeloActual.stock; return (s === undefined || +s > 0) ? +A.despachoConStock || 1 : +A.produccionDias || 7; };
   function estimar(minT, maxT){
     const p = diasPrep(), hoy = new Date();
     return { desde: sumarHabiles(hoy, p + minT), hasta: sumarHabiles(hoy, p + maxT), prep: p };
@@ -4395,6 +4396,10 @@ body:has(.ck.abierto) .asist-fab{opacity:0;pointer-events:none;}
   const pct = () => Math.max(0, +C().descuentoCirculo || 0);
   const descUnit = precio => currentUser && pct() ? roundK(precio * pct() / 100) : 0;
   const unitTransfer = v => roundK(precioTransfer(v));
+  /* cuenta mayorista (se activa en v45): precio por cantidad de iguales (mismo TAG); con menos del mínimo, precio web */
+  const mayo = () => (window.BRASAS_MAYO && window.BRASAS_MAYO.on) ? window.BRASAS_MAYO : null;
+  const mayoTier = (tag, n) => { const M = mayo(); if(!M) return null; const T = M.tiers[tag]; if(!T || !T.length || n < M.minU) return null; let p = T[0].p; T.forEach(t=>{ if(n >= t.n) p = t.p; }); return p; };
+  const unitPed = (v, tag, n) => { const m = mayoTier(tag, n); return m != null ? m : unitTransfer(v); };
   function mediosCheckout(){
     const c = C(), l = [];
     if(c.transferencia !== false) l.push({ k:"transferencia", n:"Transferencia bancaria", d:"El mejor precio", recargo:0 });
@@ -4530,7 +4535,14 @@ body:has(.ck.abierto) .asist-fab{opacity:0;pointer-events:none;}
 
   function cuentas(){
     const items = ckItems.map(it=>({ it, ...itemInfo(it) })).filter(x=>x.m);
-    const sub = items.reduce((a,x)=> a + unitTransfer(x.v) * x.it.qty, 0);
+    const M = mayo(), qtyT = {};
+    items.forEach(x=>{ qtyT[x.it.tag] = (qtyT[x.it.tag] || 0) + x.it.qty; });
+    const unitDe = x => M ? unitPed(x.v, x.it.tag, qtyT[x.it.tag]) : unitTransfer(x.v);
+    const sub = items.reduce((a,x)=> a + unitDe(x) * x.it.qty, 0);
+    if(M){
+      const medio = mediosCheckout().find(x=>x.k==="transferencia") || { k:"transferencia", n:"Transferencia bancaria", recargo:0 };
+      return { items, sub, desc:0, rec:0, extra:0, extraPct:0, extraTxt:"", cupon:"", promoUsada:"", total:sub, medio, mayo:true, unitDe, qtyT, valido: Object.keys(qtyT).some(t=> qtyT[t] >= M.minU) };
+    }
     const o = mediosCheckout().find(x=>x.k===ckMedio) || mediosCheckout()[0] || { k:"transferencia", recargo:0 };
     let desc = 0, rec = 0;
     if(o.k === "transferencia") desc = items.reduce((a,x)=> a + descUnit(unitTransfer(x.v)) * x.it.qty, 0);
@@ -4541,21 +4553,28 @@ body:has(.ck.abierto) .asist-fab{opacity:0;pointer-events:none;}
     if(o.k === "transferencia"){ const pp = promo ? +promo.pct || 0 : 0;
       if(pp){ extraPct = pp; extraTxt = promo.nombre || "Promo"; promoUsada = extraTxt; } }
     const extra = extraPct ? roundK((sub - desc) * extraPct / 100) : 0;
-    return { items, sub, desc, rec, extra, extraPct, extraTxt, cupon, promoUsada, total: sub - desc - extra + rec, medio:o };
+    return { items, sub, desc, rec, extra, extraPct, extraTxt, cupon, promoUsada, total: sub - desc - extra + rec, medio:o, unitDe };
   }
 
   function abrirCheckout(items, origen){
     ckItems = items.map(x=>({ ...x })); ckOrigen = origen; ckOrden = null; ckQuitado = null;
     const ms = mediosCheckout();
-    ckMedio = ms.some(o=>o.k===medioActivo) ? medioActivo : (ms[0]||{k:"transferencia"}).k;
+    ckMedio = mayo() ? "transferencia" : ms.some(o=>o.k===medioActivo) ? medioActivo : (ms[0]||{k:"transferencia"}).k;
     pintarCheckout();
     ck.classList.add("abierto"); ck.scrollTop = 0; document.body.style.overflow = "hidden";
   }
   window.BRASAS_CHECKOUT = abrirCheckout;
+  window.BRASAS_CHECKOUT_REPINTAR = () => { if(ckItems.length){ if(mayo()) ckMedio = "transferencia"; pintarCheckout(); } };
 
+  function mayoNota(x, c, M){
+    const n = c.qtyT[x.it.tag], T = M.tiers[x.it.tag] || [];
+    if(n < M.minU) return `<div class="ck-mn">Precio web · desde ${M.minU} iguales, precio mayorista</div>`;
+    const sig = T.find(t=> t.n > n), cur = c.unitDe(x);
+    return `<div class="ck-mn ok">Precio mayorista · ${n} iguales${sig ? ` · con ${sig.n} iguales: ${money(sig.p)} c/u (−${Math.round((1 - sig.p/cur)*100)}%)` : ""}</div>`;
+  }
   function pintarCheckout(){
-    const card = $("#ck-card"), c = cuentas(), d = comprador(), u = currentUser || {};
-    const ms = mediosCheckout();
+    const card = $("#ck-card"), c = cuentas(), d = comprador(), u = currentUser || {}, M = mayo();
+    const ms = M ? mediosCheckout().filter(o=>o.k==="transferencia") : mediosCheckout();
     if(!c.items.length){
       card.innerHTML = `<button class="ck-x" aria-label="Cerrar">✕</button><div class="ck-e">★★★★★★</div><h3>Tu carrito</h3>${ckQuitado ? `<div class="ck-quitado"><span>Quitaste <b>${esc(ckQuitado.txt)}</b></span><button type="button" class="ck-undo">Deshacer</button></div>` : ""}<div class="ck-vacio">Todavía no agregaste nada.</div><button class="cta ck-go" data-cerrar>Ver la colección</button>`;
       $(".ck-x", card).addEventListener("click", cerrarCk); const un0 = $(".ck-undo", card); if(un0) un0.addEventListener("click", deshacerQuitar); $("[data-cerrar]", card).addEventListener("click", ()=>{ cerrarCk(); const g = $("#grid-modelos"); if(g) g.scrollIntoView({ behavior:"smooth" }); });
@@ -4565,15 +4584,23 @@ body:has(.ck.abierto) .asist-fab{opacity:0;pointer-events:none;}
     card.innerHTML = `
       <button class="ck-x" aria-label="Cerrar">✕</button>
       <div class="ck-e">★★★★★★</div>
-      <h3>Finalizar compra</h3>
+      <h3 class="ck-h">Finalizar compra</h3>
+      <ol class="ck-ruta" aria-label="Pasos">
+        <li class="hecho"><i>✓</i><b>Elegí</b><small>tu BRASAS</small></li>
+        <li class="act"><i>2</i><b>Pagá</b><small>por transferencia</small></li>
+        <li><i>3</i><b>Te lo enviamos</b><small>a tu puerta</small></li>
+      </ol>
+      <div class="ck-envio" role="status"><span class="pulso" aria-hidden="true"></span>
+        <div><b>Envío gratis por Andreani a domicilio</b><span id="ck-llega-top">Calculando tu fecha de entrega…</span></div></div>
+      ${M ? `<div class="ck-mayo ${c.valido ? "ok" : "falta"}"><b>Cuenta mayorista · ${esc(M.nombre)}</b><span>${c.valido ? `Pedido válido. Los modelos con menos de ${M.minU} iguales se suman a precio web.` : `Para enviar el pedido sumá al menos <b>${M.minU} unidades iguales</b> de un mismo modelo y medida. Los demás modelos se suman a precio web.`}</span></div>` : ""}
 
       <div class="ck-s">01 · Tu pedido</div>
       ${ckQuitado ? `<div class="ck-quitado"><span>Quitaste <b>${esc(ckQuitado.txt)}</b></span><button type="button" class="ck-undo">Deshacer</button></div>` : ""}
       <div class="ck-items">${c.items.map((x,i)=>`
         <div class="ck-it" data-i="${i}" data-k="${esc(x.it.mid+"|"+x.it.tag)}"><div class="th" style='${fotoDe(x.m)}'></div>
-          <div><div class="n">${esc(x.v.nombre || x.m.nombre)}</div><div class="v">${esc(x.v.label)} · ${money(unitTransfer(x.v))} c/u</div>
+          <div><div class="n">${esc(x.v.nombre || x.m.nombre)}</div><div class="v">${esc(x.v.label)} · ${money(c.unitDe(x))} c/u</div>${M ? mayoNota(x, c, M) : ""}
             <div style="display:flex;align-items:center"><div class="q"><button type="button" data-q="-1" aria-label="Quitar uno">−</button><span>${x.it.qty}</span><button type="button" data-q="1" aria-label="Agregar uno">+</button></div><button type="button" class="del" aria-label="Eliminar del carrito" title="Eliminar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16"/><path d="M9 7V4.8c0-.4.4-.8.8-.8h4.4c.4 0 .8.4.8.8V7"/><path d="M6.5 7l.9 12.2c.1.9.8 1.6 1.7 1.6h5.8c.9 0 1.6-.7 1.7-1.6L17.5 7"/><path d="M10.2 11v6M13.8 11v6"/></svg></button></div></div>
-          <div class="p notranslate" translate="no">${money(unitTransfer(x.v) * x.it.qty)}</div></div>`).join("")}</div>
+          <div class="p notranslate" translate="no">${money(c.unitDe(x) * x.it.qty)}</div></div>`).join("")}</div>
       <div class="ck-tot notranslate" translate="no">
         <div><span>Subtotal</span><span>${money(c.sub)}</span></div>
         ${c.desc ? `<div class="desc"><span>★ Comunidad BRASAS −${pct()}%</span><span>− ${money(c.desc)}</span></div>` : ""}
@@ -4582,7 +4609,7 @@ body:has(.ck.abierto) .asist-fab{opacity:0;pointer-events:none;}
         <div class="gratis"><span>Envío a domicilio · Andreani</span><span>Gratis</span></div>
         <div class="total"><span>Total</span><span>${money(c.total)}</span></div>
       </div>
-      ${!currentUser && pct() && c.medio.k === "transferencia" ? `<button type="button" class="g-invita ck-inv">${G_ICON}<span>Unite con Google y ahorrá <b>${money(c.items.reduce((a,x)=> a + roundK(unitTransfer(x.v)*pct()/100) * x.it.qty, 0))}</b></span></button>` : ""}
+      ${!M && !currentUser && pct() && c.medio.k === "transferencia" ? `<button type="button" class="g-invita ck-inv">${G_ICON}<span>Unite con Google y ahorrá <b>${money(c.items.reduce((a,x)=> a + roundK(unitTransfer(x.v)*pct()/100) * x.it.qty, 0))}</b></span></button>` : ""}
 
       ${ms.length > 1 ? `<div class="ck-s">02 · Medio de pago</div><div class="ck-med">${ms.map(o=>`
         <div class="pago-op ${o.k===ckMedio?"on":""}" data-m="${o.k}" role="radio" aria-checked="${o.k===ckMedio}" tabindex="0"><span class="rd"></span>
@@ -4594,6 +4621,7 @@ body:has(.ck.abierto) .asist-fab{opacity:0;pointer-events:none;}
         <label class="w"><span>Nombre y apellido</span><input name="nombre" autocomplete="name" value="${v("nombre", u.nombre||"")}" required></label>
         <label><span>Email</span><input name="email" type="email" autocomplete="email" value="${v("email", u.email||"")}" required></label>
         <label><span>Celular <small>para el repartidor</small></span><input name="telefono" type="tel" inputmode="tel" autocomplete="tel" value="${v("telefono", u.telefono||"")}" placeholder="2284 123456" required></label>
+        ${M ? `<label class="w"><span>Comercio o razón social <small>opcional</small></span><input name="razon" value="${v("razon")}"></label><label class="w"><span>CUIT <small>opcional</small></span><input name="cuit" inputmode="numeric" maxlength="13" value="${v("cuit")}"></label>` : ""}
         <label class="w"><span>Calle</span><input name="calle" autocomplete="address-line1" value="${v("calle")}" required></label>
         <div class="w ck-f3" style="grid-column:1/-1">
           <label><span>Número</span><input name="numero" inputmode="numeric" value="${v("numero")}" required></label>
@@ -4608,7 +4636,7 @@ body:has(.ck.abierto) .asist-fab{opacity:0;pointer-events:none;}
         <label class="w"><span>Entre calles, timbre y referencias para el repartidor <small>opcional</small></span><textarea name="referencias" placeholder="Ej: entre Rivadavia y Belgrano · portón negro · timbre 2B">${v("referencias")}</textarea></label>
       </form>
 
-      <button class="cta ck-go" id="ck-go"><span class="ck-go-t">Confirmar compra · <span class="ck-go-n">${money(c.total)}</span></span></button>
+      <button class="cta ck-go ${M && !c.valido ? "ck-bloq" : ""}" id="ck-go"><span class="ck-go-t">Confirmar compra · <span class="ck-go-n">${money(c.total)}</span></span></button>
       <div class="ck-legal">${c.medio.k === "transferencia" ? `Te mostramos los datos bancarios al confirmar.` : esc(c.medio.instr || "Te contactamos para completar el pago.")}</div>`;
 
     $(".ck-x", card).addEventListener("click", cerrarCk);
@@ -4640,8 +4668,12 @@ body:has(.ck.abierto) .asist-fab{opacity:0;pointer-events:none;}
     pintarCheckout();
   }
   function pintarLlega(){
-    const cp = ($("#ck-form [name=cp]")||{}).value || "", box = $("#ck-llega"); if(!box) return;
+    const cp = ($("#ck-form [name=cp]")||{}).value || "", box = $("#ck-llega"), top = $("#ck-llega-top"); if(!box) return;
     const r = window.BRASAS_ENTREGA_CP && window.BRASAS_ENTREGA_CP(cp, ckItems);
+    if(top){
+      const g = r || (window.BRASAS_ENTREGA_CP && window.BRASAS_ENTREGA_CP(lsGet("brasas-cp") || "7400", ckItems)) || (window.BRASAS_ENTREGA_CP && window.BRASAS_ENTREGA_CP("7400", ckItems));
+      top.innerHTML = g ? (r ? `Llega entre el <em>${g.desde}</em> y el <em>${g.hasta}</em>` : `Llega aprox. entre el <em>${g.desde}</em> y el <em>${g.hasta}</em><small>Estimado · poné tu código postal y te damos la fecha exacta</small>`) : "Fecha exacta según tu código postal";
+    }
     if(!r){ box.classList.remove("on"); return; }
     $(":scope > div > b", box).textContent = `Llega entre el ${r.desde} y el ${r.hasta}`;
     $(":scope > div > span", box).textContent = `Envío gratis desde Olavarría`;
@@ -4657,7 +4689,7 @@ body:has(.ck.abierto) .asist-fab{opacity:0;pointer-events:none;}
     const d = new Date(), p = n=>String(n).padStart(2,"0");
     return `BR-${String(d.getFullYear()).slice(2)}${p(d.getMonth()+1)}${p(d.getDate())}-${Math.floor(1000+Math.random()*9000)}`;
   }
-  function confirmar(){
+  async function confirmar(){
     const f = $("#ck-form"), d = Object.fromEntries(new FormData(f).entries());
     let primero = null;
     const mal = (n, ok) => { const el = $(`[name=${n}]`, f); if(!ok){ el.classList.add("err"); primero = primero || el; } };
@@ -4669,18 +4701,35 @@ body:has(.ck.abierto) .asist-fab{opacity:0;pointer-events:none;}
     mal("cp", !!(window.BRASAS_ENTREGA_CP && window.BRASAS_ENTREGA_CP(d.cp, ckItems)));
     if(primero){ primero.focus(); primero.scrollIntoView({ block:"center", behavior:"smooth" }); toast("Revisá los datos marcados"); return; }
     guardarForm();
-    const c = cuentas(), orden = nuevaOrden(), entrega = window.BRASAS_ENTREGA_CP(d.cp, ckItems);
+    const c = cuentas(), M = mayo(), orden = nuevaOrden(), entrega = window.BRASAS_ENTREGA_CP(d.cp, ckItems);
+    if(M && !c.valido){ toast(`Sumá ${M.minU} unidades iguales de un modelo para enviar el pedido mayorista`); return; }
+    if(M && M.via === "google" && dominioReal() && !(currentUser && currentUser.cred && Date.now() < (currentUser.credVence || 0) - 60000)){ toast("Volvé a entrar con Google para confirmar tu pedido mayorista"); abrirLogin(); return; }
     const pedido = {
-      tipo:"pedido", orden, fecha:new Date().toISOString(),
+      tipo: M ? "pedido_mayorista" : "pedido", orden, fecha:new Date().toISOString(),
       medio:c.medio.n, subtotal:c.sub, descuento:c.desc + (c.extra || 0), recargo:c.rec, total:c.total, promo:c.promoUsada || "",
-      items:c.items.map(x=>({ tag:x.it.tag, producto:x.v.nombre || x.m.nombre, variante:x.v.label, cantidad:x.it.qty, unitario:unitTransfer(x.v) })),
+      items:c.items.map(x=>({ tag:x.it.tag, producto:x.v.nombre || x.m.nombre, variante:x.v.label, cantidad:x.it.qty, unitario:c.unitDe(x) })),
       cliente:{ nombre:d.nombre.trim(), email:d.email.trim(), telefono:d.telefono.trim(),
         calle:d.calle.trim(), numero:String(d.numero).trim(), piso:(d.piso||"").trim(), depto:(d.depto||"").trim(),
         direccion:[`${d.calle.trim()} ${String(d.numero).trim()}`, d.piso && d.piso.trim() ? `piso ${d.piso.trim()}` : "", d.depto && d.depto.trim() ? `depto ${d.depto.trim()}` : ""].filter(Boolean).join(", "),
         ciudad:d.ciudad.trim(), provincia:d.provincia, cp:String(d.cp).toUpperCase().trim(), dni:String(d.dni||"").replace(/\D/g,""), referencias:(d.referencias||"").trim() },
       entrega: entrega ? `${entrega.desde} a ${entrega.hasta}` : "", circulo: !!currentUser, cuenta: currentUser ? currentUser.email : ""
     };
-    if(A.appsScript) fetch(A.appsScript, { method:"POST", mode:"no-cors", body:JSON.stringify(pedido) }).catch(()=>{});
+    if(M){
+      if(M.via === "google") pedido.credencial = (currentUser && currentUser.cred) || ""; else pedido.usuario = M.usuario;
+      pedido.cliente.razon = String(d.razon || "").trim(); pedido.cliente.cuit = String(d.cuit || "").trim();
+      const btn = $("#ck-go"), tx = $(".ck-go-t", btn), antes = tx.innerHTML;
+      btn.disabled = true; tx.textContent = "Enviando pedido…";
+      let r = null;
+      if(A.appsScript){
+        try{ r = await (await fetch(A.appsScript, { method:"POST", body:JSON.stringify(pedido) })).json(); }
+        catch(e){ try{ await fetch(A.appsScript, { method:"POST", mode:"no-cors", body:JSON.stringify(pedido) }); }catch(e2){} r = null; }
+      }
+      if(r && r.ok === false){
+        btn.disabled = false; tx.innerHTML = antes;
+        toast(r.error === "acceso" ? "Tu acceso mayorista venció: volvé a entrar." : r.error === "mínimo" ? `Falta al menos un modelo con ${M.minU} iguales.` : "No se pudo enviar el pedido. Probá de nuevo.");
+        return;
+      }
+    } else if(A.appsScript) fetch(A.appsScript, { method:"POST", mode:"no-cors", body:JSON.stringify(pedido) }).catch(()=>{});
     lsSet("brasas-ultima-orden", orden);
     try{ const h = JSON.parse(lsGet("brasas-ordenes") || "[]"); h.unshift({ orden, fecha:pedido.fecha, total:c.total, items:pedido.items, medio:pedido.medio }); lsSet("brasas-ordenes", JSON.stringify(h.slice(0,20))); }catch(e){}
     if(ckOrigen === "carrito"){ CARRITO = []; guardarCarrito(); renderAccionesUsuario(); }
@@ -5628,7 +5677,7 @@ window.BRASAS_CAJA = function(alto, ancho, largo, u, tema, op){
       const chip = $("#stock-chip"), s = v.stockTag;
       if(A._prodBase === undefined) A._prodBase = A.produccionDias;
       const plazo = +v.plazo || +A._prodBase || 7;
-      A.produccionDias = plazo; A.despachoConStock = +A._despacho || 2;
+      A.produccionDias = plazo; A.despachoConStock = +A._despacho || 1;
       if(chip){
         if(s === null || s === undefined){ chip.style.display = "none"; }
         else { chip.style.display = ""; chip.classList.toggle("encargo", s <= 0);
@@ -6311,7 +6360,7 @@ a.mayo-btn{text-decoration:none;display:inline-block;}
   const pr = document.createElement("div"); pr.className = "mayo-print"; pr.id = "mayo-print"; document.body.appendChild(pr);
 
   let M = null, codigo = "", cant = {}, nivelAntes = -1;
-  const codigoHash = () => { const m = location.hash.match(/^#mayoristas?-([A-Za-z0-9]{4,12})$/); return m ? m[1].toUpperCase() : null; };
+  const codigoHash = () => null;   /* el canal mayorista ahora está dentro de la tienda (v45): este link ya no abre la pantalla vieja */
   const kg = n => (Math.round(n * 10) / 10).toLocaleString("es-AR") + " kg";
   const ICO_CAMION = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h11v9H3zM14 9h4l3 3v3h-7z"/><circle cx="7" cy="17" r="1.8"/><circle cx="17.5" cy="17" r="1.8"/></svg>`;
 
@@ -6838,7 +6887,7 @@ body:has(.agregado.on) .asist-fab{opacity:0;pointer-events:none;}
      Si faltan unidades: PLAZO × unidades que faltan.
      Entrega = hoy + preparación + viaje del correo según la zona del CP (días hábiles, lunes a viernes).
      ========================================================= */
-  let DESPACHO = 2;   // días hábiles para despachar con stock (pestaña WEB lo cambia)
+  let DESPACHO = 1;   // días hábiles para despachar con stock (pestaña WEB lo cambia)
   document.addEventListener("brasas-catalogo", e=>{ const w = e.detail && e.detail.web; if(w && +w.despacho >= 0) DESPACHO = +w.despacho || 1; });
   function infoVar(mid, tag){
     const m = MODELOS.find(x=>x.id===mid), v = m && m.variantes[tag]; if(!v) return null;
@@ -6846,12 +6895,13 @@ body:has(.agregado.on) .asist-fab{opacity:0;pointer-events:none;}
     const plazo = +v.plazo || +A._prodBase || +A.produccionDias || 7;
     return { m, v, stock: Math.max(0, stock), plazo };
   }
+  /* Plazo = fabricación de TODAS las unidades que faltan (se suman: 1 día hábil por producto, o el PLAZO de cada modelo) + días de despacho + viaje */
   function preparacion(items){
-    return items.reduce((mx, it)=>{
-      const i = infoVar(it.mid, it.tag); if(!i) return mx;
-      const faltan = Math.max(0, (+it.qty || 1) - i.stock);
-      return Math.max(mx, faltan > 0 ? i.plazo * faltan : DESPACHO);
-    }, DESPACHO);
+    const fab = items.reduce((s, it)=>{
+      const i = infoVar(it.mid, it.tag); if(!i) return s;
+      return s + Math.max(0, (+it.qty || 1) - i.stock) * i.plazo;
+    }, 0);
+    return fab + DESPACHO;
   }
   function estimar(cp, items){
     const t = window.BRASAS_TRANSITO && window.BRASAS_TRANSITO(cp); if(!t) return null;
@@ -6865,6 +6915,7 @@ body:has(.agregado.on) .asist-fab{opacity:0;pointer-events:none;}
     return entregaPrev ? entregaPrev(cp) : null;
   };
   window.BRASAS_PREPARACION = preparacion;
+  window.BRASAS_PREPARACION_ACTUAL = () => modeloActual ? preparacion([{ mid:modeloActual.id, tag:tagActivo(), qty:cantidad() }]) : null;
 
   /* =========================================================
      2. CANTIDAD EN LA FICHA (actualiza la fecha al instante)
@@ -7417,6 +7468,33 @@ body:has(.modal-compras.abierto) .flot,body:has(.modal-resenas.abierto) .flot,bo
 .mcx .hecho{color:#7fd6a0;font-size:13.5px;}
 .mcx-gr{flex:1 1 100%;display:grid;gap:8px;} .mcx-gr textarea{width:100%;min-height:70px;background:#0b0d0f;border:1px solid var(--linea-fuerte);color:#fff;padding:10px;font:inherit;font-size:14.5px;}
 .mcx-act{font-size:12.5px;color:var(--hueso-dim);margin:-8px 0 10px;}
+.mcx header{align-items:baseline;} .mcx header .num{font-family:var(--serif);font-size:20px;letter-spacing:.02em;text-transform:none;color:#fff;} .mcx header .fe{font-size:12.5px;}
+.mcx-estado{display:flex;align-items:center;flex-wrap:wrap;gap:8px 16px;margin:-2px 0 14px;}
+.mcx-pill{display:inline-flex;align-items:center;gap:8px;padding:6px 12px;border:1px solid rgba(228,188,110,.5);color:#e8cf8f;font-family:var(--mono);font-size:12px;letter-spacing:.1em;text-transform:uppercase;}
+.mcx-pill i{width:8px;height:8px;border-radius:50%;background:currentColor;}
+.mcx-pill.ok{border-color:rgba(88,195,127,.6);color:#7fd6a0;} .mcx-pill.viaje{border-color:rgba(156,200,255,.55);color:#9cc8ff;}
+.mcx-pill.pend i{animation:v43Pulso2 1.8s ease-in-out infinite;}
+.mcx-llega{font-family:var(--serif);font-size:17px;color:#d8d3c8;} .mcx-llega b{color:#fff;font-weight:500;}
+.mcx footer .acc{gap:10px;} .mcx-b{border-color:rgba(255,255,255,.22);padding:10px 16px;font-size:12.5px;letter-spacing:.1em;text-transform:uppercase;font-family:var(--mono);margin-top:0;transition:all .18s;}
+.mcx-b:hover{background:rgba(228,188,110,.08);} .mcx-b.oro{background:rgba(228,188,110,.1);}
+.mcx-b.wa{border-color:rgba(88,195,127,.5);color:#8fe0ad;}
+.mcx-ruta{list-style:none;margin:6px 0 4px;padding:14px 0 6px;border-top:1px solid var(--linea);position:relative;}
+.mcx-ruta li{display:flex;gap:14px;align-items:flex-start;position:relative;padding:0 0 16px;color:#8f8a80;}
+.mcx-ruta li:last-child{padding-bottom:6px;}
+.mcx-ruta li::before{content:"";position:absolute;left:10px;top:22px;bottom:-2px;width:1px;background:rgba(255,255,255,.14);}
+.mcx-ruta li:last-child::before{display:none;}
+.mcx-ruta li.ok::before{background:#58c37f;}
+.mcx-ruta i{flex:none;width:21px;height:21px;border-radius:50%;border:1px solid rgba(255,255,255,.28);display:grid;place-items:center;font-style:normal;font-size:12px;font-weight:700;color:#0b0b0a;background:transparent;position:relative;z-index:1;}
+.mcx-ruta li.ok i{background:#58c37f;border-color:#58c37f;}
+.mcx-ruta li.act i{border-color:#e4bc6e;box-shadow:0 0 0 4px rgba(228,188,110,.15);animation:v43Pulso2 1.8s ease-in-out infinite;}
+.mcx-ruta b{display:block;font-weight:500;font-size:15.5px;color:#9c968b;line-height:1.35;} .mcx-ruta li.ok b{color:#fff;} .mcx-ruta li.act b{color:#e8cf8f;}
+.mcx-ruta small{display:block;font-size:13px;color:#8f8a80;margin-top:1px;} .mcx-ruta li.ok small{color:#a9c9b1;}
+.mcx-ruta a{display:inline-block;margin-top:5px;color:#e8cf8f;font-size:13.5px;text-decoration:underline;text-underline-offset:3px;}
+@keyframes v43Pulso2{0%,100%{box-shadow:0 0 0 3px rgba(228,188,110,.12);}50%{box-shadow:0 0 0 7px rgba(228,188,110,.04);}}
+.mcx-gar{margin:6px 0 4px;padding:10px 12px;border:1px solid rgba(88,195,127,.3);background:rgba(88,195,127,.06);color:#bfe3cb;font-size:14px;} .mcx-gar b{color:#fff;} .mcx-gar.fin{border-color:rgba(255,255,255,.15);background:none;color:#8f8a80;}
+.mcx-b.wa{text-decoration:none;color:#7df0a5;border-color:rgba(88,224,139,.5);}
+.v43-spin{display:inline-block;width:18px;height:18px;border:2px solid rgba(228,188,110,.3);border-top-color:#e4bc6e;border-radius:50%;animation:v43Spin .8s linear infinite;vertical-align:-4px;margin-right:10px;}
+@keyframes v43Spin{to{transform:rotate(360deg);}}
 </style>
 
 <script id="v28-js">
@@ -7437,23 +7515,24 @@ body:has(.modal-compras.abierto) .flot,body:has(.modal-resenas.abierto) .flot,bo
   if(card) card.classList.add("mc-card");
   let pendienteAbrir = false;
 
-  const cacheK = () => "brasas-mc-" + String((currentUser && currentUser.email) || "").toLowerCase();
+  const mayoU = () => (window.BRASAS_MAYO && window.BRASAS_MAYO.on && window.BRASAS_MAYO.via === "usuario" && !credOk()) ? window.BRASAS_MAYO : null;
+  const cacheK = () => "brasas-mc-" + (mayoU() ? "u-" + mayoU().usuario : String((currentUser && currentUser.email) || "").toLowerCase());
   const leerCache = () => { try{ return JSON.parse(localStorage.getItem(cacheK()) || "null"); }catch(e){ return null; } };
   const guardarCache = l => { try{ localStorage.setItem(cacheK(), JSON.stringify(l)); }catch(e){} };
   async function abrirMisCompras(){
     if(!card) return;
-    if(!credOk()){ pendienteAbrir = true; abrirLogin(); return; }
+    if(!credOk() && !mayoU()){ pendienteAbrir = true; abrirLogin(); return; }
     pendienteAbrir = false;
-    card.innerHTML = `<button class="cerrar" id="cerrar-compras" aria-label="Cerrar">✕</button><h3>Mis compras</h3><div class="mc-hola">Hola, ${esc(String(currentUser.nombre).split(" ")[0])}. Acá están las compras que hiciste con tu cuenta de Google.</div><div id="compras-lista"><div class="mc-cargando">Buscando tus compras…</div></div>`;
+    card.innerHTML = `<button class="cerrar" id="cerrar-compras" aria-label="Cerrar">✕</button><h3>Mis compras</h3><div class="mc-hola">Hola, ${esc(String(mayoU() ? mayoU().nombre : currentUser.nombre).split(" ")[0])}. ${mayoU() ? "Acá están tus pedidos mayoristas." : "Acá están las compras que hiciste con tu cuenta de Google."}</div><div id="compras-lista"><div class="mc-cargando"><i class="v43-spin"></i>Buscando tus compras…</div></div>`;
     $("#cerrar-compras", card).addEventListener("click", ()=> modal.classList.remove("abierto"));
     modal.classList.add("abierto");
     const lista = $("#compras-lista", card);
     if(!A.appsScript){ lista.innerHTML = `<div class="mc-vacio">Todavía no tenés compras registradas.</div>`; return; }
     const previa = leerCache(); if(previa && previa.length) pintar(previa, true);     // al instante lo último que vio; se actualiza atrás
     try{
-      const r = await fetch(urlScript("accion=miscompras&credencial=" + encodeURIComponent(currentUser.cred || "") + "&_=" + Date.now()), { cache:"no-store" });
+      const r = await fetch(urlScript(mayoU() ? "accion=miscompras&usuario=" + encodeURIComponent(mayoU().usuario) + "&_=" + Date.now() : "accion=miscompras&credencial=" + encodeURIComponent(currentUser.cred || "") + "&_=" + Date.now()), { cache:"no-store" });
       const j = await r.json();
-      if(!j.ok){ if(j.error === "google"){ currentUser.cred = ""; pendienteAbrir = true; modal.classList.remove("abierto"); abrirLogin(); return; } throw new Error(j.error); }
+      if(!j.ok){ if(j.error === "acceso" && mayoU()){ modal.classList.remove("abierto"); window.BRASAS_MAYO_SALIR && window.BRASAS_MAYO_SALIR(); return; } if(j.error === "google"){ currentUser.cred = ""; pendienteAbrir = true; modal.classList.remove("abierto"); abrirLogin(); return; } throw new Error(j.error); }
       guardarCache(j.compras || []); pintar(j.compras || []);
     }catch(e){ if(!(previa && previa.length)) lista.innerHTML = `<div class="mc-error">No pudimos traer tus compras ahora. Probá de nuevo en un rato.</div>`; }
   }
@@ -7466,33 +7545,58 @@ body:has(.modal-compras.abierto) .flot,body:has(.modal-resenas.abierto) .flot,bo
     catch(e){ try{ await fetch(A.appsScript, { method:"POST", mode:"no-cors", body:cuerpo }); return { ok:true }; }catch(e2){ return { ok:false }; } }
   };
   const estrellas = n => `<span class="mcx-est">${"★".repeat(n)}${"☆".repeat(5 - n)}</span>`;
+  /* camino del pedido: cada etapa se tilda cuando sucede */
+  const fCorta = t => new Date(t).toLocaleDateString("es-AR", { day:"numeric", month:"short" }).replace(/\./g,"");
+  const waVend = c => `https://wa.me/${String(A.whatsapp || (typeof WHATSAPP_NUMERO !== "undefined" ? WHATSAPP_NUMERO : "")).replace(/\D/g,"")}?text=${encodeURIComponent(`Hola! Te escribo por mi pedido N.º ${c.orden}.`)}`;
+  function ruta(c){
+    const pagado = !!(c.pagado || c.despachado || c.entregado);
+    const et = [
+      { t:"Pedido recibido", d:fCorta(c.fecha), ok:true },
+      { t: pagado ? "Pago confirmado" : c.comprobante ? "Comprobante recibido" : "Pendiente de pago", d: c.pagado ? fCorta(c.pagado) : (c.comprobante && !pagado ? "lo estamos verificando" : (!pagado ? "transferí y subí el comprobante" : "")), ok:pagado },
+      { t:"En preparación", d: c.despachado || c.entregado ? "" : (pagado ? "estamos fabricándolo" : ""), ok:!!(c.despachado || c.entregado) },
+      { t: c.despachado || c.entregado ? "Despachado por Andreani" : c.seguimiento ? "Envío contratado" : "Despacho por Andreani", d: c.despachado ? fCorta(c.despachado) : "", ok:!!(c.despachado || c.entregado), link: c.seguimiento ? { u:c.seguimientoUrl, t:`Seguir envío · ${c.seguimiento}` } : null },
+      { t:"Entregado", d: c.entregado ? fCorta(c.entregado) : "", ok:!!c.entregado }
+    ];
+    const act = et.findIndex(x=> !x.ok);
+    return `<ol class="mcx-ruta">${et.map((x,k)=>`<li class="${x.ok ? "ok" : k === act ? "act" : ""}"><i>${x.ok ? "✓" : ""}</i><div><b>${x.t}</b>${x.d ? `<small>${x.d}</small>` : ""}${x.link && x.link.u ? `<a href="${esc(x.link.u)}" target="_blank" rel="noopener">${esc(x.link.t)} →</a>` : ""}</div></li>`).join("")}</ol>`;
+  }
+  function estadoLinea(c){
+    const [k, t] = c.entregado ? ["ok", `Entregado el ${fFecha(c.entregado)}`] : c.despachado ? ["viaje", "En camino por Andreani"] : (c.pagado) ? ["pend", "Pago confirmado · en preparación"] : c.comprobante ? ["pend", "Verificando tu pago"] : ["pend", "Esperando tu pago"];
+    const llega = !c.entregado && c.entrega ? `<span class="mcx-llega">Llega aprox. entre el <b>${esc(c.entrega.replace(" a "," y el "))}</b></span>` : "";
+    return `<div class="mcx-estado"><span class="mcx-pill ${k}"><i></i>${t}</span>${llega}</div>`;
+  }
+  function garantia(c){
+    if(!c.entregado) return `<div class="mcx-gar">Garantía de fábrica: <b>365 días</b>, desde que lo recibís.</div>`;
+    const hasta = c.entregado + 365 * 864e5, dias = Math.max(0, Math.ceil((hasta - Date.now()) / 864e5));
+    return `<div class="mcx-gar ${dias ? "" : "fin"}">Garantía de fábrica: ${dias ? `te quedan <b>${dias} días</b> · hasta el ${new Date(hasta).toLocaleDateString("es-AR", { day:"numeric", month:"long", year:"numeric" })}` : "<b>venció</b>"}</div>`;
+  }
   function pintar(compras, desdeCache){
     const lista = $("#compras-lista", card);
     if(!compras.length){ lista.innerHTML = `<div class="mc-vacio">No encontramos compras hechas con esta cuenta de Google.<br>Si compraste sin entrar con Google, escribinos por WhatsApp y te ayudamos.</div>`; return; }
-    lista.innerHTML = (desdeCache ? `<div class="mcx-act">Actualizando…</div>` : "") + compras.map(c=>{ const [cls, est] = ESTADO(c); return `
+    lista.innerHTML = (desdeCache ? `<div class="mcx-act"><i class="v43-spin"></i>Actualizando…</div>` : "") + compras.map(c=>`
       <article class="mcx" data-o="${esc(c.orden)}">
-        <header><span>Orden ${esc(c.orden)} · ${fFecha(c.fecha)}</span><span class="e ${cls}">${est}</span></header>
-        ${c.seguimiento ? `<a class="mc-seg" href="${esc(c.seguimientoUrl || "")}" target="_blank" rel="noopener"><span>Andreani · seguimiento <b>${esc(c.seguimiento)}</b></span><i>Seguir mi envío →</i></a>` : ""}
+        <header><span class="num">Pedido N.º ${esc(c.orden)}</span><span class="fe">${fFecha(c.fecha)}</span></header>${estadoLinea(c)}
         ${c.items.map(i=>`<div class="mcx-it" data-t="${esc(i.tag)}">
           <div class="ft" style="${i.foto ? `background-image:url('${esc(i.foto)}')` : ""}"></div>
-          <div class="tx"><b>${esc(i.producto)}</b><small>${esc(i.variante || "")}${i.cantidad > 1 ? ` · ${i.cantidad} unidades` : ""}${i.precio ? ` · ${money(i.precio)} c/u` : ""}</small>
-            ${i.descripcion ? `<p>${esc(i.descripcion)}</p>` : ""}
-            ${i.opinado ? `<div class="ya">✓ Ya lo calificaste ${estrellas(i.estrellas)}</div>` : i.puedeOpinar ? `<button type="button" class="mcx-b oro" data-calif>Calificar este producto</button>
+          <div class="tx"><b>${esc(i.producto)}</b><small>${esc(i.variante || "")}${i.cantidad > 1 ? ` · ${i.cantidad} unidades` : ""}</small>
+            ${i.opinado ? `<div class="ya">✓ Ya lo calificaste ${estrellas(i.estrellas)}</div>` : i.puedeOpinar && !mayoU() ? `<button type="button" class="mcx-b oro" data-calif>Calificar este producto</button>
               <div class="mc-form"><div class="mc-est" role="radiogroup" aria-label="Estrellas">${[1,2,3,4,5].map(n=>`<button type="button" data-n="${n}" aria-label="${n} estrella${n>1?"s":""}">★</button>`).join("")}</div>
                 <textarea maxlength="1500" placeholder="Contanos cómo te fue: calidad, terminaciones, el fuego, la entrega…"></textarea>
-                <div class="acc"><button type="button" class="enviar" disabled>Enviar opinión</button><span class="nota">Se publica de forma anónima, después de revisarla.</span></div></div>`
-              : `<div class="espera">${c.despachado ? "Cuando te llegue, tocá “Lo recibí” y lo podés calificar." : "Vas a poder calificarlo cuando te llegue."}</div>`}
+                <div class="acc"><button type="button" class="enviar" disabled>Enviar opinión</button><span class="nota">Se publica de forma anónima, después de revisarla.</span></div></div>` : ""}
           </div></div>`).join("")}
+        ${ruta(c)}
+        ${garantia(c)}
         <footer>
           <div class="tot">${c.total ? `<span>Total</span><b>${money(c.total)}</b>${c.medio ? `<small>${esc(c.medio)}</small>` : ""}` : ""}</div>
           <div class="acc">
+            <a class="mcx-b wa" target="_blank" rel="noopener" href="${esc(waVend(c))}">Enviar mensaje al vendedor</a>
             ${c.despachado && !c.entregado ? `<button type="button" class="mcx-b oro" data-recibi>Lo recibí</button>` : ""}
             <button type="button" class="mcx-b" data-repetir>Volver a comprar</button>
             ${c.entregado ? (c.fotoUso ? `<span class="hecho">✓ Foto enviada</span>` : `<label class="mcx-b">Subir foto en uso<input type="file" accept="image/*" hidden data-foto></label>`) : ""}
             ${c.entregado ? (c.gracias ? `<span class="hecho">❤ Gracias enviado</span>` : `<button type="button" class="mcx-b" data-gracias>Agradecer al taller</button>`) : ""}
           </div>
         </footer>
-      </article>`; }).join("");
+      </article>`).join("");
     $$(".mcx", lista).forEach(art=>{
       const orden = art.dataset.o, c = compras.find(x=> x.orden === orden);
       $$(".mcx-it", art).forEach(it=>{
@@ -7871,7 +7975,11 @@ body:has(.modal-compras.abierto) .flot,body:has(.modal-resenas.abierto) .flot,bo
   { const ck = $("#checkout"); if(ck) new MutationObserver(()=>{ if(ck.classList.contains("abierto")) V.checkout = true; }).observe(ck, { attributes:true, attributeFilter:["class"] }); }
   const fPrev = window.fetch;
   window.fetch = function(u, o){ try{ if(o && typeof o.body === "string" && /"tipo":"pedido"/.test(o.body)) V.compro = true; }catch(e){} return fPrev.apply(this, arguments); };
-  const origen = (()=>{ try{ const q = new URLSearchParams(location.search); if(q.get("utm_source")) return q.get("utm_source").toLowerCase().slice(0,30);
+  const origen = (()=>{ try{ const q = new URLSearchParams(location.search);
+    /* #tienda = el enlace de la bio de Instagram (se recuerda en la sesión por si la persona navega antes de irse) */
+    if(/^#tienda\/?$/i.test(location.hash)) { try{ sessionStorage.setItem("brasas-origen","instagram"); }catch(e){} return "instagram"; }
+    if(q.get("utm_source")) return q.get("utm_source").toLowerCase().slice(0,30);
+    try{ const g = sessionStorage.getItem("brasas-origen"); if(g) return g; }catch(e){}
     const r = document.referrer ? new URL(document.referrer).hostname.replace(/^www\./,"") : ""; if(!r || r === location.hostname) return "directo";
     return /instagram/.test(r) ? "instagram" : /facebook|fb\./.test(r) ? "facebook" : /google/.test(r) ? "google" : /whatsapp|wa\.me/.test(r) ? "whatsapp" : /mercadoli/.test(r) ? "mercadolibre" : r.slice(0,30); }catch(e){ return ""; } })();
   let enviado = false;
@@ -8072,9 +8180,10 @@ body:not(.intl) .ficha .envio-block{display:none;}
 
   function totalCarrito(){
     let n = 0, t = 0;
+    const porTag = {}; (typeof CARRITO !== "undefined" ? CARRITO : []).forEach(x=>{ porTag[x.tag] = (porTag[x.tag] || 0) + (+x.qty || 1); });
     (typeof CARRITO !== "undefined" ? CARRITO : []).forEach(x=>{
       const m = MODELOS.find(y=>y.id===x.mid), v = m && m.variantes[x.tag]; if(!v) return;
-      const q = +x.qty || 1; n += q; t += roundK(precioTransfer(v)) * q;
+      const q = +x.qty || 1, mu = window.BRASAS_MAYO_UNIT ? window.BRASAS_MAYO_UNIT(x.tag, porTag[x.tag]) : null; n += q; t += (mu != null ? mu : roundK(precioTransfer(v))) * q;
     });
     return { n, t };
   }
@@ -8103,6 +8212,7 @@ body:not(.intl) .ficha .envio-block{display:none;}
     else { const pg = $("#precio-grande"), w = pg && document.createTreeWalker(pg, NodeFilter.SHOW_TEXT); let n, fin;
       while(w && (n = w.nextNode())){ if(n._rkFin !== undefined){ fin = n._rkFin; break; } }
       unit = fin !== undefined ? +fin : num(pg && pg.textContent); }
+    const mu = !ml && window.BRASAS_MAYO_UNIT ? window.BRASAS_MAYO_UNIT(tag, q) : null; if(mu != null) unit = mu;
     $("#v31-bn").textContent = v.nombre || m.nombre;
     $("#v31-bs").textContent = v.label || "";
     /* envío */
@@ -9605,6 +9715,301 @@ body.v40-sinmed #variantes .variante-btn{animation:none !important;}
   textos();
   const as = $("#asesor"); if(as) new MutationObserver(textos).observe(as, { childList:true });
   if(typeof abrirFicha === "function"){ const af = abrirFicha; abrirFicha = function(){ const r = af.apply(this, arguments); setTimeout(() => { textos(); armar(); window.BRASAS_APLICAR_TEXTOS && window.BRASAS_APLICAR_TEXTOS(); }, 60); return r; }; }
+})();
+</script>
+<style id="v43-css">
+/* ===== Checkout premium: ruta de 3 pasos + Andreani en verde titilante ===== */
+.ck-card{max-width:700px;}
+.ck h3.ck-h{font-family:var(--serif);font-weight:500;font-size:42px;line-height:1.05;letter-spacing:-.005em;margin:6px 0 20px;color:#fff;}
+.ck-ruta{list-style:none;display:grid;grid-template-columns:repeat(3,1fr);gap:0;margin:0 0 20px;padding:0;position:relative;}
+.ck-ruta::before{content:"";position:absolute;left:16%;right:16%;top:15px;height:1px;background:linear-gradient(90deg,#e4bc6e,rgba(228,188,110,.25) 50%,rgba(255,255,255,.12));}
+.ck-ruta li{position:relative;text-align:center;display:flex;flex-direction:column;align-items:center;gap:3px;color:#8f8a80;}
+.ck-ruta i{font-style:normal;width:31px;height:31px;border-radius:50%;display:grid;place-items:center;background:#0b0b0a;border:1px solid rgba(255,255,255,.2);font-family:var(--mono);font-size:13px;color:#8f8a80;position:relative;z-index:1;}
+.ck-ruta b{font-family:var(--serif);font-weight:600;font-size:21px;letter-spacing:.01em;color:#cfcac0;margin-top:5px;}
+.ck-ruta small{font-size:12.5px;letter-spacing:.06em;color:#8f8a80;}
+.ck-ruta .hecho i{background:#e4bc6e;border-color:#e4bc6e;color:#0b0b0a;font-weight:700;}
+.ck-ruta .hecho b{color:#e8cf8f;}
+.ck-ruta .act i{border-color:#e4bc6e;color:#fff;box-shadow:0 0 0 4px rgba(228,188,110,.14);}
+.ck-ruta .act b{color:#fff;}
+.ck-envio{display:flex;align-items:center;gap:16px;padding:16px 18px;margin:0 0 6px;border:1px solid rgba(80,200,120,.55);background:linear-gradient(100deg,rgba(61,154,92,.20),rgba(61,154,92,.06));animation:v43Glow 2.6s ease-in-out infinite;}
+.ck-envio .pulso{flex:none;width:12px;height:12px;border-radius:50%;background:#58e08b;box-shadow:0 0 0 0 rgba(88,224,139,.7);animation:v43Pulso 1.6s ease-out infinite;}
+.ck-envio b{display:block;font-family:'Archivo',sans-serif;font-size:17px;font-weight:600;letter-spacing:.01em;color:#7df0a5;}
+.ck-envio span#ck-llega-top{display:block;margin-top:4px;font-family:var(--serif);font-size:22px;line-height:1.2;color:#fff;font-weight:500;}
+.ck-envio span#ck-llega-top em{font-style:italic;color:#e8f9ee;}
+.ck-envio span#ck-llega-top small{display:block;font-family:'Archivo',sans-serif;font-size:12.5px;color:#a9c9b1;margin-top:3px;letter-spacing:.02em;}
+@keyframes v43Pulso{0%{box-shadow:0 0 0 0 rgba(88,224,139,.65);}70%{box-shadow:0 0 0 12px rgba(88,224,139,0);}100%{box-shadow:0 0 0 0 rgba(88,224,139,0);}}
+@keyframes v43Glow{0%,100%{box-shadow:0 0 0 rgba(88,224,139,0);border-color:rgba(80,200,120,.45);}50%{box-shadow:0 0 22px rgba(88,224,139,.22);border-color:rgba(110,235,150,.85);}}
+.ck-tot .gratis{color:#7df0a5;} .ck-tot .gratis span:first-child{color:#7df0a5;} .ck-tot .gratis span:last-child{color:#7df0a5;animation:v43Tit 2.2s ease-in-out infinite;}
+@keyframes v43Tit{0%,100%{opacity:1;}50%{opacity:.45;}}
+.ck #ck-llega{display:none !important;}
+.ck-s{font-family:var(--serif);font-size:23px;letter-spacing:.01em;text-transform:none;color:#e8cf8f;font-weight:500;}
+.ck-it .n{font-family:'Archivo',sans-serif;}
+@media (max-width:760px){ .ck h3.ck-h{font-size:34px;} .ck-ruta b{font-size:18px;} .ck-ruta small{font-size:11.5px;letter-spacing:.02em;} .ck-envio{padding:14px;gap:12px;} .ck-envio span#ck-llega-top{font-size:19px;} }
+@media (prefers-reduced-motion:reduce){ .ck-envio,.ck-envio .pulso,.ck-tot .gratis span:last-child{animation:none;} }
+</style>
+<script id="v43-js">
+/* ruedita de carga: cualquier texto "Enviando… / Guardando… / Buscando… / Cargando…" que aparezca en pantalla gira */
+(function(){
+  const RE = /^\s*(Enviando|Guardando|Subiendo|Buscando|Cargando|Revisando|Actualizando|Calculando|Entrando|Verificando)[^\n]{0,40}…\s*$/;
+  let t = 0;
+  function barrer(){
+    t = 0;
+    document.querySelectorAll("button, label, .mc-cargando, .mcx-act, .mayo-carga, #mayo-main > p, .nota, small").forEach(el=>{
+      if(el.querySelector(":scope > .v43-spin") || el.children.length > 1) return;
+      const tx = el.textContent || ""; if(tx.length > 60 || !RE.test(tx)) return;
+      const i = document.createElement("i"); i.className = "v43-spin"; i.setAttribute("aria-hidden", "true");
+      if(el.tagName === "BUTTON"){ i.style.width = i.style.height = "14px"; }
+      el.insertBefore(i, el.firstChild);
+    });
+  }
+  new MutationObserver(()=>{ if(!t) t = setTimeout(barrer, 60); }).observe(document.body, { childList:true, subtree:true, characterData:true });
+})();
+</script>
+<style id="v44-css">
+.v44-conf{list-style:none;margin:12px 0 4px;padding:0;display:grid;gap:9px;}
+.v44-conf li{display:flex;gap:12px;align-items:flex-start;font-size:14.5px;line-height:1.4;color:#d8d3c8;}
+.v44-conf li svg{flex:none;width:19px;height:19px;margin-top:1px;stroke:#e4bc6e;fill:none;stroke-width:1.6;}
+.v44-conf li b{color:#fff;font-weight:500;}
+.v44-conf.ficha{margin:16px 0 0;padding-top:14px;border-top:1px solid var(--linea);}
+.v44-conf.ficha li{font-size:13.5px;}
+</style>
+<script id="v44-js">
+(function(){
+  const esMay = () => !!(window.BRASAS_ES_MAYORISTA && window.BRASAS_ES_MAYORISTA());
+  const ic = {
+    rep:'<svg viewBox="0 0 24 24"><path d="M3 12a9 9 0 0 1 15.5-6.2L21 8M21 3v5h-5M21 12a9 9 0 0 1-15.5 6.2L3 16M3 21v-5h5"/></svg>',
+    seg:'<svg viewBox="0 0 24 24"><path d="M12 3l8 3v6c0 4.5-3.4 8-8 9-4.6-1-8-4.5-8-9V6z"/><path d="M8.5 12l2.5 2.5 4.5-5"/></svg>',
+    ok:'<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M8 12.5l3 3 5-6"/></svg>'
+  };
+  const lista = cls => `<ul class="v44-conf ${cls||""}">
+    <li>${ic.rep}<span><b>Si llega dañado, lo reponemos.</b></span></li>
+    <li>${ic.seg}<span><b>Envío asegurado por el valor real</b> de tu compra: tu dinero está protegido.</span></li>
+    <li>${ic.ok}<span>${esMay() ? "<b>Revisado, testeado y embalado</b> para que lo revendas con confianza." : "<b>Cada asador sale revisado y testeado.</b> Regalá calidad con confianza."}</span></li></ul>`;
+  const poner = () => {
+    const envio = document.querySelector(".ck-envio");
+    if(envio && !document.querySelector(".v44-conf.enck")) envio.insertAdjacentHTML("afterend", lista("enck"));
+    const cta = document.querySelector(".cta-row");
+    if(cta && !document.querySelector(".v44-conf.ficha")) cta.insertAdjacentHTML("afterend", lista("ficha"));
+  };
+  const refrescar = () => { document.querySelectorAll(".v44-conf").forEach(e=>e.remove()); poner(); };
+  window.BRASAS_REFRESCAR_CONFIANZA = refrescar;
+  new MutationObserver(poner).observe(document.body, { childList:true, subtree:true });
+  poner();
+})();
+</script>
+<style id="v45-css">
+/* ===== FICHA: foto | medidas (el zoom tapa solo las medidas) | precios y compra ===== */
+@media (min-width:1100px){
+  .info-col{grid-template-columns:clamp(340px,calc(var(--foto) + 14px),500px) minmax(0,1fr) !important;}
+  .info-col>*{grid-column:2 !important;}
+  .info-col>.ficha-tecnica{grid-column:1 !important;}
+}
+
+/* ===== LOGIN: entrada de mayoristas ===== */
+.v45-may{margin-top:16px;padding-top:14px;border-top:1px solid var(--linea);text-align:center;}
+.v45-may>button.v45-link{background:none;border:none;color:#e8cf8f;font-family:var(--mono);font-size:12.5px;letter-spacing:.14em;text-transform:uppercase;cursor:pointer;text-decoration:underline;text-underline-offset:4px;padding:6px;}
+.v45-form{display:none;margin-top:12px;text-align:left;}
+.v45-form.on{display:block;}
+.v45-form p{margin:0 0 10px;font-size:14px;line-height:1.5;color:#cfcac0;}
+.v45-form .fila{display:flex;gap:8px;}
+.v45-form input{flex:1;min-width:0;background:rgba(255,255,255,.04);border:1px solid var(--linea-fuerte);color:#fff;padding:13px 14px;font-family:var(--mono);font-size:16px;letter-spacing:.06em;text-transform:uppercase;}
+.v45-form input::placeholder{text-transform:none;letter-spacing:0;color:#8f8a80;font-family:inherit;}
+.v45-form button{flex:none;background:linear-gradient(180deg,#f0d28f,#c9a24a);border:none;color:#111;font-weight:600;padding:0 20px;cursor:pointer;letter-spacing:.06em;}
+.v45-form small{display:block;margin-top:8px;min-height:18px;font-size:13px;color:#e8a99a;}
+
+/* ===== insignia en el encabezado ===== */
+.v45-badge{display:inline-block;margin-left:8px;padding:2px 8px;border:1px solid rgba(228,188,110,.6);color:#e8cf8f;font-family:var(--mono);font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;vertical-align:middle;}
+
+/* ===== FICHA mayorista: precio por cantidad ===== */
+body.es-mayo .precio-box.v45-m #precio-grande,body.es-mayo .precio-box.v45-m .precio-cuotas-destacada,body.es-mayo .precio-box.v45-m #precio-usd,body.es-mayo .precio-box.v45-m .precio-medio-elegido,
+body.es-mayo .precio-box.v45-m .medios-lista,body.es-mayo .precio-box.v45-m .medios-box,body.es-mayo .precio-box.v45-m .precio-extra,body.es-mayo .precio-box.v45-m .v31-pv{display:none !important;}
+.v45-t{padding:4px 2px 2px;}
+.v45-t .h{display:flex;justify-content:space-between;align-items:baseline;gap:10px;flex-wrap:wrap;margin:0 0 8px;}
+.v45-t .h b{font-family:var(--mono);font-size:11.5px;letter-spacing:.2em;text-transform:uppercase;color:#e8cf8f;font-weight:400;}
+.v45-t .h span{font-size:12.5px;color:#7fd6a0;}
+.v45-t table{width:100%;border-collapse:collapse;}
+.v45-t td{padding:9px 6px;border-top:1px solid var(--linea);font-size:15px;color:#cfcac0;vertical-align:baseline;}
+.v45-t tr:first-child td{border-top:0;}
+.v45-t td.q{white-space:nowrap;color:#bdb8ae;}
+.v45-t td.q small{display:block;font-size:11.5px;letter-spacing:.06em;color:#8f8a80;}
+.v45-t td.p{text-align:right;font-family:var(--mono);font-size:19px;color:#fff;white-space:nowrap;}
+.v45-t td.d{text-align:right;font-size:12.5px;color:#8fd19e;white-space:nowrap;}
+.v45-t td.d.web{color:#8f8a80;}
+.v45-t tr.on td{background:rgba(228,188,110,.1);}
+.v45-t tr.on td.q{color:#e8cf8f;} .v45-t tr.on td.p{color:#fff;}
+.v45-t .ml{margin:8px 0 2px;font-size:13px;color:#8f8a80;}
+.v45-t .ml b{color:#cfcac0;font-weight:500;}
+.v45-t .tot{margin:8px 0 0;padding:10px 12px;border:1px solid rgba(228,188,110,.35);background:rgba(228,188,110,.05);font-size:14.5px;color:#d8d3c8;display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;}
+.v45-t .tot b{font-family:var(--mono);font-size:18px;color:#fff;font-weight:500;}
+.v45-t .tot em{font-style:normal;color:#e8cf8f;font-size:13px;flex-basis:100%;}
+
+/* ===== checkout mayorista ===== */
+.ck-mayo{margin:10px 0 4px;padding:13px 16px;border:1px solid rgba(228,188,110,.45);background:rgba(228,188,110,.05);}
+.ck-mayo b{display:block;font-family:var(--serif);font-weight:500;font-size:19px;color:#e8cf8f;letter-spacing:.01em;}
+.ck-mayo span{display:block;margin-top:3px;font-size:14px;line-height:1.45;color:#cfcac0;} .ck-mayo span b{display:inline;font-family:inherit;font-size:inherit;color:#fff;}
+.ck-mayo.falta{border-color:rgba(232,169,154,.6);background:rgba(232,169,154,.07);} .ck-mayo.falta b{color:#f0b9aa;}
+.ck-mn{margin-top:3px;font-size:12.5px;color:#8f8a80;line-height:1.4;} .ck-mn.ok{color:#8fd19e;}
+.ck-go.ck-bloq{opacity:.45;filter:saturate(.5);}
+</style>
+
+<script id="v45-js">
+(function(){
+  "use strict";
+  const $ = (s, r=document) => r.querySelector(s), $$ = (s, r=document) => [...r.querySelectorAll(s)];
+  const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+  const A = window.BRASAS_AJUSTES || {};
+  const lsGet = k => { try{ return localStorage.getItem(k); }catch(e){ return null; } };
+  const lsSet = (k,v) => { try{ v===null ? localStorage.removeItem(k) : localStorage.setItem(k,v); }catch(e){} };
+  const urlScript = q => A.appsScript + (A.appsScript.includes("?") ? "&" : "?") + q;
+  const KEY = "brasas-mayo";
+  let S = null, ultimaCred = "";
+  window.BRASAS_MAYO = null;
+  window.BRASAS_ES_MAYORISTA = () => !!(S && S.on);
+
+  /* ---------- precio por unidad según cuántas iguales lleva ---------- */
+  const variante = tag => { for(const m of MODELOS){ if(m.variantes && m.variantes[tag]) return m.variantes[tag]; } return null; };
+  const tierPrecio = (tag, n) => { const T = S && S.tiers[tag]; if(!T || !T.length || n < S.minU) return null; let p = T[0].p; T.forEach(t=>{ if(n >= t.n) p = t.p; }); return p; };
+  window.BRASAS_MAYO_UNIT = (tag, n) => {
+    if(!S || !S.on) return null;
+    const t = tierPrecio(tag, n); if(t != null) return t;
+    const v = variante(tag); return v ? roundK(precioTransfer(v)) : null;
+  };
+
+  /* ---------- estado ---------- */
+  function armar(j, via){
+    const tiers = {}, ml = {}, web = {};
+    (j.items || []).forEach(i=>{ tiers[i.tag] = (i.tiers || []).map(t=>({ n:+t.n, p:+t.p })); if(i.ml) ml[i.tag] = +i.ml; if(i.web) web[i.tag] = +i.web; });
+    return { on:true, via, usuario:j.usuario || "", nombre:j.nombre || "", minU:+(j.minimo && j.minimo.unidades) || 3, tiers, ml, web };
+  }
+  function activar(datos, guardar){
+    S = datos; window.BRASAS_MAYO = S; document.body.classList.add("es-mayo");
+    if(guardar) lsSet(KEY, JSON.stringify(datos));
+    refrescar();
+  }
+  function salir(avisar){
+    S = null; window.BRASAS_MAYO = null; document.body.classList.remove("es-mayo"); lsSet(KEY, null);
+    if(CARRITO && CARRITO.length){ /* el carrito queda: vuelve a precios de tienda */ }
+    refrescar(); if(avisar) toast("Saliste de la cuenta mayorista");
+  }
+  window.BRASAS_MAYO_SALIR = () => salir(true);
+  function refrescar(){
+    try{ renderAccionesUsuario(); }catch(e){}
+    pintarTiers();
+    if(window.BRASAS_REFRESCAR_CONFIANZA) window.BRASAS_REFRESCAR_CONFIANZA();
+    const ck = $("#checkout"); if(ck && ck.classList.contains("abierto") && window.BRASAS_CHECKOUT_REPINTAR) window.BRASAS_CHECKOUT_REPINTAR();
+    document.dispatchEvent(new CustomEvent("brasas-mayo", { detail: S }));
+  }
+  const consultar = async q => { const r = await fetch(urlScript(q + "&_=" + Date.now()), { cache:"no-store" }); return r.json(); };
+
+  async function entrarUsuario(u){
+    u = String(u || "").trim().toUpperCase().replace(/[^A-Z0-9]/g, "");
+    if(u.length < 6) throw new Error("corto");
+    if(!A.appsScript) throw new Error("sin servidor");
+    const j = await consultar("accion=mayorista&usuario=" + encodeURIComponent(u));
+    if(!j.ok) throw new Error(j.error || "acceso");
+    activar(armar(j, "usuario"), true);
+    return j.nombre;
+  }
+  async function entrarGoogle(cred){
+    if(!A.appsScript || !cred || cred === ultimaCred) return;
+    ultimaCred = cred;
+    try{
+      const j = await consultar("accion=mayorista&credencial=" + encodeURIComponent(cred));
+      if(j.ok){ activar(armar(j, "google"), true); toast(`Cuenta mayorista · ${String(j.nombre).split(" ")[0]}: ya ves tus precios por cantidad`); }
+      else if(S && S.via === "google"){ salir(false); }
+    }catch(e){}
+  }
+  window.BRASAS_MAYO_ENTRAR = entrarUsuario;
+
+  /* ---------- login: "Soy cliente mayorista" ---------- */
+  function loginMayo(){
+    const card = $(".login-card"); if(!card || $(".v45-may", card)) return;
+    card.insertAdjacentHTML("beforeend", `<div class="v45-may"><button type="button" class="v45-link" id="v45-abrir">Soy cliente mayorista</button>
+      <div class="v45-form" id="v45-form"><p>Entrá con tu <b>Google</b> (arriba, si te lo habilitamos) o escribí el <b>usuario</b> que te dimos.</p>
+        <div class="fila"><input id="v45-user" autocomplete="username" autocapitalize="characters" spellcheck="false" placeholder="Tu usuario"><button type="button" id="v45-entrar">Entrar</button></div><small id="v45-msg"></small></div></div>`);
+    $("#v45-abrir", card).addEventListener("click", ()=>{ $("#v45-form", card).classList.toggle("on"); setTimeout(()=> $("#v45-user", card).focus(), 50); });
+    const ir = async () => {
+      const b = $("#v45-entrar", card), m = $("#v45-msg", card), u = $("#v45-user", card).value;
+      m.textContent = ""; b.disabled = true; b.textContent = "Verificando…";
+      try{ const n = await entrarUsuario(u); $("#modal-login").classList.remove("abierto"); toast(`Hola ${String(n).split(" ")[0]}: ya ves tus precios mayoristas`); }
+      catch(e){ m.textContent = e.message === "corto" ? "Escribí tu usuario completo." : e.message === "sin servidor" ? "Sin conexión con el taller. Probá más tarde." : "Ese usuario no existe o está dado de baja. Revisalo o escribinos por WhatsApp."; }
+      b.disabled = false; b.textContent = "Entrar";
+    };
+    $("#v45-entrar", card).addEventListener("click", ir);
+    $("#v45-user", card).addEventListener("keydown", e=>{ if(e.key === "Enter"){ e.preventDefault(); ir(); } });
+  }
+  if(typeof abrirLogin === "function"){ const al = abrirLogin; abrirLogin = function(){ const r = al.apply(this, arguments); loginMayo(); return r; }; }
+  loginMayo();
+
+  /* ---------- encabezado: nombre, Mis compras y salir ---------- */
+  const rauPrev = renderAccionesUsuario;
+  renderAccionesUsuario = function(){
+    rauPrev.apply(this, arguments);
+    if(currentUser && currentUser.cred && currentUser.cred !== ultimaCred && A.appsScript) entrarGoogle(currentUser.cred);
+    if(!S || !S.on) return;
+    const chip = $("#acciones-usuario .user-chip");
+    if(chip && !$(".v45-badge", chip)) chip.insertAdjacentHTML("beforeend", `<span class="v45-badge">Mayorista</span>`);
+    const lo = $("#btn-logout"); if(lo && !lo.dataset.v45){ lo.dataset.v45 = "1"; lo.addEventListener("click", ()=>{ if(S && S.via === "google") salir(false); }); }
+    if(!currentUser){
+      const b = $("#btn-login-top");
+      if(b){
+        b.outerHTML = `<span class="user-chip">Hola, <b>${esc(String(S.nombre).split(" ")[0])}</b><span class="v45-badge">Mayorista</span></span><button id="btn-mis-compras">Mis pedidos</button><button id="btn-logout">Salir</button>`;
+        $("#btn-mis-compras").addEventListener("click", ()=>{ window.BRASAS_MIS_COMPRAS && window.BRASAS_MIS_COMPRAS(); });
+        $("#btn-logout").addEventListener("click", ()=> salir(true));
+      }
+    }
+  };
+
+  /* ---------- FICHA: precio por cantidad ---------- */
+  const mlTxt = n => money(n);
+  function pintarTiers(){
+    const caja = $(".precio-box");
+    let box = $("#v45-tiers");
+    if(!caja) return;
+    const tag = (typeof modeloActual !== "undefined" && modeloActual) ? tagActivo() : null;
+    const T = S && S.on && tag ? S.tiers[tag] : null;
+    caja.classList.toggle("v45-m", !!(T && T.length));
+    if(!T || !T.length){ if(box) box.remove(); return; }
+    if(!box){ box = document.createElement("div"); box.className = "v45-t"; box.id = "v45-tiers"; caja.appendChild(box); }
+    const inp = $("#cant-v25"), q = Math.max(1, Math.min(500, Math.round(+(inp && inp.value) || 1)));
+    const ml = S.ml[tag] || 0, web = S.web[tag] ? roundK(S.web[tag]) : 0;
+    const vs = p => ml && p ? Math.round((1 - p / ml) * 100) : 0;
+    const filas = [];
+    const act = q < S.minU ? -1 : T.reduce((a,t,i)=> q >= t.n ? i : a, 0);
+    if(web){ const dv = vs(web); filas.push(`<tr class="${act < 0 ? "on" : ""}"><td class="q">${S.minU > 2 ? `1 a ${S.minU - 1}` : "1"} unid.<small>precio web</small></td><td class="p">${money(web)}</td><td class="d web">${dv > 0 ? `−${dv}% vs ML` : ""}</td></tr>`); }
+    T.forEach((t,i)=>{ const dv = vs(t.p), sig = T[i+1];
+      filas.push(`<tr class="${act === i ? "on" : ""}"><td class="q">${t.n}${sig ? ` a ${sig.n - 1}` : " o más"} unid.<small>${i === 0 ? "precio mayorista" : "mayorista"}</small></td><td class="p">${money(t.p)}</td><td class="d">${dv > 0 ? `−${dv}% vs ML` : ""}</td></tr>`); });
+    const unit = window.BRASAS_MAYO_UNIT(tag, q);
+    const sig = T.find(t=> t.n > q);
+    box.innerHTML = `<div class="h"><b>Tu precio por cantidad</b><span>Envío gratis por Andreani, siempre</span></div>
+      <table>${filas.join("")}</table>
+      ${ml ? `<div class="ml">Precio en MercadoLibre hoy: <b>${mlTxt(ml)}</b></div>` : ""}
+      <div class="tot notranslate" translate="no"><span>${q} × ${money(unit)}</span><b>${money(unit * q)}</b>${sig ? `<em>Con ${sig.n} iguales, cada una baja a ${money(sig.p)}.</em>` : ""}</div>`;
+  }
+  document.addEventListener("input", e=>{ if(e.target && e.target.id === "cant-v25") setTimeout(pintarTiers, 0); });
+  document.addEventListener("click", e=>{ if(e.target.closest && e.target.closest(".cant button, #variantes, .miniaturas")) setTimeout(pintarTiers, 60); });
+  if(typeof abrirFicha === "function"){ const af = abrirFicha; abrirFicha = function(){ const r = af.apply(this, arguments); setTimeout(pintarTiers, 80); setTimeout(pintarTiers, 500); return r; }; }
+  if(typeof activarVariante === "function"){ const av = activarVariante; activarVariante = function(){ const r = av.apply(this, arguments); setTimeout(pintarTiers, 0); return r; }; }
+  document.addEventListener("brasas-catalogo", ()=> setTimeout(pintarTiers, 300));
+
+  /* ---------- al cargar: sesión recordada y link de acceso ---------- */
+  try{
+    const g = JSON.parse(lsGet(KEY) || "null");
+    if(g && g.on && g.tiers){
+      if(g.via === "usuario" || (g.via === "google" && currentUser)){ S = g; window.BRASAS_MAYO = S; document.body.classList.add("es-mayo"); }
+      if(g.via === "usuario" && A.appsScript) consultar("accion=mayorista&usuario=" + encodeURIComponent(g.usuario)).then(j=>{ if(j.ok) activar(armar(j, "usuario"), true); else if(j.error === "acceso") salir(false); }).catch(()=>{});
+    }
+  }catch(e){}
+  const porHash = () => {
+    const m = location.hash.match(/^#mayoristas?-([A-Za-z0-9]{6,40})$/);
+    if(!m) return;
+    history.replaceState(null, "", location.pathname + location.search);
+    entrarUsuario(m[1]).then(n=> toast(`Hola ${String(n).split(" ")[0]}: ya ves tus precios mayoristas`)).catch(()=> toast("Ese link de acceso no es válido. Escribinos por WhatsApp."));
+  };
+  window.addEventListener("hashchange", porHash);
+  const obs = new MutationObserver(()=>{ if(document.documentElement.dataset.brasasListo){ obs.disconnect(); porHash(); } });
+  obs.observe(document.documentElement, { attributes:true, attributeFilter:["data-brasas-listo"] }); { const de = document.documentElement; if(de.dataset.brasasListo) de.dataset.brasasListo = de.dataset.brasasListo; }
+  setTimeout(()=>{ try{ renderAccionesUsuario(); pintarTiers(); }catch(e){} }, 400);
 })();
 </script>
 </body>
