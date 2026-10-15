@@ -11,6 +11,9 @@
   gtag('js', new Date());
   gtag('config', 'G-7X0GHC1DTN');
 </script>
+<link rel="icon" type="image/png" sizes="512x512" href="/favicon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <title>BRASAS® | Asadores y parrillas hechos a mano en Argentina · Envío gratis</title>
 <meta name="description" content="Asadores, parrillas y accesorios BRASAS® diseñados y fabricados a mano en Olavarría, Argentina, desde 2017. Más de 5.000 unidades entregadas. Envío gratis a todo el país.">
 <link rel="canonical" href="https://brasasargentina.com/">
@@ -3132,7 +3135,7 @@ window.BRASAS_AJUSTES = {
   faq: [
     { p:"¿Cuánto tarda en llegar?", r:"Ingresá tu código postal en la ficha del producto, arriba de la medida, y te mostramos la fecha estimada de entrega." },
     { p:"¿Qué garantía tiene?", r:"365 días de garantía de fábrica." },
-    { p:"¿Hay descuento por cantidad?", r:"Sí, es igual para todos: cuantas más unidades iguales llevás en el mismo pedido, menos pagás por cada una. Va de 5% en 2 unidades hasta 25% desde 10, y lo ves en cada producto." },
+    { p:"¿Hay descuento por cantidad?", r:"Sí. Entrando con tu cuenta de Google, cuantas más unidades iguales llevás en el mismo pedido, menos pagás por cada una ({escala}). Lo ves en cada producto." },
     { p:"¿Cómo pago?", r:"Por transferencia bancaria, que es el mejor precio, o comprando en nuestra publicación de MercadoLibre." },
     { p:"¿Hacen envíos?", r:"Sí, el envío es gratis a todo el país. Despachamos desde Olavarría, provincia de Buenos Aires." }
   ]
@@ -3991,7 +3994,7 @@ window.BRASAS_AJUSTES = {
     if(tiene(t,/comprobante|ya pague|ya transferi|pague|transferi|abone|deposite/)) return { fn: flujoComprobante };
     if(tiene(t,/\b(pedido|orden|seguimiento|mi compra|estado)\b/)) return { fn: flujoPedido };
     if(tiene(t,/mayorista|revend|reventa|descuento|rebaja|por cantidad|varias unidades|varios|cantidad|promo/))
-      return { h:`El precio por unidad baja según cuántas unidades <b>iguales</b> (mismo modelo y medida) pidas: <b>5%</b> con 2, <b>11%</b> con 4, <b>17%</b> con 6 y hasta <b>25%</b> desde 10. Es el mismo precio para todos, con envío gratis, y lo ves en cada producto. Para pedidos grandes o a medida, escribinos.`, a:[{ t:"Consultar por WhatsApp", wa:"Hola! Quiero consultar por un pedido por cantidad." }] };
+      return { h:`El precio por unidad baja según cuántas unidades <b>iguales</b> (mismo modelo y medida) pidas: <b>{escala}</b>, entrando con tu cuenta de Google. Con envío gratis, y lo ves en cada producto. Para pedidos grandes o a medida, escribinos.`, a:[{ t:"Consultar por WhatsApp", wa:"Hola! Quiero consultar por un pedido por cantidad." }] };
     if(tiene(t,/persona|humano|asesor|vendedor|hablar con|whatsapp|llamar|telefono/)) return { derivar:"Te paso con una persona del taller." };
     if(tiene(t,/a medida|personaliz|especial|factura|empresa|distribu|modific|devol|reclamo|problema|roto|rota|falla|garantia (de|por) (un|una)/) || q.length > 220)
       return { derivar:"Eso lo vemos mejor con una persona del taller, así te damos una respuesta exacta." };
@@ -8631,7 +8634,7 @@ body.intl .v31-bar .b-envio .cp-fila,body.intl .v31-bar .b-envio .llega{display:
   const RESP_AR = [
     ["Información de envío", "El envío es <b>gratis a todo el país</b> por Andreani. Elegís si lo recibís <b>en tu domicilio o en una sucursal de Andreani</b>. Te mandamos el número de seguimiento por mail y también lo ves en <b>Mis compras</b>. Para ver la fecha estimada, poné tu código postal en la ficha del modelo."],
     ["¿Cómo comprar?", `Todo se gestiona desde la web, con tu cuenta de Google:<ol class="pasos"><li>Elegí modelo, medida y cantidad.</li><li>Tocá <b>Comprar ahora</b> o agregalo al carrito.</li><li>Elegí si lo querés a domicilio o en sucursal de Andreani y completá tus datos.</li><li>Pagá por transferencia y subí el comprobante.</li><li>Confirmamos el pago, gestionamos el envío y te mandamos el seguimiento por mail.</li></ol>`],
-    ["Descuento por cantidad", "El precio por unidad baja cuanto más unidades <b>iguales</b> (mismo modelo y medida) llevás en un pedido: <b>5% con 2</b>, y hasta <b>25% desde 10</b>. Es igual para todos, y lo ves en los botones de cantidad de cada ficha."],
+    ["Descuento por cantidad", "El precio por unidad baja cuanto más unidades <b>iguales</b> (mismo modelo y medida) llevás en un pedido: <b>{escala}</b>. Lo ves entrando con tu cuenta de Google, en los botones de cantidad de cada ficha."],
     ["Garantía", "Cada BRASAS® tiene <b>12 meses de garantía de fabricación</b>: si falla por un defecto nuestro, lo reparamos o lo reemplazamos sin cargo, envío incluido."],
     ["Compra protegida", "Pagás directo al taller y tu compra queda respaldada: seguimiento de Andreani, <b>reposición o reintegro</b> si no llega o llega dañado (avisando dentro de las 48 h con fotos) y <b>10 días para arrepentirte</b>. Rige para compras con tu cuenta de Google, que queda registrada en <b>Mis compras</b>."],
     ["Lista de precios (PDF)", "Tenemos una <b>lista de precios en PDF</b> con todas las medidas y el precio según cantidad. <a href=\"#\" data-v49-lista>Descargarla ahora</a>."]
@@ -10021,7 +10024,22 @@ body.v46-ml-on #v46-acc{display:none;}
   }
   const pctDe = n => escala().reduce((a, e) => n >= e.n ? e.p : a, 0);
   const maxN = () => escala().slice(-1)[0].n;
-  const unitN = (base, n) => n < 2 ? base : roundK(base * (1 - pctDe(n) / 100));
+  /* descuentos por cantidad solo con cuenta: sin cuenta (y con el interruptor de la pestaña WEB en SI) todos pagan el precio de 1 unidad */
+  const bloq = () => { try{ return !!(CAT && CAT.web && CAT.web.descLogin) && !(typeof currentUser !== "undefined" && currentUser && currentUser.email); }catch(e){ return false; } };
+  window.BRASAS_DESC_BLOQUEADOS = bloq;
+  const unitN = (base, n) => (n < 2 || bloq()) ? base : roundK(base * (1 - pctDe(n) / 100));
+  /* textos que se recalculan con la escala: {max} {min} {desde} {top} {escala} */
+  function escTokens(){
+    const e = escala(), f = e[0], l = e[e.length - 1], L = e.length;
+    const idx = [...new Set([0, Math.round((L - 1) / 4), Math.round((L - 1) / 2), L - 1])], pts = idx.map(i => e[i]);
+    const trozos = pts.map((x, i) => i === pts.length - 1 && pts.length > 1 ? `hasta ${x.p}% desde ${x.n}` : `${x.p}% con ${x.n}`);
+    const escTxt = trozos.length > 1 ? trozos.slice(0, -1).join(", ") + " y " + trozos[trozos.length - 1] : trozos[0];
+    return { max:l.p, min:f.p, desde:f.n, top:l.n, escala:escTxt };
+  }
+  const escTxt = t => { const k = escTokens(); return String(t).replace(/\{(max|min|desde|top|escala)\}/g, (m, x) => k[x]); };
+  window.BRASAS_ESC_TXT = escTxt; window.BRASAS_ESC_TOKENS = escTokens;
+  const TT = (k, d) => { try{ const v = String((CAT.textos && CAT.textos[k]) || "").trim(); return escTxt(v || d); }catch(e){ return escTxt(d); } };
+  const fill = (t, o) => String(t).replace(/\{(\w+)\}/g, (m, k) => o[k] != null ? o[k] : m);
   const variante = tag => { for(const m of MODELOS){ if(m.variantes && m.variantes[tag]) return m.variantes[tag]; } return null; };
   window.BRASAS_PRECIO_UNICO = true;
   window.BRASAS_ES_MAYORISTA = () => false;
@@ -10100,6 +10118,19 @@ body.v46-ml-on #v46-acc{display:none;}
   const cant = () => Math.max(1, Math.min(500, Math.round(+(inp && inp.value) || 1)));
   const P = (tag, n) => window.BRASAS_PRECIO_UNIDAD ? window.BRASAS_PRECIO_UNIDAD(tag, medioActivo, n) : 0;
   function ponerCant(n){ if(!inp) return; inp.value = n; inp.dispatchEvent(new Event("input", { bubbles:true })); inp.dispatchEvent(new Event("change", { bubbles:true })); repintar(); }
+  function pintarBloqueado(tag, n, p1, top){
+    const tg = $("#v46-tg"), falso = money(p1).replace(/\d/g, "8"), mx = String(pctDe(top)).replace(/\d/g, "8");
+    const fondo = [2, 3, 4].map(k => `<span><b>${k}</b><i>${falso}</i><em>−${mx}%</em></span>`).join("");
+    tg.innerHTML = `<button type="button" role="radio" aria-checked="true" class="v46-t on" data-n="1"><span class="q">1<small>unidad</small></span><span class="p notranslate" translate="no">${money(p1)}<i>c/u</i></span><span class="o z">precio base</span></button>` +
+      `<div class="v55-lock"><div class="fondo notranslate" aria-hidden="true">${fondo}</div><div class="cartel"><b>${esc(TT("bloqueoTitulo", "Desbloqueá hasta {max}% OFF por cantidad"))}</b><span>${esc(TT("bloqueoTexto", "Entrá con tu cuenta de Google y mirá cuánto menos pagás por unidad. Es gratis y tarda 5 segundos."))}</span><button type="button" class="v55-in">${esc(TT("bloqueoBoton", "Entrar con Google"))}</button></div></div>`;
+    $(".v46-t", tg).addEventListener("click", () => ponerCant(1));
+    $(".v55-in", tg).addEventListener("click", () => { try{ abrirLogin(); }catch(e){} });
+    mas.hidden = false; const sp = $("span", mas); if(sp) sp.textContent = "¿Más de una unidad? Elegí la cantidad.";
+    const ahorroEl = $("#v46-ahorro"), sugEl = document.getElementById("v54-sug");
+    const sug = n >= 2 ? fill(TT("bloqueoMas", "Estas {n} unidades tienen descuento por cantidad con tu cuenta de Google. Entrá y mirá cuánto ahorrás."), { n:n }) : "";
+    const sugHtml = sug ? `<div class="v53-up v55-up">${esc(sug)}</div>` : "";
+    if(sugEl && sugEl.isConnected){ ahorroEl.innerHTML = ""; sugEl.innerHTML = sugHtml; } else ahorroEl.innerHTML = sugHtml;
+  }
   function pintarQ(){
     const tag = (typeof modeloActual !== "undefined" && modeloActual) ? tagActivo() : null; if(!tag) return;
     const ml = medioActivo === "ml", n = cant(), top = maxN(), v = modeloActual.variantes[tag];
@@ -10115,6 +10146,7 @@ body.v46-ml-on #v46-acc{display:none;}
       return;
     }
     const p1 = P(tag, 1);
+    if(bloq()){ pintarBloqueado(tag, n, p1, top); return; }
     let h = "";
     for(let k = 1; k <= top; k++){
       const pk = P(tag, k), pc = p1 > pk ? Math.round((1 - pk / p1) * 100) : 0, sel = k === top ? n >= top : n === k;
@@ -10127,14 +10159,13 @@ body.v46-ml-on #v46-acc{display:none;}
     /* ahorro en pesos, bien a la vista */
     const pn = P(tag, n), a = (p1 - pn) * n;
     const ahorroEl = $("#v46-ahorro"), pt = P(tag, top);
-    const TT = (k, d) => { try{ const v = String((CAT.textos && CAT.textos[k]) || "").trim(); return v || d; }catch(e){ return d; } };
-    const fill = (t, o) => String(t).replace(/\{(\w+)\}/g, (m, k) => o[k] != null ? o[k] : m);
     const cajaAh = (n > 1 && a > 0) ? `<div class="v52-ah"><div class="r1"><span>Comprando de a una</span><s class="notranslate" translate="no">${money(p1 * n)}</s></div><div class="r2"><span>★ Descuento por cantidad (${pctDe(Math.min(n, top))}% OFF)</span><b class="notranslate" translate="no">− ${money(a)}</b></div></div>` : "";
     let sug = "";
-    if(n >= top && pt > 0) sug = fill(TT("fichaMaxMsg", "¡Ya tenés el descuento máximo ({pct}%)! Aprovechá y stockeate: cada unidad te sale {precio}."), { pct:pctDe(top), precio:money(pt), n:top });
+    if(n >= top && pt > 0) sug = fill(TT("fichaMaxMsg", "¡Descuento máximo desbloqueado: {pct}% OFF! Cada unidad te sale {precio} y ahorrás {ahorro} en total."), { pct:pctDe(top), precio:money(pt), n:top, ahorro:money(Math.max(0, (p1 - pt) * n)) });
     else if(n < top){
-      const n1 = n + 1, p2 = P(tag, n1), extra = pctDe(n1) - pctDe(n);
-      if(p2 > 0 && p1 > p2 && extra > 0) sug = fill(TT("fichaMasUna", "Sumá 1 más ({n1} unidades) y tu descuento sube {extra}% más: ahorrás {ahorro} en total."), { n1:n1, extra:extra, ahorro:money((p1 - p2) * n1), pct:pctDe(n1) });
+      const n1 = n + 1, p2 = P(tag, n1), extra = pctDe(n1) - pctDe(n), falta = top - n;
+      if(falta <= 2 && pt > 0 && p1 > pt) sug = fill(TT("fichaCasiMax", "Te faltan {falta} para el descuento máximo ({max}% OFF): cada unidad te sale {unitMax}."), { falta:falta, max:pctDe(top), unitMax:money(pt), topN:top });
+      else if(p2 > 0 && p1 > p2 && extra > 0) sug = fill(TT("fichaMasUna", "Sumá 1 más y cada unidad baja a {unit1} (−{pct}%): con {n1} unidades ahorrás {ahorro} en total."), { n1:n1, extra:extra, ahorro:money((p1 - p2) * n1), pct:pctDe(n1), unit0:money(pn), unit1:money(p2) });
     }
     const sugHtml = sug ? `<div class="v53-up">${esc(sug)}</div>` : "", sugEl = document.getElementById("v54-sug");
     if(sugEl && sugEl.isConnected){ ahorroEl.innerHTML = cajaAh; sugEl.innerHTML = sugHtml; } else ahorroEl.innerHTML = cajaAh + sugHtml;
@@ -10254,7 +10285,7 @@ body.v46-ml-on #v46-acc{display:none;}
     await LIB();
     const { jsPDF } = window.jspdf, doc = new jsPDF({ orientation:"landscape", unit:"mm", format:"a4", compress:true });
     doc.setProperties({ title:"BRASAS - Lista de precios", author:"BRASAS" });
-    const top = maxN(), fecha = hoy();
+    const locked = !!(window.BRASAS_DESC_BLOQUEADOS && window.BRASAS_DESC_BLOQUEADOS()), top = locked ? 1 : maxN(), fecha = hoy();
     const wa = String((CAT.web && CAT.web.whatsapp) || (typeof WHATSAPP_NUMERO !== "undefined" ? WHATSAPP_NUMERO : "")).replace(/\D/g, "");
     const waTxt = wa ? "WhatsApp +" + wa.replace(/^(\d{2})(\d)(\d{4})(\d+)$/, "$1 $2 $3 $4") : "";
     const set = (f, sz, col, st) => { doc.setFont("helvetica", st || "normal"); doc.setFontSize(sz); doc.setTextColor(...col); };
@@ -10264,7 +10295,7 @@ body.v46-ml-on #v46-acc{display:none;}
       doc.setFillColor(116,172,223); doc.rect(0, 0, t, h, "F"); doc.rect(2 * t, 0, t, h, "F");
       if(negro){ doc.setFillColor(255,255,255); doc.rect(t, 0, t, h, "F"); } else { doc.setFillColor(255,255,255); doc.rect(t, 0, t, h, "F"); doc.setDrawColor(210,214,220); doc.setLineWidth(.15); doc.line(t, h, 2 * t, h); }
       doc.setFillColor(246,180,14); doc.circle(PW / 2, h / 2, .55, "F"); };
-    const T = (k, d) => limpia(TXT(k, d));
+    const T = (k, d) => limpia(window.BRASAS_ESC_TXT ? window.BRASAS_ESC_TXT(TXT(k, d)) : TXT(k, d));
     const PEDIDO_T = T("pdfPedidoTitulo", "Hacé tu pedido en la web");
     const PEDIDO_X = T("pdfPedidoTexto", "Entrás con tu cuenta de Google y gestionás todo vos: elegís, pagás, seguís el envío paso a paso y ves el estado de tu pedido.|Es la forma más ordenada de trabajar para todos: queda registro, seguimiento y compra protegida a tu nombre.");
     const PEDIDO_P = T("pdfPedidoPie", "Hacé tu pedido en brasasargentina.com · seguimiento y registro con tu cuenta de Google");
@@ -10280,7 +10311,12 @@ body.v46-ml-on #v46-acc{display:none;}
     const intro = T("pdfIntro", "El mismo precio para todos. Cuantas más unidades iguales (mismo modelo y medida) llevás en un pedido, menos pagás por cada una. Envío gratis por Andreani a todo el país.");
     const oraciones = intro.split(/(?<=[.!?])\s+/).filter(Boolean);
     set(0, 13, [235,230,218]); oraciones.slice(0, 4).forEach((o, i) => tx(o, M + 6, 92 + i * 7.5));
-    /* escala de descuentos */
+    /* escala de descuentos (sin cuenta de Google: un cuadro que invita a entrar) */
+    if(locked){
+      const bx = M + 6, bw = PW - 2 * M - 12, by = 120, aviso = doc.splitTextToSize(T("pdfBloqueo", "Descuento por cantidad de hasta {max}%: entrando con tu cuenta de Google en brasasargentina.com ves el precio por unidad según lo que lleves."), bw - 20);
+      doc.setFillColor(28,26,18); doc.setDrawColor(...GOLD); doc.setLineWidth(.6); doc.roundedRect(bx, by, bw, 12 + aviso.length * 6, 1.2, 1.2, "FD");
+      set(0, 11, GOLD, "bold"); aviso.forEach((l, i) => tx(l, bx + 10, by + 9 + i * 6));
+    } else {
     const E = escalaPct(), tw = (PW - 2 * M - 12 - 9 * 3) / 10, ty = 127;
     set(0, 8, GOLD); doc.setCharSpace(1.4); tx(T("pdfEscala", "PRECIO POR UNIDAD SEGÚN LA CANTIDAD DE UNIDADES QUE LLEVES").toUpperCase(), M + 6, ty - 5); doc.setCharSpace(0);
     for(let k = 1; k <= top; k++){
@@ -10291,6 +10327,7 @@ body.v46-ml-on #v46-acc{display:none;}
       if(p){ set(0, 11, [120,210,160], "bold"); tx("-" + p + "%", x + tw / 2, ty + 23.5, { align:"center" }); } else { set(0, 8, [150,146,136]); tx("precio web", x + tw / 2, ty + 23.5, { align:"center" }); }
     }
     set(0, 9, [190,184,170]); doc.text(doc.splitTextToSize(T("pdfEscalaNota", "Cada recuadro es una cantidad de unidades iguales (mismo modelo y medida) en un mismo pedido. Los precios de las páginas siguientes ya incluyen el descuento de cada cantidad."), PW - 2 * M - 12), M + 6, ty + 35);
+    }
     /* invitación a pedir por la web */
     { const bx = M + 6, bw = PW - 2 * M - 12, by = 168, ps = PEDIDO_X.split("|").map(x => x.trim()).filter(Boolean);
       const lineas = ps.flatMap(p => doc.splitTextToSize(p, bw - 16)); const bh = 11 + lineas.length * 4.6;
@@ -10383,14 +10420,14 @@ body.v46-ml-on #v46-acc{display:none;}
       cy = 74; }
       /* tabla de precios por cantidad */
       const cols = [{ t:"MEDIDA", w:38 }, { t:"ARMADO (cm)", w:27 }, { t:"PESO", w:13 }];
-      const qw = 17.2; for(let k = 1; k <= top; k++) cols.push({ t:k + (k === top ? "+" : "") + (k === 1 ? " unidad" : " unidades"), w:qw, q:k });
+      const qw = locked ? 30 : 17.2; for(let k = 1; k <= top; k++) cols.push({ t:k + (k === top && !locked ? "+" : "") + (k === 1 ? " unidad" : " unidades"), w:qw, q:k });
       cols.push({ t:"MERCADOLIBRE", w:PW - 2 * M - 78 - qw * top });
       const rowH = single ? rowH1 : (vs.length > 5 ? 7.2 : 9.2), cabH = 16.4, WEB = T("pdfPrecioWeb", "precio web|por unidad").split("|"), MLT = T("pdfPrecioML", "precio MercadoLibre|por unidad").split("|");
       let ty0 = cy + 3;
       const encabezado = yy => {
         let x = M; const qx0 = M + 78, qx1 = qx0 + qw * top;
         doc.setFillColor(...GOLD); doc.rect(qx0, yy, qx1 - qx0, 5.2, "F");
-        set(0, 6.4, INK, "bold"); doc.setCharSpace(.5); tx(T("pdfCantidades", "CANTIDAD DE UNIDADES IGUALES EN EL PEDIDO · PRECIO POR UNIDAD").toUpperCase(), (qx0 + qx1) / 2, yy + 3.6, { align:"center" }); doc.setCharSpace(0);
+        set(0, 6.4, INK, "bold"); doc.setCharSpace(.5); tx((locked ? "PRECIO POR UNIDAD" : T("pdfCantidades", "CANTIDAD DE UNIDADES IGUALES EN EL PEDIDO · PRECIO POR UNIDAD")).toUpperCase(), (qx0 + qx1) / 2, yy + 3.6, { align:"center" }); doc.setCharSpace(0);
         const y1 = yy + 5.2;
         doc.setFillColor(...INK); doc.rect(M, y1, PW - 2 * M, 6.2, "F"); doc.setFillColor(243,241,234); doc.rect(M, y1 + 6.2, PW - 2 * M, 5, "F");
         cols.forEach((c, i) => { const al = i < 1 ? "left" : "center", px = al === "left" ? x + 2 : x + c.w / 2;
@@ -11097,7 +11134,7 @@ body.v46-ml-on #v46-acc{display:none;}
 (function(){
   "use strict";
   const $ = (s, r=document) => r.querySelector(s), $$ = (s, r=document) => [...r.querySelectorAll(s)];
-  const TT = (k, d) => { try{ const v = String((CAT.textos && CAT.textos[k]) || "").trim(); return v || d; }catch(e){ return d; } };
+  const TT = (k, d) => { try{ const v = String((CAT.textos && CAT.textos[k]) || "").trim(); return window.BRASAS_ESC_TXT ? window.BRASAS_ESC_TXT(v || d) : (v || d); }catch(e){ return d; } };
   const fill = (t, o) => String(t).replace(/\{(\w+)\}/g, (m, k) => o[k] != null ? o[k] : m);
   const fmt = n => (+n).toLocaleString("es-AR");
 
@@ -11183,6 +11220,126 @@ body.v46-ml-on #v46-acc{display:none;}
     const h=w.offsetHeight; if(h>150) mi.style.maxHeight=h+"px";
   }
   setInterval(ajustar,600); window.addEventListener("resize",ajustar);
+})();
+</script>
+<style>
+/* ===== v55: descuentos tapados sin cuenta + aviso de versión nueva ===== */
+.v55-lock{grid-column:2 / -1;position:relative;overflow:hidden;display:flex;min-height:88px;border:1px dashed rgba(228,188,110,.6);background:rgba(228,188,110,.05);}
+.v55-lock .fondo{position:absolute;inset:0;display:flex;gap:6px;padding:9px 8px;filter:blur(5px);opacity:.5;pointer-events:none;user-select:none;}
+.v55-lock .fondo span{flex:1;display:flex;flex-direction:column;align-items:flex-start;gap:3px;font-family:var(--mono);color:#fff;min-width:0;}
+.v55-lock .fondo b{font-family:'Oswald',sans-serif;font-weight:400;font-size:21px;line-height:1;}
+.v55-lock .fondo i{font-style:normal;font-size:12.5px;white-space:nowrap;}
+.v55-lock .fondo em{font-style:normal;padding:1px 5px;background:#1c3a29;color:#8fe0ad;font-size:10.5px;}
+.v55-lock .cartel{position:relative;z-index:1;display:flex;flex-direction:column;justify-content:center;align-items:flex-start;gap:5px;width:100%;padding:11px 14px;background:linear-gradient(90deg,rgba(11,11,10,.86),rgba(11,11,10,.55));}
+.v55-lock .cartel b{font-family:'Oswald',sans-serif;font-weight:500;font-size:17px;line-height:1.15;color:#e8cf8f;letter-spacing:.01em;}
+.v55-lock .cartel b::before{content:"🔒";margin-right:7px;font-size:14px;}
+.v55-lock .cartel span{font-size:12.5px;line-height:1.35;color:#d9d4c8;}
+.v55-in{margin-top:3px;padding:9px 16px;border:0;cursor:pointer;background:linear-gradient(180deg,#f2d699,#e4bc6e 45%,#c9a24a);color:#14100a;font:600 12.5px/1 'Inter',system-ui,sans-serif;letter-spacing:.04em;}
+.v55-in:hover{filter:brightness(1.08);}
+@media (max-width:520px){ .v55-lock{min-height:96px;} .v55-lock .cartel{padding:9px 10px;} .v55-lock .cartel b{font-size:14.5px;} .v55-lock .cartel span{font-size:11.5px;} .v55-in{padding:8px 12px;} }
+.v55-nota{margin:10px 0;padding:11px 14px;border:1px dashed rgba(228,188,110,.6);background:rgba(228,188,110,.06);color:#e8dcc0;font-size:14px;line-height:1.4;display:flex;gap:12px;align-items:center;justify-content:space-between;flex-wrap:wrap;}
+.v55-nota button{padding:8px 14px;border:0;cursor:pointer;background:linear-gradient(180deg,#f2d699,#e4bc6e 45%,#c9a24a);color:#14100a;font:600 12.5px/1 'Inter',system-ui,sans-serif;}
+.v55-nueva{position:fixed;left:50%;bottom:18px;transform:translateX(-50%);z-index:99999;display:flex;gap:14px;align-items:center;padding:12px 16px;background:#14120e;border:1px solid rgba(228,188,110,.7);color:#f1ead8;font:14px/1.3 'Inter',system-ui,sans-serif;box-shadow:0 10px 40px rgba(0,0,0,.55);max-width:calc(100vw - 24px);}
+.v55-nueva button{padding:8px 14px;border:0;cursor:pointer;background:linear-gradient(180deg,#f2d699,#e4bc6e 45%,#c9a24a);color:#14100a;font:600 12.5px/1 'Inter',system-ui,sans-serif;white-space:nowrap;}
+</style>
+<script>
+(function(){
+  "use strict";
+  const BUILD = "20261015-184527";
+  window.BRASAS_BUILD = BUILD;
+  const $ = (s, r) => (r || document).querySelector(s);
+  const esc = t => String(t).replace(/[&<>"]/g, c => ({ "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;" }[c]));
+  let CAT = {}; try{ CAT = JSON.parse(localStorage.getItem("brasas-catalogo") || "{}") || {}; }catch(e){}
+  document.addEventListener("brasas-catalogo", e => { CAT = e.detail || CAT; });
+  const lsQuitar = k => { try{ localStorage.removeItem(k); }catch(e){} };
+
+  /* ---------- 1. versión: nadie se queda con una web vieja ---------- */
+  try{ const prev = localStorage.getItem("brasas-build"); if(prev && prev !== BUILD){ lsQuitar("brasas-catalogo"); lsQuitar("brasas-precios"); } localStorage.setItem("brasas-build", BUILD); }catch(e){}
+  const ocupado = () => !!document.querySelector(".overlay.abierto, .modal.abierto, #checkout.abierto, .modal-overlay.abierto, #modal-login.abierto");
+  let aviso = null;
+  function recargar(v){
+    lsQuitar("brasas-catalogo"); lsQuitar("brasas-precios");
+    const u = new URL(location.href); u.searchParams.set("v", v); location.replace(u.toString());
+  }
+  async function revisarVersion(){
+    try{
+      const base = location.pathname.replace(/[^\/]*$/, "");
+      const r = await fetch(base + "version.txt?t=" + Date.now(), { cache:"no-store" }); if(!r.ok) return;
+      const v = (await r.text()).trim(); if(!/^[\w.-]{4,40}$/.test(v) || v === BUILD) return;
+      let ya = ""; try{ ya = sessionStorage.getItem("brasas-recarga") || ""; }catch(e){}
+      if(ya === v) return;                                        /* ya recargué por esta versión: sin bucles */
+      if(!ocupado()){ try{ sessionStorage.setItem("brasas-recarga", v); }catch(e){} recargar(v); return; }
+      if(aviso) return;
+      aviso = document.createElement("div"); aviso.className = "v55-nueva";
+      aviso.innerHTML = `<span>Hay una versión nueva de la web.</span><button type="button">Actualizar</button>`;
+      document.body.appendChild(aviso);
+      $("button", aviso).addEventListener("click", () => { try{ sessionStorage.setItem("brasas-recarga", v); }catch(e){} recargar(v); });
+    }catch(e){}
+  }
+  setTimeout(revisarVersion, 1500);
+  document.addEventListener("visibilitychange", () => { if(document.visibilityState === "visible") revisarVersion(); });
+  setInterval(revisarVersion, 10 * 60 * 1000);
+
+  /* ---------- 2. textos con valores de la escala: {max} {min} {desde} {top} {escala} ---------- */
+  const RX = /\{(max|min|desde|top|escala)\}/;
+  const plantillas = new Map();                                  /* nodo → texto con las llaves, para recalcular si cambia la escala */
+  function expandir(nodo){
+    const t = plantillas.get(nodo) || nodo.nodeValue;
+    if(!RX.test(t)) return;
+    const nv = window.BRASAS_ESC_TXT ? window.BRASAS_ESC_TXT(t) : t;
+    if(nv !== nodo.nodeValue){ plantillas.set(nodo, t); nodo.nodeValue = nv; }
+  }
+  function recorrer(raiz){
+    if(raiz.nodeType === 3){ if(raiz.nodeValue.indexOf("{") >= 0) expandir(raiz); return; }
+    if(raiz.nodeType !== 1) return;
+    const tag = raiz.tagName; if(tag === "SCRIPT" || tag === "STYLE" || tag === "TEXTAREA") return;
+    const w = document.createTreeWalker(raiz, NodeFilter.SHOW_TEXT); let n;
+    while((n = w.nextNode())){ if(n.nodeValue.indexOf("{") >= 0) expandir(n); }
+  }
+  new MutationObserver(ms => { ms.forEach(m => {
+    if(m.type === "characterData"){ if(m.target.nodeValue.indexOf("{") >= 0) expandir(m.target); }
+    else m.addedNodes.forEach(recorrer);
+  }); }).observe(document.body, { childList:true, subtree:true, characterData:true });
+  function recalcular(){ plantillas.forEach((t, n) => { if(!n.isConnected){ plantillas.delete(n); return; } const nv = window.BRASAS_ESC_TXT ? window.BRASAS_ESC_TXT(t) : t; if(nv !== n.nodeValue) n.nodeValue = nv; }); recorrer(document.body); }
+  document.addEventListener("brasas-catalogo", () => setTimeout(recalcular, 50));
+  setTimeout(() => recorrer(document.body), 200);
+
+  /* ---------- 3. al entrar o salir con Google se vuelven a calcular los precios ---------- */
+  const entro = () => { try{ return !!(typeof currentUser !== "undefined" && currentUser && currentUser.email); }catch(e){ return false; } };
+  let ultimo = entro();
+  function alCambiar(){
+    const e = entro(); if(e === ultimo) return; ultimo = e;
+    const inp = $("#cant-v25"); if(inp) inp.dispatchEvent(new Event("input", { bubbles:true }));
+    try{ if(window.BRASAS_CHECKOUT_REPINTAR) window.BRASAS_CHECKOUT_REPINTAR(); }catch(e2){}
+    notas();
+    try{ if(typeof toast === "function" && e && window.BRASAS_DESC_BLOQUEADOS && !window.BRASAS_DESC_BLOQUEADOS() && ((CAT.web && CAT.web.descLogin))) toast("Descuentos por cantidad desbloqueados"); }catch(e3){}
+    document.dispatchEvent(new CustomEvent("brasas-sesion"));
+  }
+  if(typeof renderAccionesUsuario === "function"){ const prev = renderAccionesUsuario; renderAccionesUsuario = function(){ const r = prev.apply(this, arguments); setTimeout(alCambiar, 0); return r; }; }
+  setInterval(alCambiar, 1500);
+
+  /* ---------- 4. aviso en carrito y compra para quien no entró y lleva unidades iguales ---------- */
+  function hayVarias(){ try{ return (typeof CARRITO !== "undefined" && CARRITO.some(x => (+x.qty || 1) >= 2)) || (+(($("#cant-v25") || {}).value) >= 2); }catch(e){ return false; } }
+  function poner(dest, antes){
+    if(!dest) return;
+    let n = $(".v55-nota", antes ? dest.parentNode : dest);
+    if(n) return;
+    n = document.createElement("div"); n.className = "v55-nota";
+    const tt = window.BRASAS_ESC_TXT ? window.BRASAS_ESC_TXT : (x => x);
+    const txt = tt(String((CAT.textos && CAT.textos.bloqueoPedido) || "Tu pedido tiene unidades iguales: entrando con Google se aplica el descuento por cantidad (hasta {max}%)."));
+    const btn = tt(String((CAT.textos && CAT.textos.bloqueoBoton) || "Entrar con Google"));
+    n.innerHTML = `<span>${esc(txt)}</span><button type="button">${esc(btn)}</button>`;
+    $("button", n).addEventListener("click", () => { try{ abrirLogin(); }catch(e){} });
+    if(antes) dest.parentNode.insertBefore(n, dest); else dest.prepend(n);
+  }
+  function notas(){
+    const bloq = window.BRASAS_DESC_BLOQUEADOS && window.BRASAS_DESC_BLOQUEADOS(), mostrar = bloq && hayVarias();
+    document.querySelectorAll(".v55-nota").forEach(n => { if(!mostrar) n.remove(); });
+    if(!mostrar) return;
+    const lista = $("#carrito-lista"); if(lista && lista.children.length && lista.offsetParent) poner(lista, false);
+    const tot = $("#checkout.abierto .ck-tot"); if(tot) poner(tot, true);
+  }
+  setInterval(notas, 800);
 })();
 </script>
 </body>
