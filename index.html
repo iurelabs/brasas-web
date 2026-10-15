@@ -2222,10 +2222,12 @@ renderLanding();
   let yaVista = false; try{ if(sessionStorage.getItem("brasas-saltar-intro")==="1"){ yaVista = true; sessionStorage.removeItem("brasas-saltar-intro"); } }catch(e){}
   if(/mayorista/.test(location.hash)) yaVista = true;
   function cerrarIntro(){ intro.classList.add("fuera"); setTimeout(()=>intro.remove(), 1000); }
-  if(!intro){} else if(yaVista || reducido){ intro.remove(); }
+  let hayCopia = false; try{ hayCopia = !!localStorage.getItem("brasas-catalogo"); }catch(e){}
+  if(!intro){} else if((yaVista && hayCopia) || reducido){ intro.remove(); }
   else {
-    intro.addEventListener("click", cerrarIntro);
-    setTimeout(cerrarIntro, 2500);
+    /* el cierre lo decide la barra de carga (capa v56) según el estado real de la colección y las fotos; este tope es solo por seguridad */
+    window.BRASAS_INTRO = { cerrar: cerrarIntro, t0: Date.now() };
+    setTimeout(cerrarIntro, 30000);
   }
 
   /* ---- topbar compacta al scrollear ---- */
@@ -11255,7 +11257,7 @@ body.v46-ml-on #v46-acc{display:none;}
 <script>
 (function(){
   "use strict";
-  const BUILD = "20261015-191856";
+  const BUILD = "20261015-193959";
   window.BRASAS_BUILD = BUILD;
   const $ = (s, r) => (r || document).querySelector(s);
   const esc = t => String(t).replace(/[&<>"]/g, c => ({ "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;" }[c]));
@@ -11350,6 +11352,129 @@ body.v46-ml-on #v46-acc{display:none;}
     const tot = $("#checkout.abierto .ck-tot"); if(tot) poner(tot, true);
   }
   setInterval(notas, 800);
+})();
+</script>
+<style>
+/* ===== v56: barra de carga real en la animación inicial ===== */
+#lujo-intro .li-barra{width:min(240px,62vw);height:2px;margin-top:22px;background:rgba(255,255,255,.12);position:relative;overflow:hidden;opacity:0;animation:lujoAparecer .8s .7s forwards;}
+#lujo-intro .li-barra i{position:absolute;inset:0;transform-origin:left center;transform:scaleX(0);background:linear-gradient(90deg,#c9a24a,#f2d699);}
+#lujo-intro .li-pct{margin-top:10px;font-family:var(--mono);font-size:11px;letter-spacing:.3em;padding-left:.3em;color:var(--hueso-dim);opacity:0;animation:lujoAparecer .8s .8s forwards;min-height:14px;}
+#lujo-intro{cursor:default;}
+/* el selector de idioma de la primera visita queda por encima de la carga, que sigue trabajando por detrás */
+.bienvenida{z-index:10001;}
+</style>
+<script>
+(function(){
+  "use strict";
+  const intro = document.getElementById("lujo-intro"), I = window.BRASAS_INTRO;
+  if(!intro || !I) return;
+  const A = window.BRASAS_AJUSTES || {};
+  const hayServidor = !!A.appsScript;
+  const MIN = 2400, TOPE = 18000, T_FOTO = 9000;
+  intro.insertAdjacentHTML("beforeend", '<div class="li-barra"><i></i></div><div class="li-pct">0%</div>');
+  const bar = intro.querySelector(".li-barra i"), pct = intro.querySelector(".li-pct");
+
+  const t0 = I.t0 || Date.now();
+  let catOk = !hayServidor, tCat = catOk ? Date.now() : 0;
+  const hayCopia = () => { try{ return !!localStorage.getItem("brasas-catalogo"); }catch(e){ return false; } };
+  if(hayServidor && hayCopia() && document.querySelector("#grid-modelos .modelo-card")){ catOk = true; tCat = Date.now(); }
+  document.addEventListener("brasas-catalogo", ()=>{ if(!catOk){ catOk = true; tCat = Date.now(); } });
+
+  /* fotos reales: lo que se ve en pantalla de la colección y el comienzo de la página */
+  const vistas = new Map();       // url -> estado (0 cargando, 1 lista)
+  function seguir(url){
+    if(!url || vistas.has(url) || /^data:/.test(url)) return;
+    vistas.set(url, 0);
+    const im = new Image();
+    const fin = () => vistas.set(url, 1);
+    im.onload = fin; im.onerror = fin; im.src = url;
+    if(im.complete) fin();
+  }
+  function escanear(){
+    const urls = [];
+    document.querySelectorAll("#grid-modelos img, #coleccion img, .lujo-hero2 img, section img").forEach(im=>{
+      if(im.closest("#lujo-intro, .bienvenida, .overlay, #checkout")) return;
+      if(im.loading === "lazy") return;
+      const u = im.currentSrc || im.src; if(u) urls.push(u);
+    });
+    document.querySelectorAll("#grid-modelos [style*='url('], .modelo-foto").forEach(el=>{
+      const m = /url\((['"]?)(.*?)\1\)/.exec(getComputedStyle(el).backgroundImage || ""); if(m && m[2]) urls.push(m[2]);
+    });
+    urls.slice(0, 18).forEach(seguir);
+  }
+  let escaneos = 0;
+  function programarEscaneos(){ [80, 450, 1000].forEach(ms=> setTimeout(()=>{ escanear(); escaneos++; }, ms)); }
+  let programado = false;
+
+  let shown = 0, cerrando = false;
+  function objetivo(){
+    const t = Date.now() - t0;
+    if(!catOk) return 0.45 * (1 - Math.exp(-t / 3500));              // avanza despacio mientras llega la colección
+    const tot = vistas.size, ok = [...vistas.values()].filter(Boolean).length;
+    return 0.5 + 0.5 * (tot ? ok / tot : 1);
+  }
+  function listo(){
+    if(!catOk) return false;
+    if(escaneos < 3) return false;
+    const vencido = Date.now() - tCat > T_FOTO;
+    return vencido || [...vistas.values()].every(Boolean);
+  }
+  function paso(){
+    if(cerrando) return;
+    const ahora = Date.now() - t0;
+    if(catOk && !programado){ programado = true; programarEscaneos(); }
+    let obj = objetivo();
+    const termina = (listo() && ahora >= MIN) || ahora >= TOPE;
+    if(termina) obj = 1;
+    shown += (obj - shown) * (termina ? 0.25 : 0.12);
+    if(obj - shown < 0.004) shown = obj;
+    bar.style.transform = "scaleX(" + shown.toFixed(3) + ")";
+    pct.textContent = Math.round(shown * 100) + "%";
+    if(termina && shown >= 1){ cerrando = true; setTimeout(()=>I.cerrar(), 350); return; }
+    requestAnimationFrame(paso);
+  }
+  requestAnimationFrame(paso);
+  window.BRASAS_INTRO_ESTADO = () => ({ catOk, fotos:[...vistas.values()], shown });
+})();
+</script>
+<style>
+/* el aviso de Google del carrito es ahora la misma ventana de "Iniciá sesión con Google" */
+.ck-gate{display:none !important;}
+.v56-inv{display:block;margin:6px auto 0;background:none;border:0;color:#9a958a;font-size:13.5px;cursor:pointer;text-decoration:underline;text-underline-offset:3px;padding:6px 10px;}
+.v56-inv:hover{color:#efe9dc;}
+</style>
+<script>
+(function(){
+  "use strict";
+  const gate = document.getElementById("ck-gate"), ml = document.getElementById("modal-login");
+  if(!gate || !ml || typeof abrirLogin !== "function") return;
+  const ss = { get:k=>{ try{ return sessionStorage.getItem(k); }catch(e){ return null; } }, set:(k,v)=>{ try{ sessionStorage.setItem(k,v); }catch(e){} } };
+  let modoCarrito = false;
+  const enFormulario = () => { const ck = document.getElementById("checkout"); return !!(ck && ck.classList.contains("abierto") && ck.querySelector("#ck-form")); };
+  const logueado = () => { try{ return typeof currentUser !== "undefined" && currentUser && currentUser.email; }catch(e){ return false; } };
+  function seguirSinCuenta(){
+    ss.set("brasas-invitado", "1"); modoCarrito = false;
+    ml.classList.remove("abierto"); quitarLink();
+    setTimeout(()=>{ const i = document.querySelector("#ck-form [name=nombre]"); if(i) i.focus(); }, 80);
+  }
+  function quitarLink(){ const b = ml.querySelector(".v56-inv"); if(b) b.remove(); }
+  function ponerLink(){
+    const card = ml.querySelector(".login-card"); if(!card || card.querySelector(".v56-inv")) return;
+    const b = document.createElement("button"); b.type = "button"; b.className = "v56-inv"; b.textContent = "Continuar sin cuenta"; b.addEventListener("click", seguirSinCuenta);
+    card.appendChild(b);
+  }
+  function mostrarLogin(){
+    if(logueado() || ss.get("brasas-invitado") || !enFormulario()) return;
+    modoCarrito = true; if(!ml.classList.contains("abierto")) abrirLogin();
+    ponerLink();
+  }
+  new MutationObserver(()=>{ if(gate.classList.contains("on")){ gate.classList.remove("on"); mostrarLogin(); } }).observe(gate, { attributes:true, attributeFilter:["class"] });
+  /* si cierra la ventana (X, clic afuera o Esc) sin entrar, sigue como invitado */
+  new MutationObserver(()=>{
+    if(!ml.classList.contains("abierto") && modoCarrito){ modoCarrito = false; quitarLink(); if(!logueado()) seguirSinCuenta(); }
+  }).observe(ml, { attributes:true, attributeFilter:["class"] });
+  /* al entrar con Google, se limpia el modo */
+  document.addEventListener("brasas-sesion", ()=>{ modoCarrito = false; quitarLink(); });
 })();
 </script>
 </body>
