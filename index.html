@@ -10941,7 +10941,7 @@ body.v46-ml-on #v46-acc{display:none;}
     try{
       const r = await fetch(url("accion=ventas&credencial=" + encodeURIComponent(cred()) + "&_=" + Date.now()), { cache:"no-store" }), j = await r.json();
       if(!j.ok){ if(j.error === "google" && !silencioso){ try{ currentUser.cred = ""; abrirLogin(); }catch(e){} } return false; }
-      admin = true; ventas = j.ventas || []; btn.classList.add("on");
+      admin = true; ventas = j.ventas || []; btn.classList.add("on"); try{ localStorage.setItem("brasas-ventas-cache", JSON.stringify(ventas.slice(0, 120))); }catch(e){}
       const pend = ventas.filter(v => /esperando|comprobante|pagado/.test(v.estado)).length; $("#v51-n").textContent = pend;
       return true;
     }catch(e){ return false; }
@@ -10974,7 +10974,7 @@ body.v46-ml-on #v46-acc{display:none;}
       <div class="tot">${money(v.total)} <small>· ${esc(v.medio)}${v.ahorro ? " · ahorro " + money(v.ahorro) : ""}</small></div>
       <div class="bl"><em>Productos y precio</em>${v.items.map(i => `<div class="it"><i style="${i.foto ? "background-image:url('" + esc(i.foto) + "')" : ""}"></i><span>${i.cantidad} × ${esc(i.producto)} <span style="color:#8a8478">(${esc(i.variante)})</span>${i.precio ? `<br><span style="color:#8a8478">${money(i.precio)} c/u = ${money(i.precio * i.cantidad)}</span>` : ""}</span></div>`).join("")}${v.entregado ? `<br><span style="color:#7fd6a0">Garantía hasta el ${fd(v.garantiaHasta)} · ${v.garantiaHasta > Date.now() ? "vigente" : "vencida"}</span>` : ""}</div>
       <div class="bl"><em>Cliente</em>${esc(v.nombre)}${v.dni ? " · DNI " + esc(v.dni) : ""}<br>${v.email ? `<a href="mailto:${esc(v.email)}">${esc(v.email)}</a>` : ""}${v.telefono ? ` · <a href="https://wa.me/${esc(String(v.telefono).replace(/\D/g, ""))}" target="_blank" rel="noopener">${esc(v.telefono)}</a>` : ""}${v.cuenta ? `<br><span style="color:#7fd6a0">Cuenta Google ✓</span>` : ""}</div>
-      <div class="bl"><em>Entrega · ${suc ? "a sucursal" : "a domicilio"}</em>${dir}<br>${esc(v.ciudad)}, ${esc(v.provincia)} · CP ${esc(v.cp)}${v.referencias ? `<br><span style="color:#8a8478">${esc(v.referencias)}</span>` : ""}</div>
+      <div class="bl"><em>Entrega · ${suc ? "a sucursal" : "a domicilio"}</em>${v.calle || v.ciudad || v.sucursal ? `${dir}<br>${esc(v.ciudad)}, ${esc(v.provincia)} · CP ${esc(v.cp)}` : (v.destino ? esc(v.destino) + `<br><span style="color:#8a8478">(pedido anterior: solo se guardó el destino completo)</span>` : `<span style="color:#f09a9a">Sin datos de envío guardados en esta orden</span>`)}${v.referencias ? `<br><span style="color:#8a8478">${esc(v.referencias)}</span>` : ""}</div>
       <div class="bl"><em>Seguimiento Andreani</em>${v.seguimiento ? `<a href="${esc(v.seguimientoUrl)}" target="_blank" rel="noopener">${esc(v.seguimiento)}</a>` : `<span style="color:#8a8478">sin cargar</span>`}
         <div class="seg"><input class="sn" placeholder="Pegá acá el número (Ctrl+V)" autocomplete="off"><button class="g" data-a="seguimiento" type="button" style="background:#d4af37;color:#0c0c0c;border:0;padding:0 14px;font-weight:600;cursor:pointer">${v.seguimiento ? "Cambiar" : "Guardar"}</button></div></div>
       <div class="bl"><em>Nota privada (el cliente no la ve)</em><textarea class="nt" maxlength="600" placeholder="Ej: pidió envío después del 20, pagó en dos partes…">${esc(v.nota || "")}</textarea><div class="ac" style="margin-top:6px"><button data-a="nota" class="sec" type="button">Guardar nota</button></div></div>
@@ -10986,6 +10986,15 @@ body.v46-ml-on #v46-acc{display:none;}
         <button data-a="copiar" class="sec" type="button">Copiar datos de etiqueta</button>
         ${est === "cancelado" ? "" : `<button data-a="cancelar" class="mal" type="button">Cancelar orden</button>`}
         <select class="rv" aria-label="Deshacer un paso"><option value="">Deshacer…</option>${[["entregado","Entregado"],["despachado","Despachado"],["pagado","Pago acreditado"],["seguimiento","Seguimiento"],["cancelado","Cancelada"]].filter(x => v[x[0]]).map(x => `<option value="${x[0]}">Quitar: ${x[1]}</option>`).join("")}</select></div></div>`;
+  }
+  function aplicarLocal(v, a, campo){
+    const t = Date.now();
+    if(a === "pagado"){ v.pagado = t; if(v.estado !== "despachado" && v.estado !== "entregado") v.estado = "pagado"; }
+    else if(a === "despachado"){ v.pagado = v.pagado || t; v.despachado = v.despachado || t; if(v.estado !== "entregado") v.estado = "despachado"; }
+    else if(a === "entregado"){ v.pagado = v.pagado || t; v.despachado = v.despachado || t; v.entregado = t; v.estado = "entregado"; v.garantiaHasta = t + 365 * 864e5; }
+    else if(a === "cancelar"){ v.cancelado = t; v.estado = "cancelado"; }
+    else if(a === "revertir" && campo){ v[campo] = 0; if(campo === "seguimiento") v.seguimientoUrl = "", v.seguimiento = ""; v.estado = v.cancelado ? "cancelado" : v.entregado ? "entregado" : v.despachado ? "despachado" : v.pagado ? "pagado" : (v.comprobante ? "comprobante recibido" : "esperando pago"); }
+    else if(a === "seguimiento"){ /* lo trae la actualización del servidor */ }
   }
   async function accion(o, a, n, boton, sinmail, campo){
     const v = ventas.find(x => x.orden === o); if(!v) return;
@@ -11001,14 +11010,16 @@ body.v46-ml-on #v46-acc{display:none;}
       const r = await fetch(url("accion=ventaaccion&credencial=" + encodeURIComponent(cred()) + "&a=" + a + "&o=" + encodeURIComponent(o) + (n ? "&n=" + encodeURIComponent(n) : "") + (sinmail ? "&s=1" : "") + (campo ? "&c=" + campo : "") + "&_=" + Date.now()), { cache:"no-store" }), j = await r.json();
       if(!j.ok){ if(j.error === "google"){ try{ currentUser.cred = ""; abrirLogin(); }catch(e){} } else alert(j.titulo ? j.titulo + "\n" + (j.msg || "") : "No se pudo: " + (j.error || "error")); boton.disabled = false; if(!esSel) boton.textContent = tx; return; }
       if(a === "nota"){ boton.disabled = false; boton.textContent = "Guardado ✓"; setTimeout(() => boton.textContent = tx, 1500); await cargar(true); return; }
-      await cargar(true); pintar();
+      aplicarLocal(v, a, campo);
+      pintar(); cargar(true).then(ok => { if(ok) pintar(); });     // se ve al instante; el servidor se confirma atrás
     }catch(e){ alert("No hubo conexión. Probá de nuevo."); boton.disabled = false; if(!esSel) boton.textContent = tx; }
   }
   async function abrir(){
     if(!cred()){ try{ if(typeof currentUser === "undefined" || !currentUser) abrirLogin(); else { currentUser.cred = ""; abrirLogin(); } }catch(e){} return; }
     pan.classList.add("on"); document.body.style.overflow = "hidden";
-    $("#v51-l").innerHTML = `<div class="vv">Cargando ventas…</div>`;
-    if(await cargar()) pintar(); else { pan.classList.remove("on"); document.body.style.overflow = ""; return; }
+    let previa = null; try{ previa = JSON.parse(localStorage.getItem("brasas-ventas-cache") || "null"); }catch(e){}
+    if(previa && previa.length){ ventas = previa; pintar(); $("#v51-ts").textContent = "actualizando…"; } else $("#v51-l").innerHTML = `<div class="vv">Cargando ventas…</div>`;
+    if(await cargar()) pintar(); else if(!(previa && previa.length)){ pan.classList.remove("on"); document.body.style.overflow = ""; return; }
     clearInterval(timer); timer = setInterval(async () => { if(pan.classList.contains("on") && !document.activeElement?.classList.contains("sn") && !document.activeElement?.matches("#v51-q") && await cargar(true)) pintar(); }, 30000);
   }
   function cerrar(){ pan.classList.remove("on"); document.body.style.overflow = ""; clearInterval(timer); }
@@ -11314,7 +11325,7 @@ body.v46-ml-on #v46-acc{display:none;}
 <script>
 (function(){
   "use strict";
-  const BUILD = "20261015-224030";
+  const BUILD = "20261015-230111";
   window.BRASAS_BUILD = BUILD;
   const $ = (s, r) => (r || document).querySelector(s);
   const esc = t => String(t).replace(/[&<>"]/g, c => ({ "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;" }[c]));
