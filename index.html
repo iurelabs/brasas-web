@@ -11314,7 +11314,7 @@ body.v46-ml-on #v46-acc{display:none;}
 <script>
 (function(){
   "use strict";
-  const BUILD = "20261015-222151";
+  const BUILD = "20261015-224030";
   window.BRASAS_BUILD = BUILD;
   const $ = (s, r) => (r || document).querySelector(s);
   const esc = t => String(t).replace(/[&<>"]/g, c => ({ "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;" }[c]));
@@ -11623,6 +11623,10 @@ body.v46-ml-on #v46-acc{display:none;}
   document.addEventListener("click", e => { if(e.target.closest && e.target.closest("#btn-logout")){ ls(K, null); pedida = ""; } }, true);
   /* si el servidor dijo que la sesión ya no vale (otro dispositivo, vencida), se limpia para volver a pedir Google */
   setInterval(() => { try{ if(currentUser && currentUser.cred === "" && lg(K)){ ls(K, null); pedida = ""; } }catch(e){} }, 2500);
+  /* coherencia: si en la web real no hay sesión válida (la de Google se pierde al recargar), no se muestra como "logueado": se pide entrar de nuevo */
+  const real = /(^|\.)brasasargentina\.com$/.test(location.hostname);
+  const huerfano = () => { try{ return real && currentUser && currentUser.email && !(currentUser.cred && Date.now() < (currentUser.credVence || 0) - 60000) && !guardada(); }catch(e){ return false; } };
+  setTimeout(() => { try{ if(huerfano()){ ls("brasas-usuario", null); currentUser = null; renderAccionesUsuario(); } }catch(e){} }, 1800);
   try{ if(typeof currentUser !== "undefined" && currentUser) renderAccionesUsuario(); }catch(e){}
 })();
 </script>
