@@ -1477,7 +1477,7 @@ body.panel-abierto .asist-fab,body:has(.asist.abierto) .asist-fab{opacity:0;poin
         <div class="envio-block">
           <div class="label-op">Envío</div>
           <div class="envio-toggle">
-            <button data-tipo="domicilio" class="activo">📍 A domicilio (Argentina)</button>
+            <button data-tipo="domicilio" class="activo">📍 Argentina (Andreani)</button>
             <button data-tipo="internacional">🌎 Internacional</button>
           </div>
           <div class="envio-panel" id="envio-panel-domicilio">
@@ -1843,7 +1843,7 @@ function renderPrecioYCuotas(){
 }
 function actualizarResumenMedioElegido(){
   const el = document.getElementById("precio-medio-elegido");
-  el.innerHTML = `Pagás con <b>${NOMBRES_MEDIO[medioActivo]}</b> · Envío: <b>${envioTipo==='domicilio'?'a domicilio (Argentina)':'internacional'}</b>`;
+  el.innerHTML = `Pagás con <b>${NOMBRES_MEDIO[medioActivo]}</b> · Envío: <b>${envioTipo==='domicilio'?'Argentina por Andreani':'internacional'}</b>`;
 }
 
 /* ===================== ENVÍO ===================== */
@@ -2075,8 +2075,7 @@ function pintarModalResenas(){
     : `<div class="resenas-vacio">Todavía no hay opiniones publicadas de este producto.</div>`;
   const escribir = document.getElementById("escribir-resena");
   /* se opina SOLO desde "Mis compras", con la cuenta de Google con la que se compró, una vez por producto por compra */
-  escribir.innerHTML = `<div class="no-login-box">Las opiniones son de clientes que compraron. Si compraste este producto en la web, calificalo desde <b>Mis compras</b> entrando con tu cuenta de Google.<br><button class="cta" id="btn-ir-mis-compras" style="width:auto;padding:9px 16px;margin-top:8px;">Ir a Mis compras</button></div>`;
-  document.getElementById("btn-ir-mis-compras").addEventListener("click", ()=>{ cerrarModalResenas(); if(window.BRASAS_MIS_COMPRAS) window.BRASAS_MIS_COMPRAS(); });
+  escribir.innerHTML = "";
 }
 document.getElementById("btn-abrir-resenas").addEventListener("click", abrirModalResenas);
 document.getElementById("cerrar-resenas").addEventListener("click", cerrarModalResenas);
@@ -2169,7 +2168,7 @@ function abrirCarrito(){
   } else {
     cont.innerHTML = CARRITO.map((it,i)=>`
       <div class="carrito-item"><div class="ci-nombre">${it.modelo} — ${it.variante}</div>
-      <div class="ci-det">${it.medio} · ${it.internacional? "Envío internacional" : "Envío a domicilio (Arg.)"} · ${money(it.total)}</div></div>`).join("");
+      <div class="ci-det">${it.medio} · ${it.internacional? "Envío internacional" : "Envío gratis (Arg.)"} · ${money(it.total)}</div></div>`).join("");
     const sumaConocida = CARRITO.filter(it=>!it.internacional).reduce((a,it)=>a+it.total,0);
     const hayIntl = CARRITO.some(it=>it.internacional);
     totalEl.textContent = `Total: ${money(sumaConocida)}${hayIntl?' + envíos internacionales a coordinar':''}`;
@@ -2192,7 +2191,7 @@ document.getElementById("vendidos-menos").addEventListener("click", ()=>{ modelo
 document.getElementById("btn-enviar-pregunta").addEventListener("click", ()=>{
   const txt = document.getElementById("pregunta-texto").value.trim();
   if(!txt){ toast("Escribí tu pregunta primero"); return; }
-  window.open(`https://wa.me/${WHATSAPP_NUMERO}?text=${encodeURIComponent(`Hola! Tengo una consulta sobre ${((modeloActual.variantes[tagActivo()]||{}).nombre||modeloActual.nombre)}: ${txt}`)}`, "_blank");
+  window.open(`https://wa.me/${WHATSAPP_NUMERO}?text=${encodeURIComponent(window.BRASAS_WA_CONSULTA ? window.BRASAS_WA_CONSULTA(((modeloActual.variantes[tagActivo()]||{}).nombre||modeloActual.nombre), txt) : `Hola! Tengo una consulta sobre ${((modeloActual.variantes[tagActivo()]||{}).nombre||modeloActual.nombre)}: ${txt}`)}`, "_blank");
 });
 document.getElementById("btn-wa-directo").addEventListener("click", ()=>{
   window.open(`https://wa.me/${WHATSAPP_NUMERO}?text=${encodeURIComponent(`Hola! Me interesa el ${((modeloActual.variantes[tagActivo()]||{}).nombre||modeloActual.nombre)}, ¿me pasás más info?`)}`, "_blank");
@@ -2550,7 +2549,7 @@ renderLanding();
     if(!CARRITO.length){ cont.innerHTML = `<div class="carrito-vacio">Tu carrito está vacío.</div>`; totalEl.textContent = ""; }
     else {
       cont.innerHTML = CARRITO.map(it=>`<div class="carrito-item"><div class="ci-nombre">${it.modelo} — ${it.variante}</div>
-        <div class="ci-det">${it.medio} · ${it.internacional ? "Envío a " + (it.pais||"exterior") : "Envío a domicilio (Arg.)"} · ${it.totalTxt || money(it.total)}</div></div>`).join("");
+        <div class="ci-det">${it.medio} · ${it.internacional ? "Envío a " + (it.pais||"exterior") : "Envío gratis (Arg.)"} · ${it.totalTxt || money(it.total)}</div></div>`).join("");
       const ars = CARRITO.filter(it=>!it.internacional), ext = CARRITO.filter(it=>it.internacional);
       totalEl.textContent = [ars.length ? "Total Argentina: " + money(ars.reduce((a,it)=>a+it.total,0)) : "", ext.length ? `${ext.length} ítem(s) de exportación` : ""].filter(Boolean).join(" · ");
     }
@@ -3131,8 +3130,9 @@ window.BRASAS_AJUSTES = {
     reservaHoras: 48
   },
   faq: [
-    { p:"¿Cuánto tarda en llegar?", r:"Ingresá tu código postal en el paso 02 de la compra y te mostramos la fecha estimada de entrega." },
+    { p:"¿Cuánto tarda en llegar?", r:"Ingresá tu código postal en la ficha del producto, arriba de la medida, y te mostramos la fecha estimada de entrega." },
     { p:"¿Qué garantía tiene?", r:"365 días de garantía de fábrica." },
+    { p:"¿Hay descuento por cantidad?", r:"Sí, es igual para todos: cuantas más unidades iguales llevás en el mismo pedido, menos pagás por cada una. Va de 5% en 2 unidades hasta 25% desde 10, y lo ves en cada producto." },
     { p:"¿Cómo pago?", r:"Por transferencia bancaria, que es el mejor precio, o comprando en nuestra publicación de MercadoLibre." },
     { p:"¿Hacen envíos?", r:"Sí, el envío es gratis a todo el país. Despachamos desde Olavarría, provincia de Buenos Aires." }
   ]
@@ -3990,8 +3990,10 @@ window.BRASAS_AJUSTES = {
     if(tiene(t,/\bgracias\b/) && t.length < 25) return { h:"¡De nada! Cualquier otra cosa, acá estoy." };
     if(tiene(t,/comprobante|ya pague|ya transferi|pague|transferi|abone|deposite/)) return { fn: flujoComprobante };
     if(tiene(t,/\b(pedido|orden|seguimiento|mi compra|estado)\b/)) return { fn: flujoPedido };
+    if(tiene(t,/mayorista|revend|reventa|descuento|rebaja|por cantidad|varias unidades|varios|cantidad|promo/))
+      return { h:`El precio por unidad baja según cuántas unidades <b>iguales</b> (mismo modelo y medida) pidas: <b>5%</b> con 2, <b>11%</b> con 4, <b>17%</b> con 6 y hasta <b>25%</b> desde 10. Es el mismo precio para todos, con envío gratis, y lo ves en cada producto. Para pedidos grandes o a medida, escribinos.`, a:[{ t:"Consultar por WhatsApp", wa:"Hola! Quiero consultar por un pedido por cantidad." }] };
     if(tiene(t,/persona|humano|asesor|vendedor|hablar con|whatsapp|llamar|telefono/)) return { derivar:"Te paso con una persona del taller." };
-    if(tiene(t,/a medida|personaliz|especial|factura|empresa|mayorista|distribu|revend|reventa|descuento|rebaja|precio especial|por cantidad|varios|modific|devol|reclamo|problema|roto|rota|falla|garantia (de|por) (un|una)/) || q.length > 220)
+    if(tiene(t,/a medida|personaliz|especial|factura|empresa|distribu|modific|devol|reclamo|problema|roto|rota|falla|garantia (de|por) (un|una)/) || q.length > 220)
       return { derivar:"Eso lo vemos mejor con una persona del taller, así te damos una respuesta exacta." };
     const cp = q.match(/\b([A-Za-z]?\d{4})(?:[A-Za-z]{3})?\b/);
     if(tiene(t,/envio|envian|llega|tarda|demora|entrega|cuando|codigo postal|\bcp\b|domicilio/) || (cp && t.replace(/\s/g,"").length <= 8)){
@@ -4005,9 +4007,9 @@ window.BRASAS_AJUSTES = {
       return { h:`Por ahora no trabajamos con cuotas. Podés pagar por <b>transferencia</b> (el mejor precio) o comprar en <b>MercadoLibre</b>, donde tenés sus opciones de financiación.` };
     }
     if(tiene(t,/pago|pagar|abonar|transfer|cripto|usdt|usdc|btc|bitcoin|eth|western|dolar|efectivo|mercado ?pago|rapipago|pago facil/))
-      return { h:`Podés pagar por <b>transferencia bancaria</b> (el mejor precio) o comprar en <b>MercadoLibre</b>. Se elige en el paso 03 de la compra.` };
+      return { h:`Podés pagar por <b>transferencia bancaria</b> (el mejor precio) o comprar en <b>MercadoLibre</b>. Lo elegís en la ficha del producto, junto al precio.` };
     if(tiene(t,/precio|cuanto|cuesta|sale|valor|vale|costo/)){
-      if(m) return { h:`${esc(m.nombre)}: ${Object.values(m.variantes).map(v=>`${esc(v.label)} ${money(precioTransfer(v))}`).join(" · ")}. Precio por transferencia, envío gratis incluido.` };
+      if(m) return { h:`${esc(m.nombre)}: ${Object.values(m.variantes).map(v=>`${esc(v.label)} ${money(precioTransfer(v))}`).join(" · ")}. Precio por transferencia, envío gratis incluido, por 1 unidad: con más unidades baja el precio de cada una.` };
       return { h:`Precios desde: ${MODELOS.map(x=>`${esc(x.nombre)} ${money(Math.min(...Object.values(x.variantes).map(precioTransfer)))}`).join(" · ")}.` };
     }
     if(tiene(t,/medida|tamano|dimension|\bcm\b|grande|chico|conviene|cual (me|compro|elijo)|recomend|diferencia/)){
@@ -4393,9 +4395,13 @@ body:has(.ck.abierto) .asist-fab{opacity:0;pointer-events:none;}
      2. MEDIOS DE COBRO
      ========================================================= */
   NOMBRES_MEDIO.transferencia = "Transferencia bancaria"; NOMBRES_MEDIO.ml = "MercadoLibre";
-  const pct = () => Math.max(0, +C().descuentoCirculo || 0);
+  const pct = () => window.BRASAS_PRECIO_UNICO ? 0 : Math.max(0, +C().descuentoCirculo || 0);
   const descUnit = precio => currentUser && pct() ? roundK(precio * pct() / 100) : 0;
   const unitTransfer = v => roundK(precioTransfer(v));
+  /* precio único por cantidad (v46): en la ficha, el precio unitario depende de la cantidad elegida */
+  const qtyFicha = () => { const i = document.getElementById("cant-v25"); return Math.max(1, Math.round(+(i && i.value) || 1)); };
+  const unitQ = (v, n) => { try{ if(window.BRASAS_MAYO_UNIT && modeloActual){ const t = Object.keys(modeloActual.variantes).find(k => modeloActual.variantes[k] === v); if(t){ const u = window.BRASAS_MAYO_UNIT(t, n); if(u != null) return u; } } }catch(e){} return unitTransfer(v); };
+  const baseFicha = v => unitQ(v, qtyFicha());
   /* cuenta mayorista (se activa en v45): precio por cantidad de iguales (mismo TAG); con menos del mínimo, precio web */
   const mayo = () => (window.BRASAS_MAYO && window.BRASAS_MAYO.on) ? window.BRASAS_MAYO : null;
   const mayoTier = (tag, n) => { const M = mayo(); if(!M) return null; const T = M.tiers[tag]; if(!T || !T.length || n < M.minU) return null; let p = T[0].p; T.forEach(t=>{ if(n >= t.n) p = t.p; }); return p; };
@@ -4407,13 +4413,14 @@ body:has(.ck.abierto) .asist-fab{opacity:0;pointer-events:none;}
     return l;
   }
   /* precio por unidad según el medio (ya con descuento o recargo) */
-  function precioUnidad(v, k){
-    const base = unitTransfer(v);
+  function precioUnidad(v, k, n){
+    const base = n ? unitQ(v, n) : baseFicha(v);
     if(k === "transferencia") return base - descUnit(base);
     if(k === "ml") return roundK(precioML(v));
     const o = mediosCheckout().find(x=>x.k===k);
     return o ? roundK(base * (1 + o.recargo/100)) : base;
   }
+  window.BRASAS_PRECIO_UNIDAD = (tag, k, n) => { const v = modeloActual && modeloActual.variantes[tag]; return v ? precioUnidad(v, k, n) : 0; };
   function mediosFicha(v){
     const l = mediosCheckout().map(o => ({ ...o }));
     if(tieneML(v)) l.push({ k:"ml", n:"MercadoLibre", d:"Comprá en nuestra publicación oficial", ml:true });
@@ -4426,7 +4433,7 @@ body:has(.ck.abierto) .asist-fab{opacity:0;pointer-events:none;}
     const v = modeloActual.variantes[tag], cont = $("#medios-lista"), lista = mediosFicha(v);
     if(!lista.length){ cont.innerHTML = `<div class="pago-nota">Consultanos por WhatsApp para comprar este modelo.</div>`; actualizarCTA(); return; }
     if(!lista.some(o=>o.k===medioActivo)) medioActivo = lista[0].k;
-    const base = unitTransfer(v);
+    const base = baseFicha(v);
     cont.innerHTML = lista.map(o=>{
       const p = precioUnidad(v, o.k), off = o.k === "transferencia" && descUnit(base) > 0;
       return `<div class="pago-op ${o.k===medioActivo?"on":""}" data-m="${o.k}" role="radio" aria-checked="${o.k===medioActivo}" tabindex="0"><span class="rd"></span>
@@ -4455,7 +4462,7 @@ body:has(.ck.abierto) .asist-fab{opacity:0;pointer-events:none;}
   const G_ICON = `<svg class="g" viewBox="0 0 48 48" aria-hidden="true"><path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3C33.7 32.7 29.2 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.8 1.2 7.9 3.1l5.7-5.7C34 6.1 29.3 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20 20-8.9 20-20c0-1.3-.1-2.4-.4-3.5z"/><path fill="#FF3D00" d="m6.3 14.7 6.6 4.8C14.7 15.1 19 12 24 12c3.1 0 5.8 1.2 7.9 3.1l5.7-5.7C34 6.1 29.3 4 24 4 16.3 4 9.7 8.3 6.3 14.7z"/><path fill="#4CAF50" d="M24 44c5.2 0 9.9-2 13.4-5.2l-6.2-5.2C29.2 35.1 26.7 36 24 36c-5.2 0-9.6-3.3-11.3-8l-6.5 5C9.5 39.6 16.2 44 24 44z"/><path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3c-.8 2.2-2.2 4.2-4.1 5.6l6.2 5.2C37 39.2 44 34 44 24c0-1.3-.1-2.4-.4-3.5z"/></svg>`;
   actualizarResumenMedioElegido = function(){
     const el = $("#precio-medio-elegido"); if(!el || !modeloActual) return;
-    const v = modeloActual.variantes[tagActivo()], base = unitTransfer(v);
+    const v = modeloActual.variantes[tagActivo()], base = baseFicha(v);
     if(medioActivo === "transferencia" && pct()){
       if(currentUser) el.innerHTML = `<s>${money(base)}</s><span class="circ-ok">★ ${pct()}% Comunidad BRASAS aplicado</span> · por transferencia`;
       else {
@@ -4539,32 +4546,33 @@ body:has(.ck.abierto) .asist-fab{opacity:0;pointer-events:none;}
     items.forEach(x=>{ qtyT[x.it.tag] = (qtyT[x.it.tag] || 0) + x.it.qty; });
     const unitDe = x => M ? unitPed(x.v, x.it.tag, qtyT[x.it.tag]) : unitTransfer(x.v);
     const sub = items.reduce((a,x)=> a + unitDe(x) * x.it.qty, 0);
-    if(M){
+    const ahorro = items.reduce((a,x)=> a + Math.max(0, unitTransfer(x.v) - unitDe(x)) * x.it.qty, 0);
+    if(M && M.via){
       const medio = mediosCheckout().find(x=>x.k==="transferencia") || { k:"transferencia", n:"Transferencia bancaria", recargo:0 };
-      return { items, sub, desc:0, rec:0, extra:0, extraPct:0, extraTxt:"", cupon:"", promoUsada:"", total:sub, medio, mayo:true, unitDe, qtyT, valido: Object.keys(qtyT).some(t=> qtyT[t] >= M.minU) };
+      return { items, sub, desc:0, rec:0, extra:0, extraPct:0, extraTxt:"", cupon:"", promoUsada:"", total:sub, medio, mayo:true, unitDe, qtyT, ahorro, valido: Object.keys(qtyT).some(t=> qtyT[t] >= M.minU) };
     }
     const o = mediosCheckout().find(x=>x.k===ckMedio) || mediosCheckout()[0] || { k:"transferencia", recargo:0 };
     let desc = 0, rec = 0;
-    if(o.k === "transferencia") desc = items.reduce((a,x)=> a + descUnit(unitTransfer(x.v)) * x.it.qty, 0);
-    else rec = items.reduce((a,x)=> a + (roundK(unitTransfer(x.v) * (1 + o.recargo/100)) - unitTransfer(x.v)) * x.it.qty, 0);
-    /* promo del día (solo por transferencia) */
-    const promo = window.BRASAS_PROMO ? window.BRASAS_PROMO() : null;
+    if(o.k === "transferencia") desc = items.reduce((a,x)=> a + descUnit(unitDe(x)) * x.it.qty, 0);
+    else rec = items.reduce((a,x)=> a + (roundK(unitDe(x) * (1 + o.recargo/100)) - unitDe(x)) * x.it.qty, 0);
+    /* promo del día (solo por transferencia; con precio único por cantidad no se suma) */
+    const promo = !M && window.BRASAS_PROMO ? window.BRASAS_PROMO() : null;
     let extraPct = 0, extraTxt = "", cupon = "", promoUsada = "";
     if(o.k === "transferencia"){ const pp = promo ? +promo.pct || 0 : 0;
       if(pp){ extraPct = pp; extraTxt = promo.nombre || "Promo"; promoUsada = extraTxt; } }
     const extra = extraPct ? roundK((sub - desc) * extraPct / 100) : 0;
-    return { items, sub, desc, rec, extra, extraPct, extraTxt, cupon, promoUsada, total: sub - desc - extra + rec, medio:o, unitDe };
+    return { items, sub, desc, rec, extra, extraPct, extraTxt, cupon, promoUsada, total: sub - desc - extra + rec, medio:o, unitDe, qtyT, ahorro, valido:true };
   }
 
   function abrirCheckout(items, origen){
     ckItems = items.map(x=>({ ...x })); ckOrigen = origen; ckOrden = null; ckQuitado = null;
     const ms = mediosCheckout();
-    ckMedio = mayo() ? "transferencia" : ms.some(o=>o.k===medioActivo) ? medioActivo : (ms[0]||{k:"transferencia"}).k;
+    ckMedio = (mayo() && mayo().via) ? "transferencia" : ms.some(o=>o.k===medioActivo) ? medioActivo : (ms[0]||{k:"transferencia"}).k;
     pintarCheckout();
     ck.classList.add("abierto"); ck.scrollTop = 0; document.body.style.overflow = "hidden";
   }
   window.BRASAS_CHECKOUT = abrirCheckout;
-  window.BRASAS_CHECKOUT_REPINTAR = () => { if(ckItems.length){ if(mayo()) ckMedio = "transferencia"; pintarCheckout(); } };
+  window.BRASAS_CHECKOUT_REPINTAR = () => { if(ckItems.length){ if(mayo() && mayo().via) ckMedio = "transferencia"; pintarCheckout(); } };
 
   function mayoNota(x, c, M){
     const n = c.qtyT[x.it.tag], T = M.tiers[x.it.tag] || [];
@@ -4573,14 +4581,14 @@ body:has(.ck.abierto) .asist-fab{opacity:0;pointer-events:none;}
     return `<div class="ck-mn ok">Precio mayorista · ${n} iguales${sig ? ` · con ${sig.n} iguales: ${money(sig.p)} c/u (−${Math.round((1 - sig.p/cur)*100)}%)` : ""}</div>`;
   }
   function pintarCheckout(){
-    const card = $("#ck-card"), c = cuentas(), d = comprador(), u = currentUser || {}, M = mayo();
+    const card = $("#ck-card"), c = cuentas(), d = comprador(), u = currentUser || {}, M = (mayo() && mayo().via) ? mayo() : null;
     const ms = M ? mediosCheckout().filter(o=>o.k==="transferencia") : mediosCheckout();
     if(!c.items.length){
       card.innerHTML = `<button class="ck-x" aria-label="Cerrar">✕</button><div class="ck-e">★★★★★★</div><h3>Tu carrito</h3>${ckQuitado ? `<div class="ck-quitado"><span>Quitaste <b>${esc(ckQuitado.txt)}</b></span><button type="button" class="ck-undo">Deshacer</button></div>` : ""}<div class="ck-vacio">Todavía no agregaste nada.</div><button class="cta ck-go" data-cerrar>Ver la colección</button>`;
       $(".ck-x", card).addEventListener("click", cerrarCk); const un0 = $(".ck-undo", card); if(un0) un0.addEventListener("click", deshacerQuitar); $("[data-cerrar]", card).addEventListener("click", ()=>{ cerrarCk(); const g = $("#grid-modelos"); if(g) g.scrollIntoView({ behavior:"smooth" }); });
       return;
     }
-    const v = (k, def="") => esc(d[k] || def);
+    const v = (k, def="") => esc(d[k] || def), suc = d.envio === "sucursal";
     card.innerHTML = `
       <button class="ck-x" aria-label="Cerrar">✕</button>
       <div class="ck-e">★★★★★★</div>
@@ -4588,26 +4596,26 @@ body:has(.ck.abierto) .asist-fab{opacity:0;pointer-events:none;}
       <ol class="ck-ruta" aria-label="Pasos">
         <li class="hecho"><i>✓</i><b>Elegí</b><small>tu BRASAS</small></li>
         <li class="act"><i>2</i><b>Pagá</b><small>por transferencia</small></li>
-        <li><i>3</i><b>Te lo enviamos</b><small>a tu puerta</small></li>
+        <li><i>3</i><b>Te lo enviamos</b><small>a donde elijas</small></li>
       </ol>
       <div class="ck-envio" role="status"><span class="pulso" aria-hidden="true"></span>
-        <div><b>Envío gratis por Andreani a domicilio</b><span id="ck-llega-top">Calculando tu fecha de entrega…</span></div></div>
+        <div><b>Envío gratis por Andreani a todo el país</b><span id="ck-llega-top">Calculando tu fecha de entrega…</span></div></div>
       ${M ? `<div class="ck-mayo ${c.valido ? "ok" : "falta"}"><b>Cuenta mayorista · ${esc(M.nombre)}</b><span>${c.valido ? `Pedido válido. Los modelos con menos de ${M.minU} iguales se suman a precio web.` : `Para enviar el pedido sumá al menos <b>${M.minU} unidades iguales</b> de un mismo modelo y medida. Los demás modelos se suman a precio web.`}</span></div>` : ""}
 
       <div class="ck-s">01 · Tu pedido</div>
       ${ckQuitado ? `<div class="ck-quitado"><span>Quitaste <b>${esc(ckQuitado.txt)}</b></span><button type="button" class="ck-undo">Deshacer</button></div>` : ""}
       <div class="ck-items">${c.items.map((x,i)=>`
         <div class="ck-it" data-i="${i}" data-k="${esc(x.it.mid+"|"+x.it.tag)}"><div class="th" style='${fotoDe(x.m)}'></div>
-          <div><div class="n">${esc(x.v.nombre || x.m.nombre)}</div><div class="v">${esc(x.v.label)} · ${money(c.unitDe(x))} c/u</div>${M ? mayoNota(x, c, M) : ""}
+          <div><div class="n">${esc(x.v.nombre || x.m.nombre)}</div><div class="v">${esc(x.v.label)} · ${money(c.unitDe(x))} c/u</div>${M ? mayoNota(x, c, M) : (c.unitDe(x) < unitTransfer(x.v) ? `<div class="ck-mn ok">Precio por cantidad · ahorrás ${money((unitTransfer(x.v) - c.unitDe(x)) * x.it.qty)}</div>` : "")}
             <div style="display:flex;align-items:center"><div class="q"><button type="button" data-q="-1" aria-label="Quitar uno">−</button><span>${x.it.qty}</span><button type="button" data-q="1" aria-label="Agregar uno">+</button></div><button type="button" class="del" aria-label="Eliminar del carrito" title="Eliminar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16"/><path d="M9 7V4.8c0-.4.4-.8.8-.8h4.4c.4 0 .8.4.8.8V7"/><path d="M6.5 7l.9 12.2c.1.9.8 1.6 1.7 1.6h5.8c.9 0 1.6-.7 1.7-1.6L17.5 7"/><path d="M10.2 11v6M13.8 11v6"/></svg></button></div></div>
           <div class="p notranslate" translate="no">${money(c.unitDe(x) * x.it.qty)}</div></div>`).join("")}</div>
       <div class="ck-tot notranslate" translate="no">
-        <div><span>Subtotal</span><span>${money(c.sub)}</span></div>
+        ${c.ahorro > 0 ? `<div class="tach"><span>Total comprando de a una unidad</span><s>${money(c.sub + c.ahorro)}</s></div><div class="desc"><span>★ Descuento por cantidad</span><span>− ${money(c.ahorro)}</span></div>` : `<div><span>Subtotal</span><span>${money(c.sub)}</span></div>`}
         ${c.desc ? `<div class="desc"><span>★ Comunidad BRASAS −${pct()}%</span><span>− ${money(c.desc)}</span></div>` : ""}
         ${c.extra ? `<div class="desc"><span>★ ${esc(c.extraTxt)} −${c.extraPct}%</span><span>− ${money(c.extra)}</span></div>` : ""}
         ${c.rec ? `<div><span>Recargo ${esc(c.medio.n)} (${c.medio.recargo}%)</span><span>+ ${money(c.rec)}</span></div>` : ""}
-        <div class="gratis"><span>Envío a domicilio · Andreani</span><span>Gratis</span></div>
-        <div class="total"><span>Total</span><span>${money(c.total)}</span></div>
+        <div class="gratis"><span>${suc ? "Envío a sucursal de Andreani" : "Envío a domicilio · Andreani"}</span><span>Gratis</span></div>
+        <div class="total"><span>Total a pagar</span><span>${money(c.total)}</span></div>
       </div>
       ${!M && !currentUser && pct() && c.medio.k === "transferencia" ? `<button type="button" class="g-invita ck-inv">${G_ICON}<span>Unite con Google y ahorrá <b>${money(c.items.reduce((a,x)=> a + roundK(unitTransfer(x.v)*pct()/100) * x.it.qty, 0))}</b></span></button>` : ""}
 
@@ -4616,24 +4624,32 @@ body:has(.ck.abierto) .asist-fab{opacity:0;pointer-events:none;}
           <span class="nm"><b>${esc(o.n)}</b><small>${esc(o.d)}${o.recargo ? ` · recargo ${o.recargo}%` : ""}</small></span></div>`).join("")}</div>` : ""}
 
       <div class="ck-s">${ms.length > 1 ? "03" : "02"} · Datos de entrega</div>
-      <form class="ck-f" id="ck-form" novalidate>
+      <div class="ck-env" role="radiogroup" aria-label="Cómo querés recibirlo">
+        <button type="button" class="ck-eo ${suc ? "" : "on"}" data-env="domicilio" role="radio" aria-checked="${!suc}"><b>🏠 A mi domicilio</b><small>Te lo llevan a tu casa · gratis</small></button>
+        <button type="button" class="ck-eo ${suc ? "on" : ""}" data-env="sucursal" role="radio" aria-checked="${suc}"><b>📦 A una sucursal de Andreani</b><small>Lo retirás vos · gratis</small></button>
+      </div>
+      <form class="ck-f" id="ck-form" data-env="${suc ? "sucursal" : "domicilio"}" novalidate>
+        <input type="hidden" name="envio" value="${suc ? "sucursal" : "domicilio"}">
         ${currentUser ? `<div class="w ck-gauto" style="grid-column:1/-1">${G_ICON}<span>Completamos tus datos con tu cuenta de Google. Revisalos.</span></div>` : ""}
         <label class="w"><span>Nombre y apellido</span><input name="nombre" autocomplete="name" value="${v("nombre", u.nombre||"")}" required></label>
         <label><span>Email</span><input name="email" type="email" autocomplete="email" value="${v("email", u.email||"")}" required></label>
-        <label><span>Celular <small>para el repartidor</small></span><input name="telefono" type="tel" inputmode="tel" autocomplete="tel" value="${v("telefono", u.telefono||"")}" placeholder="2284 123456" required></label>
+        <label><span>Celular <small>${suc ? "para avisarte cuando llegue" : "para el repartidor"}</small></span><input name="telefono" type="tel" inputmode="tel" autocomplete="tel" value="${v("telefono", u.telefono||"")}" placeholder="2284 123456" required></label>
         ${M ? `<label class="w"><span>Comercio o razón social <small>opcional</small></span><input name="razon" value="${v("razon")}"></label><label class="w"><span>CUIT <small>opcional</small></span><input name="cuit" inputmode="numeric" maxlength="13" value="${v("cuit")}"></label>` : ""}
+        <div class="ck-dom">
         <label class="w"><span>Calle</span><input name="calle" autocomplete="address-line1" value="${v("calle")}" required></label>
         <div class="w ck-f3" style="grid-column:1/-1">
           <label><span>Número</span><input name="numero" inputmode="numeric" value="${v("numero")}" required></label>
           <label><span>Piso <small>opcional</small></span><input name="piso" value="${v("piso")}"></label>
           <label><span>Depto <small>opcional</small></span><input name="depto" value="${v("depto")}"></label>
         </div>
+        </div>
+        <label class="w ck-suc"><span>Sucursal de Andreani donde querés retirar <small>nombre y dirección</small></span><input name="sucursal" value="${v("sucursal")}" placeholder="Ej: Sucursal Olavarría · Av. Pringles 2150"><small class="ck-ayuda">Buscá la más cercana en <a href="https://www.andreani.com/sucursales" target="_blank" rel="noopener">andreani.com/sucursales</a>. Cuando llega, Andreani te avisa para retirarlo con tu DNI.</small></label>
         <label><span>Ciudad</span><input name="ciudad" autocomplete="address-level2" value="${v("ciudad")}" required></label>
         <label><span>Provincia</span><select name="provincia" required><option value="">Elegí…</option>${PROVINCIAS.map(p=>`<option ${p===d.provincia?"selected":""}>${p}</option>`).join("")}</select></label>
         <label><span>Código postal</span><input name="cp" inputmode="text" maxlength="8" autocomplete="postal-code" value="${v("cp", lsGet("brasas-cp")||"")}" required></label>
         <label><span>DNI <small>lo pide el correo</small></span><input name="dni" inputmode="numeric" maxlength="10" value="${v("dni")}" required></label>
         <div class="w" style="grid-column:1/-1"><div class="llega" id="ck-llega"><span class="ic">📦</span><div><b></b><span></span></div></div></div>
-        <label class="w"><span>Entre calles, timbre y referencias para el repartidor <small>opcional</small></span><textarea name="referencias" placeholder="Ej: entre Rivadavia y Belgrano · portón negro · timbre 2B">${v("referencias")}</textarea></label>
+        <label class="w"><span>${suc ? "Algo más que quieras que sepamos" : "Entre calles, timbre y referencias para el repartidor"} <small>opcional</small></span><textarea name="referencias" placeholder="Ej: entre Rivadavia y Belgrano · portón negro · timbre 2B">${v("referencias")}</textarea></label>
       </form>
 
       <button class="cta ck-go ${M && !c.valido ? "ck-bloq" : ""}" id="ck-go"><span class="ck-go-t">Confirmar compra · <span class="ck-go-n">${money(c.total)}</span></span></button>
@@ -4651,6 +4667,7 @@ body:has(.ck.abierto) .asist-fab{opacity:0;pointer-events:none;}
     });
     const un = $(".ck-undo", card); if(un) un.addEventListener("click", deshacerQuitar);
     const inv = $(".ck-inv", card); if(inv) inv.addEventListener("click", ()=>{ guardarForm(); abrirLogin(); });
+    $$(".ck-eo", card).forEach(r=> r.addEventListener("click", ()=>{ const h = $("#ck-form [name=envio]"); if(h.value === r.dataset.env) return; h.value = r.dataset.env; guardarForm(); pintarCheckout(); }));
     $$(".ck-med .pago-op", card).forEach(r=> r.addEventListener("click", ()=>{ guardarForm(); ckMedio = r.dataset.m; pintarCheckout(); }));
     const f = $("#ck-form", card);
     f.addEventListener("input", e=>{ e.target.classList.remove("err"); if(e.target.name === "cp") pintarLlega(); });
@@ -4693,24 +4710,26 @@ body:has(.ck.abierto) .asist-fab{opacity:0;pointer-events:none;}
     const f = $("#ck-form"), d = Object.fromEntries(new FormData(f).entries());
     let primero = null;
     const mal = (n, ok) => { const el = $(`[name=${n}]`, f); if(!ok){ el.classList.add("err"); primero = primero || el; } };
-    ["nombre","calle","ciudad","provincia"].forEach(n=> mal(n, String(d[n]||"").trim().length > 1));
-    mal("numero", /\d/.test(String(d.numero||"")) || /^s\/?n$/i.test(String(d.numero||"").trim()));
+    const suc = d.envio === "sucursal";
+    ["nombre","ciudad","provincia"].concat(suc ? ["sucursal"] : ["calle"]).forEach(n=> mal(n, String(d[n]||"").trim().length > (n === "sucursal" ? 5 : 1)));
+    if(!suc) mal("numero", /\d/.test(String(d.numero||"")) || /^s\/?n$/i.test(String(d.numero||"").trim()));
     mal("dni", /^\d{7,8}$/.test(String(d.dni||"").replace(/\D/g,"")));
     mal("email", /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(String(d.email||"").trim()));
     mal("telefono", String(d.telefono||"").replace(/\D/g,"").length >= 8);
     mal("cp", !!(window.BRASAS_ENTREGA_CP && window.BRASAS_ENTREGA_CP(d.cp, ckItems)));
     if(primero){ primero.focus(); primero.scrollIntoView({ block:"center", behavior:"smooth" }); toast("Revisá los datos marcados"); return; }
     guardarForm();
-    const c = cuentas(), M = mayo(), orden = nuevaOrden(), entrega = window.BRASAS_ENTREGA_CP(d.cp, ckItems);
+    const c = cuentas(), M = (mayo() && mayo().via) ? mayo() : null, orden = nuevaOrden(), entrega = window.BRASAS_ENTREGA_CP(d.cp, ckItems);
     if(M && !c.valido){ toast(`Sumá ${M.minU} unidades iguales de un modelo para enviar el pedido mayorista`); return; }
     if(M && M.via === "google" && dominioReal() && !(currentUser && currentUser.cred && Date.now() < (currentUser.credVence || 0) - 60000)){ toast("Volvé a entrar con Google para confirmar tu pedido mayorista"); abrirLogin(); return; }
     const pedido = {
       tipo: M ? "pedido_mayorista" : "pedido", orden, fecha:new Date().toISOString(),
-      medio:c.medio.n, subtotal:c.sub, descuento:c.desc + (c.extra || 0), recargo:c.rec, total:c.total, promo:c.promoUsada || "",
+      medio:c.medio.n, ahorroCantidad:c.ahorro || 0, subtotal:c.sub, descuento:c.desc + (c.extra || 0), recargo:c.rec, total:c.total, promo:c.promoUsada || "",
       items:c.items.map(x=>({ tag:x.it.tag, producto:x.v.nombre || x.m.nombre, variante:x.v.label, cantidad:x.it.qty, unitario:c.unitDe(x) })),
-      cliente:{ nombre:d.nombre.trim(), email:d.email.trim(), telefono:d.telefono.trim(),
-        calle:d.calle.trim(), numero:String(d.numero).trim(), piso:(d.piso||"").trim(), depto:(d.depto||"").trim(),
-        direccion:[`${d.calle.trim()} ${String(d.numero).trim()}`, d.piso && d.piso.trim() ? `piso ${d.piso.trim()}` : "", d.depto && d.depto.trim() ? `depto ${d.depto.trim()}` : ""].filter(Boolean).join(", "),
+      entregaTipo: suc ? "sucursal" : "domicilio",
+      cliente:{ nombre:d.nombre.trim(), email:d.email.trim(), telefono:d.telefono.trim(), entregaTipo: suc ? "sucursal" : "domicilio", sucursal: suc ? d.sucursal.trim() : "",
+        calle:suc ? "" : d.calle.trim(), numero:suc ? "" : String(d.numero).trim(), piso:suc ? "" : (d.piso||"").trim(), depto:suc ? "" : (d.depto||"").trim(),
+        direccion:suc ? `Sucursal Andreani: ${d.sucursal.trim()}` : [`${d.calle.trim()} ${String(d.numero).trim()}`, d.piso && d.piso.trim() ? `piso ${d.piso.trim()}` : "", d.depto && d.depto.trim() ? `depto ${d.depto.trim()}` : ""].filter(Boolean).join(", "),
         ciudad:d.ciudad.trim(), provincia:d.provincia, cp:String(d.cp).toUpperCase().trim(), dni:String(d.dni||"").replace(/\D/g,""), referencias:(d.referencias||"").trim() },
       entrega: entrega ? `${entrega.desde} a ${entrega.hasta}` : "", circulo: !!currentUser, cuenta: currentUser ? currentUser.email : ""
     };
@@ -7473,6 +7492,7 @@ body:has(.modal-compras.abierto) .flot,body:has(.modal-resenas.abierto) .flot,bo
 .mcx-pill{display:inline-flex;align-items:center;gap:8px;padding:6px 12px;border:1px solid rgba(228,188,110,.5);color:#e8cf8f;font-family:var(--mono);font-size:12px;letter-spacing:.1em;text-transform:uppercase;}
 .mcx-pill i{width:8px;height:8px;border-radius:50%;background:currentColor;}
 .mcx-pill.ok{border-color:rgba(88,195,127,.6);color:#7fd6a0;} .mcx-pill.viaje{border-color:rgba(156,200,255,.55);color:#9cc8ff;}
+.mcx-pill.cancel{border-color:rgba(232,169,154,.6);color:#f0b9aa;} .mcx.cancelado .mcx-it{opacity:.55;} .mcx-dato{margin:0 0 10px;font-size:13.5px;color:#bdb8ae;line-height:1.5;} .mcx-dato b{color:#fff;font-weight:500;} .mcx-dato .ah{color:#8fd19e;} .mcx-b.quitar{border-color:rgba(232,169,154,.45);color:#f0b9aa;} .mcx-b.quitar.si{background:rgba(232,169,154,.14);}
 .mcx-pill.pend i{animation:v43Pulso2 1.8s ease-in-out infinite;}
 .mcx-llega{font-family:var(--serif);font-size:17px;color:#d8d3c8;} .mcx-llega b{color:#fff;font-weight:500;}
 .mcx footer .acc{gap:10px;} .mcx-b{border-color:rgba(255,255,255,.22);padding:10px 16px;font-size:12.5px;letter-spacing:.1em;text-transform:uppercase;font-family:var(--mono);margin-top:0;transition:all .18s;}
@@ -7561,8 +7581,8 @@ body:has(.modal-compras.abierto) .flot,body:has(.modal-resenas.abierto) .flot,bo
     return `<ol class="mcx-ruta">${et.map((x,k)=>`<li class="${x.ok ? "ok" : k === act ? "act" : ""}"><i>${x.ok ? "✓" : ""}</i><div><b>${x.t}</b>${x.d ? `<small>${x.d}</small>` : ""}${x.link && x.link.u ? `<a href="${esc(x.link.u)}" target="_blank" rel="noopener">${esc(x.link.t)} →</a>` : ""}</div></li>`).join("")}</ol>`;
   }
   function estadoLinea(c){
-    const [k, t] = c.entregado ? ["ok", `Entregado el ${fFecha(c.entregado)}`] : c.despachado ? ["viaje", "En camino por Andreani"] : (c.pagado) ? ["pend", "Pago confirmado · en preparación"] : c.comprobante ? ["pend", "Verificando tu pago"] : ["pend", "Esperando tu pago"];
-    const llega = !c.entregado && c.entrega ? `<span class="mcx-llega">Llega aprox. entre el <b>${esc(c.entrega.replace(" a "," y el "))}</b></span>` : "";
+    const [k, t] = (c.estado === "cancelado" || c.cancelado) ? ["cancel", "Pedido cancelado"] : c.entregado ? ["ok", `Entregado el ${fFecha(c.entregado)}`] : c.despachado ? ["viaje", "En camino por Andreani"] : (c.pagado) ? ["pend", "Pago confirmado · en preparación"] : c.comprobante ? ["pend", "Verificando tu pago"] : ["pend", "Esperando tu pago"];
+    const llega = !c.entregado && c.estado !== "cancelado" && c.entrega ? `<span class="mcx-llega">Llega aprox. entre el <b>${esc(c.entrega.replace(" a "," y el "))}</b></span>` : "";
     return `<div class="mcx-estado"><span class="mcx-pill ${k}"><i></i>${t}</span>${llega}</div>`;
   }
   function garantia(c){
@@ -7574,24 +7594,25 @@ body:has(.modal-compras.abierto) .flot,body:has(.modal-resenas.abierto) .flot,bo
     const lista = $("#compras-lista", card);
     if(!compras.length){ lista.innerHTML = `<div class="mc-vacio">No encontramos compras hechas con esta cuenta de Google.<br>Si compraste sin entrar con Google, escribinos por WhatsApp y te ayudamos.</div>`; return; }
     lista.innerHTML = (desdeCache ? `<div class="mcx-act"><i class="v43-spin"></i>Actualizando…</div>` : "") + compras.map(c=>`
-      <article class="mcx" data-o="${esc(c.orden)}">
+      <article class="mcx ${c.estado === "cancelado" ? "cancelado" : ""}" data-o="${esc(c.orden)}">
         <header><span class="num">Pedido N.º ${esc(c.orden)}</span><span class="fe">${fFecha(c.fecha)}</span></header>${estadoLinea(c)}
         ${c.items.map(i=>`<div class="mcx-it" data-t="${esc(i.tag)}">
           <div class="ft" style="${i.foto ? `background-image:url('${esc(i.foto)}')` : ""}"></div>
-          <div class="tx"><b>${esc(i.producto)}</b><small>${esc(i.variante || "")}${i.cantidad > 1 ? ` · ${i.cantidad} unidades` : ""}</small>
+          <div class="tx"><b>${esc(i.producto)}</b><small>${esc(i.variante || "")}${i.cantidad > 1 ? ` · ${i.cantidad} unidades` : ""}${i.precio ? ` · ${money(i.precio)} c/u` : ""}</small>
             ${i.opinado ? `<div class="ya">✓ Ya lo calificaste ${estrellas(i.estrellas)}</div>` : i.puedeOpinar && !mayoU() ? `<button type="button" class="mcx-b oro" data-calif>Calificar este producto</button>
               <div class="mc-form"><div class="mc-est" role="radiogroup" aria-label="Estrellas">${[1,2,3,4,5].map(n=>`<button type="button" data-n="${n}" aria-label="${n} estrella${n>1?"s":""}">★</button>`).join("")}</div>
                 <textarea maxlength="1500" placeholder="Contanos cómo te fue: calidad, terminaciones, el fuego, la entrega…"></textarea>
                 <div class="acc"><button type="button" class="enviar" disabled>Enviar opinión</button><span class="nota">Se publica de forma anónima, después de revisarla.</span></div></div>` : ""}
           </div></div>`).join("")}
-        ${ruta(c)}
-        ${garantia(c)}
+        ${c.destino || c.ahorro ? `<div class="mcx-dato">${c.destino ? `Envío a <b>${esc(c.destino)}</b>` : ""}${c.destino && c.ahorro ? " · " : ""}${c.ahorro ? `<span class="ah">Ahorraste ${money(c.ahorro)} por cantidad</span>` : ""}</div>` : ""}
+        ${c.estado === "cancelado" ? "" : ruta(c) + garantia(c)}
         <footer>
           <div class="tot">${c.total ? `<span>Total</span><b>${money(c.total)}</b>${c.medio ? `<small>${esc(c.medio)}</small>` : ""}` : ""}</div>
           <div class="acc">
             <a class="mcx-b wa" target="_blank" rel="noopener" href="${esc(waVend(c))}">Enviar mensaje al vendedor</a>
             ${c.despachado && !c.entregado ? `<button type="button" class="mcx-b oro" data-recibi>Lo recibí</button>` : ""}
             <button type="button" class="mcx-b" data-repetir>Volver a comprar</button>
+            ${c.quitable ? `<button type="button" class="mcx-b quitar" data-quitar>${c.estado === "cancelado" ? "Quitar del historial" : "Cancelar y quitar"}</button>` : ""}
             ${c.entregado ? (c.fotoUso ? `<span class="hecho">✓ Foto enviada</span>` : `<label class="mcx-b">Subir foto en uso<input type="file" accept="image/*" hidden data-foto></label>`) : ""}
             ${c.entregado ? (c.gracias ? `<span class="hecho">❤ Gracias enviado</span>` : `<button type="button" class="mcx-b" data-gracias>Agradecer al taller</button>`) : ""}
           </div>
@@ -7612,6 +7633,14 @@ body:has(.modal-compras.abierto) .flot,body:has(.modal-resenas.abierto) .flot,bo
           if(j.ok){ form.outerHTML = `<div class="ya">✓ ¡Gracias! Recibimos tu opinión ${estrellas(est)}</div>`; const x = c.items.find(i=> i.tag === it.dataset.t); if(x){ x.opinado = true; x.estrellas = est; x.puedeOpinar = false; guardarCache(compras); } }
           else { env.disabled = false; env.textContent = "Enviar opinión"; $(".nota", form).textContent = j.error === "ya opinaste" ? "Ya calificaste este producto en esta compra." : j.error === "google" ? "Tu sesión de Google venció: volvé a entrar." : "No se pudo enviar. Probá de nuevo."; }
         });
+      });
+      const qt = $("[data-quitar]", art);
+      if(qt) qt.addEventListener("click", async ()=>{
+        if(!qt.classList.contains("si")){ qt.classList.add("si"); qt.textContent = c.estado === "cancelado" ? "Confirmar: quitar" : "Confirmar: cancelar pedido"; setTimeout(()=>{ if(document.body.contains(qt) && qt.classList.contains("si") && !qt.disabled){ qt.classList.remove("si"); qt.textContent = c.estado === "cancelado" ? "Quitar del historial" : "Cancelar y quitar"; } }, 5000); return; }
+        qt.disabled = true; qt.textContent = "Quitando…";
+        const j = await post({ tipo:"quitar_compra", orden });
+        if(j.ok){ const rest = compras.filter(x=> x.orden !== orden); guardarCache(rest); pintar(rest); toast("Listo: pedido quitado de tu historial"); }
+        else { qt.disabled = false; qt.classList.remove("si"); qt.textContent = "Cancelar y quitar"; toast(j.error === "ya pagado" ? "Ese pedido ya está pago: no se puede cancelar. Escribinos por WhatsApp." : "No se pudo quitar. Probá de nuevo."); }
       });
       const rec = $("[data-recibi]", art);
       if(rec) rec.addEventListener("click", async ()=>{ rec.disabled = true; rec.textContent = "Guardando…"; const j = await post({ tipo:"recibido", orden }); if(j.ok){ c.entregado = Date.now(); c.items.forEach(i=>{ if(!i.opinado) i.puedeOpinar = true; }); guardarCache(compras); pintar(compras); } else { rec.disabled = false; rec.textContent = "Lo recibí"; toast("No se pudo guardar. Probá de nuevo."); } });
@@ -7852,7 +7881,6 @@ body:has(.modal-compras.abierto) .flot,body:has(.modal-resenas.abierto) .flot,bo
         <button type="button" data-v30="privacidad">Política de privacidad</button>
         <button type="button" data-v30="garantia">Cambios, devoluciones y garantía</button>
         <a href="https://www.argentina.gob.ar/produccion/defensadelconsumidor/formulario" target="_blank" rel="noopener">Defensa del Consumidor</a>
-        <button type="button" data-v30="mayoristas">Mayoristas</button>
         <button type="button" data-v30="cv">Trabajá con nosotros</button>
       </div></div>
       <div class="pie-datos" id="pie-datos"></div>`);
@@ -7877,7 +7905,6 @@ body:has(.modal-compras.abierto) .flot,body:has(.modal-resenas.abierto) .flot,bo
     privacidad: "Usamos tus datos solo para procesar y enviar tu pedido y, si lo aceptaste, para mandarte novedades. No los vendemos ni los cedemos. Podés pedir acceso, corrección o eliminación cuando quieras (Ley 25.326).",
     garantia: "Garantía contra defectos de fabricación. Cambios y devoluciones dentro de los 10 días de recibido, sin uso y en su embalaje. Escribinos con tu número de pedido.",
     arrep: "Tenés 10 días corridos desde que recibiste el producto para arrepentirte de la compra, sin dar explicaciones (Ley 24.240 art. 34). Te enviamos por mail un código de trámite.",
-    mayo: "Canal exclusivo para comercios y revendedores con CUIT. Escribinos con tus datos y te damos tu acceso personal.",
     cv: "Dejanos tus datos y tu CV."
   };
   const legal = (tit, k, def) => abrir(`<div class="ck-e">★★★★★★</div><h3>${tit}</h3><div class="txt">${esc(T(k, def))}</div>`);
@@ -7939,11 +7966,6 @@ body:has(.modal-compras.abierto) .flot,body:has(.modal-resenas.abierto) .flot,bo
       else { b.disabled = false; b.textContent = "No se pudo enviar. Reintentar"; }
     });
   }
-  function mayoristas(){
-    const msg = "Hola! Quiero ser revendedor de BRASAS.\n\nRazón social: \nCUIT: \nRubro: \nLocal o Instagram: \nCiudad: \nUnidades estimadas por mes: ";
-    abrir(`<div class="ck-e">★★★★★★</div><h3>Mayoristas</h3><p class="intro">${esc(T("mayoPie", DEF.mayo))}</p>
-      <a class="ck-wa-btn wa-btn" href="${waLink(msg)}" target="_blank" rel="noopener">Pedir acceso por WhatsApp</a>`);
-  }
   document.addEventListener("click", e=>{
     const b = e.target.closest("[data-v30]"); if(!b) return; e.preventDefault();
     const k = b.dataset.v30;
@@ -7952,7 +7974,6 @@ body:has(.modal-compras.abierto) .flot,body:has(.modal-resenas.abierto) .flot,bo
     else if(k === "garantia") legal("Cambios, devoluciones y garantía", "legalGarantia", DEF.garantia);
     else if(k === "arrep") arrepentimiento();
     else if(k === "cv") cv();
-    else if(k === "mayoristas") mayoristas();
   });
   /* #arrepentimiento en la dirección abre el formulario (sirve para linkearlo) */
   if(/^#arrepentimiento/.test(location.hash)) setTimeout(arrepentimiento, 600);
@@ -7999,7 +8020,7 @@ body:has(.modal-compras.abierto) .flot,body:has(.modal-resenas.abierto) .flot,bo
   }
   addEventListener("pagehide", senal);
   document.addEventListener("visibilitychange", ()=>{ if(document.visibilityState === "hidden") senal(); });
-  window.BRASAS_V30 = { senal, V, arrepentimiento, cv, mayoristas };
+  window.BRASAS_V30 = { senal, V, arrepentimiento, cv };
 })();
 </script>
 
@@ -9701,7 +9722,7 @@ body.v40-sinmed #variantes .variante-btn{animation:none !important;}
   function armar(){
     const fold = $(".fold-abajo"), det = $("#v31-detalle"), ay = $(".v31-ayuda"); if(!fold || !det || !ay) return;
     let bajo = $(".v42-bajo"); if(!bajo){ bajo = document.createElement("div"); bajo.className = "v42-bajo"; fold.prepend(bajo); }
-    if(!mq.matches){ if(det.parentNode !== bajo) bajo.prepend(det); if(ay.parentNode !== bajo) bajo.appendChild(ay); }
+    if(!mq.matches){ if(!det.closest("#v46-under") && det.parentNode !== bajo) bajo.prepend(det); if(ay.parentNode !== bajo) bajo.appendChild(ay); }
     else if(ay.parentNode === bajo){ fold.appendChild(ay); }
   }
   armar(); if(mq.addEventListener) mq.addEventListener("change", () => setTimeout(armar, 0));
@@ -9710,7 +9731,7 @@ body.v40-sinmed #variantes .variante-btn{animation:none !important;}
     const pb = $("#asesor .preg-box"); if(!pb) return;
     const t = $(".t", pb);
     if(t && !t.dataset.v42){ t.dataset.v42 = "1"; t.textContent = "¿Necesitás asesoramiento?"; t.insertAdjacentHTML("afterend", `<p class="v42-bajada">Contanos qué vas a cocinar y para cuántas personas: te recomendamos la medida y te respondemos por WhatsApp.</p>`); }
-    const ta = $("textarea", pb); if(ta && !ta.dataset.v42){ ta.dataset.v42 = "1"; ta.placeholder = "Ej.: tengo un balcón chico y cocino para 4. ¿Cuál me conviene?"; }
+    const ta = $("textarea", pb); if(ta){ ta.placeholder = window.BRASAS_TXT ? window.BRASAS_TXT("FICHA-ASESOR-EJEMPLO", "Ej.: tengo un balcón chico y cocino para 4. ¿Cuál me conviene?") : "Ej.: tengo un balcón chico y cocino para 4. ¿Cuál me conviene?"; }
   }
   textos();
   const as = $("#asesor"); if(as) new MutationObserver(textos).observe(as, { childList:true });
@@ -9770,8 +9791,8 @@ body.v40-sinmed #variantes .variante-btn{animation:none !important;}
 .v44-conf li{display:flex;gap:12px;align-items:flex-start;font-size:14.5px;line-height:1.4;color:#d8d3c8;}
 .v44-conf li svg{flex:none;width:19px;height:19px;margin-top:1px;stroke:#e4bc6e;fill:none;stroke-width:1.6;}
 .v44-conf li b{color:#fff;font-weight:500;}
-.v44-conf.ficha{margin:16px 0 0;padding-top:14px;border-top:1px solid var(--linea);}
-.v44-conf.ficha li{font-size:13.5px;}
+.v44-conf.fch{margin:16px 0 0;padding-top:14px;border-top:1px solid var(--linea);}
+.v44-conf.fch li{font-size:13.5px;}
 </style>
 <script id="v44-js">
 (function(){
@@ -9789,7 +9810,7 @@ body.v40-sinmed #variantes .variante-btn{animation:none !important;}
     const envio = document.querySelector(".ck-envio");
     if(envio && !document.querySelector(".v44-conf.enck")) envio.insertAdjacentHTML("afterend", lista("enck"));
     const cta = document.querySelector(".cta-row");
-    if(cta && !document.querySelector(".v44-conf.ficha")) cta.insertAdjacentHTML("afterend", lista("ficha"));
+    if(cta && !document.querySelector(".v44-conf.fch")) cta.insertAdjacentHTML("afterend", lista("fch"));
   };
   const refrescar = () => { document.querySelectorAll(".v44-conf").forEach(e=>e.remove()); poner(); };
   window.BRASAS_REFRESCAR_CONFIANZA = refrescar;
@@ -9797,219 +9818,565 @@ body.v40-sinmed #variantes .variante-btn{animation:none !important;}
   poner();
 })();
 </script>
-<style id="v45-css">
-/* ===== FICHA: foto | medidas (el zoom tapa solo las medidas) | precios y compra ===== */
+<style id="v46-css">
+/* ===== v46 · UNA SOLA PUBLICACIÓN: mismo precio por cantidad para todos · compra arriba y fija ===== */
+
+/* ---------- ESCRITORIO: foto | medidas | compra (columna fija a la derecha) ---------- */
 @media (min-width:1100px){
-  .info-col{grid-template-columns:clamp(340px,calc(var(--foto) + 14px),500px) minmax(0,1fr) !important;}
-  .info-col>*{grid-column:2 !important;}
-  .info-col>.ficha-tecnica{grid-column:1 !important;}
+  .ficha .ficha-body{grid-template-columns:calc(var(--foto) + 72px) clamp(300px,21vw,380px) minmax(0,1fr) !important;column-gap:28px !important;row-gap:0 !important;grid-template-rows:var(--foto) auto !important;align-items:start;}
+  .ficha .ficha-body .col-izq,.ficha .ficha-body .info-col{display:contents !important;}
+  .ficha .galeria-col{grid-column:1;grid-row:1;}
+  .ficha .info-col>.ficha-tecnica{grid-column:2 !important;grid-row:1 !important;margin:0 !important;align-self:start;}
+  .ficha .info-col>.ficha-tecnica.on{display:flex !important;flex-direction:column;height:var(--foto);box-sizing:border-box;overflow:hidden;}
+  .ficha-tecnica.on .ft-caja{flex:1 1 auto;min-height:0;display:flex;flex-direction:column;}
+  .ficha-tecnica.on .ft-caja svg{flex:1 1 auto;min-height:0;width:100% !important;height:auto;}
+  #v46-under{grid-column:1 / 3;grid-row:2;margin-top:22px;min-width:0;}
+  #v46-right{grid-column:3;grid-row:1 / span 2;position:sticky;top:10px;align-self:start;min-width:0;}
+  .ficha-sticky{display:none !important;}
+}
+#v46-right{display:block;}
+#v46-right>*{min-width:0;}
+.v46-tit{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;}
+.v46-tit h1{flex:1;min-width:0;}
+/* entrega, arriba y junto al envío gratis */
+#v46-right #v31-envio{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin:0 0 12px;padding:11px 14px;border:1px solid rgba(143,208,163,.35);background:rgba(143,208,163,.05);}
+#v46-right #v31-envio .v31-gratis{flex:1 1 220px;font-size:14.5px;line-height:1.4;color:#a6e0b8;min-width:0;}
+#v46-right #v31-envio .v31-gratis small,#v46-right #v31-envio .llega span{display:none !important;}
+#v46-right #v31-envio .llega{margin:0;padding:0;border:none;background:none;flex:1 1 220px;}
+#v46-right #v31-envio .llega .ic{display:none;}
+#v46-right #v31-envio .llega b{font-size:14.5px;line-height:1.4;color:#a6e0b8;font-weight:500;}
+#v46-right #v31-envio .llega.on + .v31-gratis{display:none;}
+#v46-right #v31-envio .cp-fila{margin:0;flex:0 0 108px;}
+#v46-right #v31-envio .cp-fila input{padding:8px 10px;font-size:14px;width:100%;min-width:0;}
+#v46-right #v31-envio .v31-ml{font-size:14px;color:var(--hueso-dim);}
+
+/* cantidad: tarjetas de oferta + desplegable */
+.v46-q{margin:4px 0 0;}
+.v46-qh{display:flex;align-items:baseline;justify-content:space-between;gap:10px;flex-wrap:wrap;margin:0 0 8px;}
+.v46-qh b{font-family:var(--mono);font-weight:400;font-size:11.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--hueso-dim);}
+.v46-qh span{font-size:13px;color:#8fe0ad;}
+.v46-tg{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:6px;}
+.v46-t{position:relative;display:flex;flex-direction:column;align-items:flex-start;gap:3px;padding:9px 8px 8px;border:1px solid var(--linea-fuerte);background:rgba(255,255,255,.015);color:#fff;font:inherit;cursor:pointer;text-align:left;min-width:0;transition:border-color .15s,background .15s;}
+.v46-t:hover{border-color:rgba(228,188,110,.6);}
+.v46-t.on{border-color:#e4bc6e;background:rgba(228,188,110,.13);box-shadow:inset 0 0 0 1px #e4bc6e;}
+.v46-t .q{font-family:'Oswald',sans-serif;font-size:21px;line-height:1;color:#fff;}
+.v46-t .q small{font-family:var(--mono);font-size:10px;letter-spacing:.06em;color:var(--hueso-dim);margin-left:4px;text-transform:uppercase;}
+.v46-t .p{font-family:var(--mono);font-size:12.5px;color:#e9e4da;white-space:nowrap;}
+.v46-t.on .p{color:#fff;}
+.v46-t .o{padding:1px 5px;background:#1c3a29;color:#8fe0ad;font-family:var(--mono);font-size:10.5px;letter-spacing:.04em;white-space:nowrap;}
+.v46-t .o.z{background:none;color:var(--hueso-dim);padding-left:0;}
+.v46-t.mx::after{content:"MÁX";position:absolute;top:-7px;right:5px;padding:1px 5px;background:linear-gradient(180deg,#f0d28f,#c9a24a);color:#111;font-family:var(--mono);font-size:8.5px;letter-spacing:.1em;}
+@media (max-width:520px){ .v46-tg{gap:5px;} .v46-t{padding:8px 5px 7px;} .v46-t .p{font-size:11px;} .v46-t .q{font-size:19px;} .v46-t .q small{display:none;} .v46-t .o{font-size:9.5px;padding:1px 3px;} }
+#v46-mas{margin:10px 0 0;display:flex;align-items:center;gap:12px;}
+#v46-mas[hidden]{display:none;}
+#v46-mas .cant button{width:36px;height:40px;font-size:18px;}
+#v46-mas .cant input{width:56px;height:40px;font-size:15px;}
+#v46-mas span{font-size:13px;color:var(--hueso-dim);}
+.v46-ahorro{margin:12px 0 0;}
+.v46-ahorro:empty{display:none;}
+.v46-ahorro .p{display:block;font-family:'Oswald',sans-serif;font-weight:500;font-size:26px;line-height:1.1;color:#8fe0ad;letter-spacing:.01em;}
+.v46-ahorro .c{display:block;margin-top:3px;font-size:13.5px;color:#a6e0b8;}
+.v46-link{background:none;border:none;padding:0;margin:10px 0 0;color:#e8cf8f;font:inherit;font-size:13.5px;text-decoration:underline;text-underline-offset:3px;cursor:pointer;}
+.v46-link:hover{color:#fff;}
+body.intl .v46-offers,body.intl .v46-qrow,body.intl .v46-ahorro,body.intl .v46-link{display:none !important;}
+body.intl #v46-mas{display:flex !important;}
+
+/* total + botones fijos en la columna (escritorio) */
+#v46-acc{margin:14px 0 0;padding-top:14px;border-top:1px solid var(--linea);}
+#v46-acc .b-total{text-align:left;margin:0 0 10px;min-width:0;}
+#v46-acc .b-total small{display:block;font-size:12.5px;color:var(--hueso-dim);line-height:1.4;}
+#v46-acc .b-total b{display:block;font-family:'Oswald',sans-serif;font-weight:400;font-size:34px;line-height:1.1;color:#fff;font-variant-numeric:tabular-nums;}
+#v46-acc .b-total .cmp,#v46-acc .b-total .carr{background:none;border:none;padding:0;cursor:pointer;font:inherit;font-size:12.5px;text-decoration:underline;text-underline-offset:2px;}
+#v46-acc .b-total .cmp{color:#8fd0a3;} #v46-acc .b-total .carr{color:#e8cf8f;}
+#v46-acc .b-btns{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+#v46-acc .b-btns .cta{margin:0;width:100%;padding:15px 10px;font-size:13px;white-space:nowrap;}
+
+/* debajo de la foto y las medidas: confianza + consejo y descripción (sin hueco negro) */
+.v46-trust{display:grid;grid-template-columns:1fr 1fr;gap:6px 28px;align-items:start;padding:14px 0 6px;border-top:1px solid var(--linea);}
+.v46-trust .v36-conf{margin:0 !important;}
+.v46-trust .v44-conf.fch{margin:0 !important;padding:0 !important;border:0 !important;}
+#v46-under .v31-detalle{margin:14px 0 0 !important;padding-top:16px;border-top:1px solid var(--linea);max-width:none !important;width:auto !important;}
+#v46-under .v31-detalle .descripcion{max-height:none !important;overflow:visible !important;font-size:15px !important;line-height:1.55 !important;}
+@media (max-width:1099px){ .v46-trust{grid-template-columns:1fr;} #v46-under{margin-top:18px;} }
+
+/* asesoramiento: ahora ocupa todo el ancho de abajo, en dos columnas */
+@media (min-width:1100px){
+  .v42-bajo:not(:has(.v31-detalle)){display:block !important;}
+  .v42-bajo:not(:has(.v31-detalle)) .v31-ayuda .asesor{display:grid !important;grid-template-columns:minmax(0,1fr) minmax(0,1fr);column-gap:56px;align-items:start;}
+  .v42-bajo:not(:has(.v31-detalle)) .v31-ayuda .asesor > .preg-box{grid-column:1;grid-row:1 / span 3;order:0;margin:0 !important;}
+  .v42-bajo:not(:has(.v31-detalle)) .v31-ayuda .asesor > .t{grid-column:2;grid-row:1;order:0;}
+  .v42-bajo:not(:has(.v31-detalle)) .v31-ayuda .asesor > .faq{grid-column:2;grid-row:2;order:0;}
 }
 
-/* ===== LOGIN: entrada de mayoristas ===== */
-.v45-may{margin-top:16px;padding-top:14px;border-top:1px solid var(--linea);text-align:center;}
-.v45-may>button.v45-link{background:none;border:none;color:#e8cf8f;font-family:var(--mono);font-size:12.5px;letter-spacing:.14em;text-transform:uppercase;cursor:pointer;text-decoration:underline;text-underline-offset:4px;padding:6px;}
-.v45-form{display:none;margin-top:12px;text-align:left;}
-.v45-form.on{display:block;}
-.v45-form p{margin:0 0 10px;font-size:14px;line-height:1.5;color:#cfcac0;}
-.v45-form .fila{display:flex;gap:8px;}
-.v45-form input{flex:1;min-width:0;background:rgba(255,255,255,.04);border:1px solid var(--linea-fuerte);color:#fff;padding:13px 14px;font-family:var(--mono);font-size:16px;letter-spacing:.06em;text-transform:uppercase;}
-.v45-form input::placeholder{text-transform:none;letter-spacing:0;color:#8f8a80;font-family:inherit;}
-.v45-form button{flex:none;background:linear-gradient(180deg,#f0d28f,#c9a24a);border:none;color:#111;font-weight:600;padding:0 20px;cursor:pointer;letter-spacing:.06em;}
-.v45-form small{display:block;margin-top:8px;min-height:18px;font-size:13px;color:#e8a99a;}
+/* muchas medidas: grilla de fichas con las dimensiones a la vista */
+#variantes.v46-muchas{display:grid !important;grid-template-columns:repeat(auto-fill,minmax(118px,1fr));gap:8px;}
+#variantes.v46-muchas .variante-btn{display:flex;flex-direction:column;align-items:flex-start;gap:2px;margin:0 !important;text-align:left;}
+#variantes .variante-btn .v46-d{display:block;font-family:var(--mono);font-size:11px;letter-spacing:.04em;color:var(--hueso-dim);font-weight:400;}
+#variantes .variante-btn.activa .v46-d{color:#e8cf8f;}
 
-/* ===== insignia en el encabezado ===== */
-.v45-badge{display:inline-block;margin-left:8px;padding:2px 8px;border:1px solid rgba(228,188,110,.6);color:#e8cf8f;font-family:var(--mono);font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;vertical-align:middle;}
+/* ---------- CELULAR / TABLET: barra fija solo con total y botones ---------- */
+@media (max-width:1099px){
+  .ficha-sticky{padding:10px 14px calc(10px + env(safe-area-inset-bottom)) !important;}
+  .v31-bar{display:grid !important;grid-template-columns:auto minmax(0,1fr);grid-template-areas:"total btns" !important;gap:10px 14px;align-items:center;}
+  .v31-bar .b-prod,.v31-bar .b-envio,.v31-bar .b-cant{display:none !important;}
+  .v31-bar .b-total{grid-area:total;text-align:left;min-width:0;}
+  .v31-bar .b-total b{font-size:22px;}
+  .v31-bar .b-total small:first-child{max-width:118px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .v31-bar .b-total small{white-space:normal;font-size:11.5px;}
+  .v31-bar .b-btns{grid-area:btns;display:flex;gap:8px;justify-content:flex-end;}
+  .v31-bar .b-btns .cta{padding:13px 14px;}
+  #v46-right #v31-envio .cp-fila{flex-basis:96px;}
+  .v46-ahorro .p{font-size:24px;}
+  .v46-of .u{font-size:13.5px;} .v46-of .u small{display:none;} .v46-of{padding:10px 8px 8px;}
+}
+@media (max-width:760px){
+  body:has(.overlay.abierto) .flot{bottom:92px;}
+}
 
-/* ===== FICHA mayorista: precio por cantidad ===== */
-body.es-mayo .precio-box.v45-m #precio-grande,body.es-mayo .precio-box.v45-m .precio-cuotas-destacada,body.es-mayo .precio-box.v45-m #precio-usd,body.es-mayo .precio-box.v45-m .precio-medio-elegido,
-body.es-mayo .precio-box.v45-m .medios-lista,body.es-mayo .precio-box.v45-m .medios-box,body.es-mayo .precio-box.v45-m .precio-extra,body.es-mayo .precio-box.v45-m .v31-pv{display:none !important;}
-.v45-t{padding:4px 2px 2px;}
-.v45-t .h{display:flex;justify-content:space-between;align-items:baseline;gap:10px;flex-wrap:wrap;margin:0 0 8px;}
-.v45-t .h b{font-family:var(--mono);font-size:11.5px;letter-spacing:.2em;text-transform:uppercase;color:#e8cf8f;font-weight:400;}
-.v45-t .h span{font-size:12.5px;color:#7fd6a0;}
-.v45-t table{width:100%;border-collapse:collapse;}
-.v45-t td{padding:9px 6px;border-top:1px solid var(--linea);font-size:15px;color:#cfcac0;vertical-align:baseline;}
-.v45-t tr:first-child td{border-top:0;}
-.v45-t td.q{white-space:nowrap;color:#bdb8ae;}
-.v45-t td.q small{display:block;font-size:11.5px;letter-spacing:.06em;color:#8f8a80;}
-.v45-t td.p{text-align:right;font-family:var(--mono);font-size:19px;color:#fff;white-space:nowrap;}
-.v45-t td.d{text-align:right;font-size:12.5px;color:#8fd19e;white-space:nowrap;}
-.v45-t td.d.web{color:#8f8a80;}
-.v45-t tr.on td{background:rgba(228,188,110,.1);}
-.v45-t tr.on td.q{color:#e8cf8f;} .v45-t tr.on td.p{color:#fff;}
-.v45-t .ml{margin:8px 0 2px;font-size:13px;color:#8f8a80;}
-.v45-t .ml b{color:#cfcac0;font-weight:500;}
-.v45-t .tot{margin:8px 0 0;padding:10px 12px;border:1px solid rgba(228,188,110,.35);background:rgba(228,188,110,.05);font-size:14.5px;color:#d8d3c8;display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;}
-.v45-t .tot b{font-family:var(--mono);font-size:18px;color:#fff;font-weight:500;}
-.v45-t .tot em{font-style:normal;color:#e8cf8f;font-size:13px;flex-basis:100%;}
 
-/* ===== checkout mayorista ===== */
-.ck-mayo{margin:10px 0 4px;padding:13px 16px;border:1px solid rgba(228,188,110,.45);background:rgba(228,188,110,.05);}
-.ck-mayo b{display:block;font-family:var(--serif);font-weight:500;font-size:19px;color:#e8cf8f;letter-spacing:.01em;}
-.ck-mayo span{display:block;margin-top:3px;font-size:14px;line-height:1.45;color:#cfcac0;} .ck-mayo span b{display:inline;font-family:inherit;font-size:inherit;color:#fff;}
-.ck-mayo.falta{border-color:rgba(232,169,154,.6);background:rgba(232,169,154,.07);} .ck-mayo.falta b{color:#f0b9aa;}
+/* MercadoLibre: el botón amarillo aparece junto a la opción y brilla */
+#v46-ml{margin:0 0 12px;}
+#v46-ml .cta{width:100%;margin:0;padding:16px 12px;font-size:14px;}
+#v46-ml .v46-link{display:block;margin:10px 0 0;color:#8fd0a3;font-size:14px;}
+.cta-ml{position:relative;overflow:hidden;}
+.cta-ml::after{content:"";position:absolute;top:0;bottom:0;left:-70%;width:40%;pointer-events:none;background:linear-gradient(105deg,transparent,rgba(255,255,255,.75),transparent);transform:skewX(-18deg);animation:v46Glint 2.4s ease-in-out .6s infinite;}
+@keyframes v46Glint{0%{left:-70%;}45%{left:130%;}100%{left:130%;}}
+@media (prefers-reduced-motion:reduce){ .cta-ml::after{animation:none;display:none;} }
+body.v46-ml-on #v46-acc{display:none;}
+.b-total .cmp{display:none !important;}
+.escribir-resena{display:none !important;}
+
+/* ---------- popup prolijo con cruz ---------- */
+.v46-pop{position:fixed;inset:0;z-index:460;background:rgba(0,0,0,.72);display:flex;align-items:center;justify-content:center;padding:18px;}
+.v46-pop .bx{position:relative;width:min(520px,100%);max-height:88vh;overflow:auto;background:#101214;border:1px solid rgba(228,188,110,.45);padding:26px 24px 22px;box-shadow:0 30px 80px rgba(0,0,0,.7);}
+.v46-pop .x{position:absolute;top:10px;right:10px;width:36px;height:36px;border:0;background:none;color:#cfcac0;font-size:20px;cursor:pointer;}
+.v46-pop .x:hover{color:#fff;}
+.v46-pop h3{margin:0 40px 12px 0;font-family:var(--serif);font-weight:500;font-size:23px;color:#fff;}
+.v46-pop p{margin:0 0 12px;font-size:15px;line-height:1.55;color:#cfcac0;}
+.v46-pop table{width:100%;border-collapse:collapse;margin:6px 0 14px;font-size:14.5px;}
+.v46-pop td,.v46-pop th{padding:8px 6px;border-top:1px solid rgba(255,255,255,.08);text-align:right;color:#d8d3c8;white-space:nowrap;}
+.v46-pop th{border-top:0;font-family:var(--mono);font-weight:400;font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--hueso-dim);}
+.v46-pop td:first-child,.v46-pop th:first-child{text-align:left;}
+.v46-pop td.g{color:#8fe0ad;} .v46-pop tr.on td{background:rgba(228,188,110,.1);color:#fff;}
+.v46-pop .ok{display:block;width:100%;margin-top:6px;padding:13px;border:1px solid rgba(228,188,110,.6);background:rgba(228,188,110,.1);color:#fff;font:inherit;cursor:pointer;letter-spacing:.08em;text-transform:uppercase;font-size:13px;}
+.v46-fl{display:grid;grid-template-columns:44px minmax(0,1fr) auto;gap:12px;align-items:center;padding:10px 0;border-top:1px solid rgba(255,255,255,.08);}
+.v46-fl:first-of-type{border-top:0;}
+.v46-fl .th{width:44px;height:44px;background:#3a3835 center/cover no-repeat;}
+.v46-fl b{display:block;font-size:15px;color:#fff;font-weight:500;} .v46-fl small{display:block;font-size:12.5px;color:var(--hueso-dim);}
+.v46-fl .ac{display:flex;gap:6px;}
+.v46-fl .ac button{border:1px solid rgba(255,255,255,.22);background:none;color:#e9e4da;padding:8px 11px;font:inherit;font-size:12.5px;cursor:pointer;}
+.v46-fl .ac button.q{border-color:rgba(232,169,154,.45);color:#f0b9aa;}
+
+/* checkout: ahorro por cantidad */
 .ck-mn{margin-top:3px;font-size:12.5px;color:#8f8a80;line-height:1.4;} .ck-mn.ok{color:#8fd19e;}
-.ck-go.ck-bloq{opacity:.45;filter:saturate(.5);}
+.ck-ahorro{display:flex;justify-content:space-between;gap:10px;margin-top:10px;padding:9px 12px;border:1px dashed rgba(143,209,158,.55);color:#8fe0ad;font-size:14.5px;font-weight:600;}
+.ck-tot .tach span:first-child{color:#b9b4a8;} .ck-tot .tach s{color:#8f8a80;text-decoration-thickness:2px;text-decoration-color:rgba(230,120,100,.85);}
+.ck-tot .total span:first-child{font-weight:600;}
+.ck-env{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:0 0 14px;}
+.ck-eo{text-align:left;padding:13px 14px;border:1px solid rgba(255,255,255,.16);background:transparent;color:#cfcac0;cursor:pointer;font-family:inherit;transition:border-color .2s,background .2s;}
+.ck-eo b{display:block;font-size:15px;color:#fff;font-weight:600;} .ck-eo small{display:block;margin-top:3px;font-size:12.5px;color:#8f8a80;}
+.ck-eo:hover{border-color:rgba(228,188,110,.5);} .ck-eo.on{border-color:#e4bc6e;background:rgba(228,188,110,.09);} .ck-eo.on small{color:#cdbb92;}
+.ck-dom{display:contents;} .ck-f .ck-suc{display:none !important;grid-column:1/-1;} .ck-f[data-env=sucursal] .ck-dom{display:none !important;} .ck-f[data-env=sucursal] .ck-suc{display:block !important;}
+.ck-ayuda{display:block;margin-top:6px;font-size:12.5px;line-height:1.5;color:#8f8a80;} .ck-ayuda a{color:#e4bc6e;}
+@media (max-width:560px){ .ck-env{grid-template-columns:1fr;} }
+/* cruces de cerrar: siempre por encima del contenido y con zona de toque amplia */
+.ck-gate .x,.v30m .x,.v39-pop .x,.mayo-modal .x,.cerrar-ficha,.ck-x,.login-card button.cerrar,.compras-card button.cerrar,.carrito-card button.cerrar,.orden-card .cerrar,.resenas-head button{z-index:60 !important;min-width:44px;min-height:44px;display:inline-flex;align-items:center;justify-content:center;padding:0 !important;line-height:1;}
+.cerrar-ficha{top:8px !important;right:10px !important;}
+@media (max-width:1099px){ .cerrar-ficha{background:rgba(10,10,9,.72) !important;border-radius:50%;color:#fff !important;backdrop-filter:blur(4px);} }
 </style>
 
-<script id="v45-js">
+<script id="v46-js">
 (function(){
   "use strict";
   const $ = (s, r=document) => r.querySelector(s), $$ = (s, r=document) => [...r.querySelectorAll(s)];
   const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
-  const A = window.BRASAS_AJUSTES || {};
   const lsGet = k => { try{ return localStorage.getItem(k); }catch(e){ return null; } };
   const lsSet = (k,v) => { try{ v===null ? localStorage.removeItem(k) : localStorage.setItem(k,v); }catch(e){} };
-  const urlScript = q => A.appsScript + (A.appsScript.includes("?") ? "&" : "?") + q;
-  const KEY = "brasas-mayo";
-  let S = null, ultimaCred = "";
-  window.BRASAS_MAYO = null;
-  window.BRASAS_ES_MAYORISTA = () => !!(S && S.on);
+  const A = window.BRASAS_AJUSTES || {};
+  let CAT = {}; try{ CAT = JSON.parse(lsGet("brasas-catalogo") || "{}") || {}; }catch(e){}
+  document.addEventListener("brasas-catalogo", e => { CAT = e.detail || CAT; aplicarTextos(); setTimeout(repintar, 50); });
 
-  /* ---------- precio por unidad según cuántas iguales lleva ---------- */
+  /* ---------- textos editables (pestaña TEXTOS) ---------- */
+  window.BRASAS_TXT = (id, def) => { const v = String(((CAT && CAT.textosSitio) || {})[id] ?? "").trim(); return v || def; };
+  window.BRASAS_WA_CONSULTA = (prod, txt) => window.BRASAS_TXT("FICHA-ASESOR-WA", "Hola! Tengo una consulta sobre {producto}: {consulta}").replace(/\{producto\}/g, () => prod).replace(/\{consulta\}/g, () => txt);
+  function aplicarTextos(){ const ta = $("#asesor textarea"); if(ta) ta.placeholder = window.BRASAS_TXT("FICHA-ASESOR-EJEMPLO", "Ej.: tengo un balcón chico y cocino para 4. ¿Cuál me conviene?"); }
+
+  /* ---------- ESCALA ÚNICA: el mismo precio por cantidad para todos ---------- */
+  const ESC_DEF = [[2,5],[3,8],[4,11],[5,14],[6,17],[7,19],[8,21],[9,23],[10,25]];
+  function escala(){
+    const raw = CAT && CAT.web && Array.isArray(CAT.web.escala) ? CAT.web.escala : [];
+    const e = raw.map(x => ({ n:Math.round(+x.desde), p:+x.pct })).filter(x => x.n >= 2 && x.p > 0 && x.p <= 60).sort((a,b) => a.n - b.n);
+    return e.length ? e : ESC_DEF.map(([n,p]) => ({ n, p }));
+  }
+  const pctDe = n => escala().reduce((a, e) => n >= e.n ? e.p : a, 0);
+  const maxN = () => escala().slice(-1)[0].n;
+  const unitN = (base, n) => n < 2 ? base : roundK(base * (1 - pctDe(n) / 100));
   const variante = tag => { for(const m of MODELOS){ if(m.variantes && m.variantes[tag]) return m.variantes[tag]; } return null; };
-  const tierPrecio = (tag, n) => { const T = S && S.tiers[tag]; if(!T || !T.length || n < S.minU) return null; let p = T[0].p; T.forEach(t=>{ if(n >= t.n) p = t.p; }); return p; };
-  window.BRASAS_MAYO_UNIT = (tag, n) => {
-    if(!S || !S.on) return null;
-    const t = tierPrecio(tag, n); if(t != null) return t;
-    const v = variante(tag); return v ? roundK(precioTransfer(v)) : null;
+  window.BRASAS_PRECIO_UNICO = true;
+  window.BRASAS_ES_MAYORISTA = () => false;
+  window.BRASAS_MAYO_UNIT = (tag, n) => { const v = variante(tag); return v ? unitN(roundK(precioTransfer(v)), Math.max(1, Math.round(+n || 1))) : null; };
+  window.BRASAS_ESCALA = () => escala().map(e => ({ desde:e.n, pct:e.p }));
+  window.BRASAS_MAYO = {
+    get on(){ return !document.body.classList.contains("intl"); },
+    minU: 1, ml: {}, web: {},
+    tiers: new Proxy({}, { get(_, tag){ if(typeof tag !== "string") return undefined; const v = variante(tag); if(!v) return undefined;
+      const b = roundK(precioTransfer(v)); return [{ n:1, p:b }].concat(escala().map(e => ({ n:e.n, p:unitN(b, e.n) }))); } })
   };
 
-  /* ---------- estado ---------- */
-  function armar(j, via){
-    const tiers = {}, ml = {}, web = {};
-    (j.items || []).forEach(i=>{ tiers[i.tag] = (i.tiers || []).map(t=>({ n:+t.n, p:+t.p })); if(i.ml) ml[i.tag] = +i.ml; if(i.web) web[i.tag] = +i.web; });
-    return { on:true, via, usuario:j.usuario || "", nombre:j.nombre || "", minU:+(j.minimo && j.minimo.unidades) || 3, tiers, ml, web };
-  }
-  function activar(datos, guardar){
-    S = datos; window.BRASAS_MAYO = S; document.body.classList.add("es-mayo");
-    if(guardar) lsSet(KEY, JSON.stringify(datos));
-    refrescar();
-  }
-  function salir(avisar){
-    S = null; window.BRASAS_MAYO = null; document.body.classList.remove("es-mayo"); lsSet(KEY, null);
-    if(CARRITO && CARRITO.length){ /* el carrito queda: vuelve a precios de tienda */ }
-    refrescar(); if(avisar) toast("Saliste de la cuenta mayorista");
-  }
-  window.BRASAS_MAYO_SALIR = () => salir(true);
-  function refrescar(){
-    try{ renderAccionesUsuario(); }catch(e){}
-    pintarTiers();
-    if(window.BRASAS_REFRESCAR_CONFIANZA) window.BRASAS_REFRESCAR_CONFIANZA();
-    const ck = $("#checkout"); if(ck && ck.classList.contains("abierto") && window.BRASAS_CHECKOUT_REPINTAR) window.BRASAS_CHECKOUT_REPINTAR();
-    document.dispatchEvent(new CustomEvent("brasas-mayo", { detail: S }));
-  }
-  const consultar = async q => { const r = await fetch(urlScript(q + "&_=" + Date.now()), { cache:"no-store" }); return r.json(); };
+  /* ---------- popup genérico con cruz ---------- */
+  window.BRASAS_POP = function(titulo, html){
+    $$(".v46-pop").forEach(p => p.remove());
+    const p = document.createElement("div"); p.className = "v46-pop"; p.setAttribute("role", "dialog"); p.setAttribute("aria-modal", "true");
+    p.innerHTML = `<div class="bx"><button type="button" class="x" aria-label="Cerrar">✕</button><h3>${esc(titulo)}</h3>${html}</div>`;
+    document.body.appendChild(p);
+    const cerrar = () => { p.remove(); document.removeEventListener("keydown", onKey, true); };
+    const onKey = e => { if(e.key === "Escape"){ e.stopImmediatePropagation(); cerrar(); } };
+    document.addEventListener("keydown", onKey, true);
+    $(".x", p).addEventListener("click", cerrar);
+    p.addEventListener("click", e => { if(e.target === p) cerrar(); });
+    $$("[data-cerrar]", p).forEach(b => b.addEventListener("click", cerrar));
+    return { el:p, cerrar };
+  };
 
-  async function entrarUsuario(u){
-    u = String(u || "").trim().toUpperCase().replace(/[^A-Z0-9]/g, "");
-    if(u.length < 6) throw new Error("corto");
-    if(!A.appsScript) throw new Error("sin servidor");
-    const j = await consultar("accion=mayorista&usuario=" + encodeURIComponent(u));
-    if(!j.ok) throw new Error(j.error || "acceso");
-    activar(armar(j, "usuario"), true);
-    return j.nombre;
+  /* ---------- ficha ---------- */
+  const ficha = $(".ficha"), info = $(".info-col"); if(!ficha || !info) return;
+  const inp = $("#cant-v25");
+  const mqD = window.matchMedia("(min-width:1100px)");
+  const right = document.createElement("div"); right.id = "v46-right"; info.prepend(right);
+  const bc = $(".breadcrumb", info), tit = $("#ficha-titulo"), rep = $(".rep-row", info), pb = $(".precio-box"), env = $("#v31-envio"), vb = $(".variantes-block", info);
+  if(bc) right.appendChild(bc);
+  const tw = document.createElement("div"); tw.className = "v46-tit"; right.appendChild(tw);
+  if(tit) tw.appendChild(tit);
+  if(rep) right.appendChild(rep);
+  if(pb) right.appendChild(pb);
+  if(env) right.appendChild(env);
+  if(vb) right.appendChild(vb);
+
+  const q = document.createElement("div"); q.className = "v46-q"; q.id = "v46-q";
+  q.innerHTML = `<div class="v46-qh"><b>Cantidad</b><span>Elegí cuántas llevás: cada una sale menos</span></div>
+    <div class="v46-tg" id="v46-tg" role="radiogroup" aria-label="Cantidad"></div>
+    <div id="v46-mas" hidden></div>
+    <div class="v46-ahorro" id="v46-ahorro" aria-live="polite"></div>`;
+  right.appendChild(q);
+  const mlb = document.createElement("div"); mlb.id = "v46-ml"; mlb.hidden = true;
+  mlb.innerHTML = `<button type="button" class="cta cta-ml" id="v46-ml-go">Comprar en MercadoLibre ↗</button><button type="button" class="v46-link" id="v46-ml-tr"></button>`;
+  if(pb) pb.after(mlb);
+  const acc = document.createElement("div"); acc.id = "v46-acc"; right.appendChild(acc);
+  const stepper = $(".cant-row .cant, #v31-cant .cant"); const mas = $("#v46-mas"); if(stepper) mas.appendChild(stepper);
+  mas.insertAdjacentHTML("beforeend", "<span></span>");
+
+  /* total + botones: en la columna (escritorio) o en la barra (celular) */
+  const bar = $("#v31-bar"), total = bar && $(".b-total", bar), btns = $("#v31-btns");
+  function ubicarCompra(){
+    if(mqD.matches){ if(total && total.parentNode !== acc) acc.appendChild(total); if(btns && btns.parentNode !== acc) acc.appendChild(btns); }
+    else if(bar){ if(total && total.parentNode !== bar) bar.insertBefore(total, btns || null); if(btns && btns.parentNode !== bar) bar.appendChild(btns); }
   }
-  async function entrarGoogle(cred){
-    if(!A.appsScript || !cred || cred === ultimaCred) return;
-    ultimaCred = cred;
+  ubicarCompra(); if(mqD.addEventListener) mqD.addEventListener("change", () => setTimeout(ubicarCompra, 0));
+
+  /* debajo de la foto y las medidas */
+  const under = document.createElement("div"); under.id = "v46-under"; info.appendChild(under);
+  const trust = document.createElement("div"); trust.className = "v46-trust"; under.appendChild(trust);
+  function juntarConfianza(){
+    const c = $(".v36-conf", info); if(c && c.parentNode !== trust) trust.prepend(c);
+    const l = $(".v44-conf.fch", info); if(l && l.parentNode !== trust) trust.appendChild(l);
+  }
+  new MutationObserver(juntarConfianza).observe(info, { childList:true, subtree:true }); juntarConfianza();
+  function ubicarDetalle(){ const det = $("#v31-detalle"); if(det && mqD.matches && det.parentNode !== under) under.appendChild(det); }
+  ubicarDetalle(); [60, 300].forEach(t => setTimeout(ubicarDetalle, t));
+  if(mqD.addEventListener) mqD.addEventListener("change", () => [10, 80].forEach(t => setTimeout(ubicarDetalle, t)));
+
+  /* ---------- cantidad: grilla siempre visible + ahorro ---------- */
+  const cant = () => Math.max(1, Math.min(500, Math.round(+(inp && inp.value) || 1)));
+  const P = (tag, n) => window.BRASAS_PRECIO_UNIDAD ? window.BRASAS_PRECIO_UNIDAD(tag, medioActivo, n) : 0;
+  function ponerCant(n){ if(!inp) return; inp.value = n; inp.dispatchEvent(new Event("input", { bubbles:true })); inp.dispatchEvent(new Event("change", { bubbles:true })); repintar(); }
+  function pintarQ(){
+    const tag = (typeof modeloActual !== "undefined" && modeloActual) ? tagActivo() : null; if(!tag) return;
+    const ml = medioActivo === "ml", n = cant(), top = maxN(), v = modeloActual.variantes[tag];
+    document.body.classList.toggle("v46-ml-on", ml);
+    q.style.display = ml ? "none" : "";
+    mlb.hidden = !ml;
+    if(ml){
+      const U = window.BRASAS_PRECIO_UNIDAD, tr = U(tag, "transferencia", 1) || roundK(precioTransfer(v)), mp = U(tag, "ml", 1), dif = mp - tr, t = $("#v46-ml-tr");
+      t.hidden = !(tr > 0 && dif > 0);
+      t.textContent = `Por transferencia: ${money(tr)} · ahorrás ${money(dif)}`;
+      t.onclick = () => { medioActivo = "transferencia"; repintar(); };
+      $("#v46-ml-go").onclick = () => { const b = $("#btn-comprar-ahora"); if(b) b.click(); };
+      return;
+    }
+    const p1 = P(tag, 1);
+    let h = "";
+    for(let k = 1; k <= top; k++){
+      const pk = P(tag, k), pc = p1 > pk ? Math.round((1 - pk / p1) * 100) : 0, sel = k === top ? n >= top : n === k;
+      h += `<button type="button" role="radio" aria-checked="${sel}" class="v46-t ${sel ? "on" : ""} ${k === top ? "mx" : ""}" data-n="${k}"><span class="q">${k}${k === top ? "+" : ""}<small>${k === 1 ? "unidad" : "unid."}</small></span><span class="p notranslate" translate="no">${money(pk)}</span><span class="o ${pc ? "" : "z"}">${pc ? pc + "% OFF" : "precio base"}</span></button>`;
+    }
+    $("#v46-tg").innerHTML = h;
+    $$(".v46-t", q).forEach(b => b.addEventListener("click", () => ponerCant(+b.dataset.n)));
+    mas.hidden = n < top;
+    const sp = $("span", mas); if(sp) sp.textContent = `Más de ${top - 1} unidades: desde ${top} el descuento es el máximo (${pctDe(top)}%).`;
+    /* ahorro en pesos, bien a la vista */
+    const pn = P(tag, n), a = (p1 - pn) * n;
+    $("#v46-ahorro").innerHTML = n > 1 && a > 0 ? `<span class="p notranslate" translate="no">Ahorrás ${money(a)}</span><span class="c">${Math.round((1 - pn / p1) * 100)}% menos por unidad que comprando 1</span>` : "";
+  }
+
+  /* ---------- muchas medidas: fichas con las dimensiones ---------- */
+  function medidasChips(){
+    const cont = $("#variantes"); if(!cont || !modeloActual) return;
+    const btns = $$(".variante-btn", cont);
+    cont.classList.toggle("v46-muchas", btns.length > 4);
+    btns.forEach(b => { const v = modeloActual.variantes[b.dataset.tag]; if(!v || $(".v46-d", b)) return;
+      const am = String(v.armado || "").match(/(\d+(?:[.,]\d+)?)\s*[x×*]\s*(\d+(?:[.,]\d+)?)\s*[x×*]\s*(\d+(?:[.,]\d+)?)/i);
+      if(am) b.insertAdjacentHTML("beforeend", `<span class="v46-d">${am[1]}×${am[2]}×${am[3]} cm</span>`); });
+  }
+
+  /* ---------- repintado ---------- */
+  function repintar(){
+    if(typeof modeloActual === "undefined" || !modeloActual) return;
+    try{ renderMedios(tagActivo()); renderPrecioYCuotas(); }catch(e){}
+    pintarQ(); medidasChips(); aplicarTextos();
+  }
+  const rmPrev = renderMedios;
+  renderMedios = function(){ const r = rmPrev.apply(this, arguments); try{ pintarQ(); }catch(e){} return r; };
+  if(inp){ inp.addEventListener("input", () => setTimeout(() => { try{ renderMedios(tagActivo()); renderPrecioYCuotas(); }catch(e){} pintarQ(); }, 0)); }
+  if(stepper) $$("button", stepper).forEach(bt => bt.addEventListener("click", () => setTimeout(() => { try{ renderMedios(tagActivo()); renderPrecioYCuotas(); }catch(e){} pintarQ(); }, 0)));
+  const afPrev = abrirFicha;
+  abrirFicha = function(){ const r = afPrev.apply(this, arguments); setTimeout(() => { repintar(); ubicarDetalle(); juntarConfianza(); }, 90); setTimeout(repintar, 500); return r; };
+  const avPrev = activarVariante;
+  activarVariante = function(){ const r = avPrev.apply(this, arguments); setTimeout(repintar, 0); setTimeout(medidasChips, 120); return r; };
+  document.addEventListener("click", e => { if(e.target.closest && e.target.closest("#variantes, .miniaturas")) setTimeout(repintar, 80); });
+  aplicarTextos();
+})();
+</script>
+<style id="v47-css">
+.v47-lista{display:flex;align-items:center;justify-content:center;gap:14px 20px;flex-wrap:wrap;margin:34px auto 6px;padding:0 16px;text-align:center;}
+.v47-lista button,#btn-lista{cursor:pointer;font:inherit;}
+.v47-lista button{display:inline-flex;align-items:center;gap:10px;padding:14px 22px;border:1px solid rgba(228,188,110,.65);background:rgba(228,188,110,.08);color:#fff;font-size:13px;letter-spacing:.12em;text-transform:uppercase;transition:background .2s;}
+.v47-lista button:hover{background:rgba(228,188,110,.18);}
+.v47-lista button svg{width:18px;height:18px;stroke:#e4bc6e;fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round;}
+.v47-lista button[disabled]{opacity:.6;cursor:progress;}
+.v47-lista span{font-size:13.5px;color:var(--hueso-dim);}
+@media (max-width:900px){ .topbar #btn-lista{display:none;} }
+</style>
+
+<script id="v47-js">
+(function(){
+  "use strict";
+  const $ = (s, r=document) => r.querySelector(s), $$ = (s, r=document) => [...r.querySelectorAll(s)];
+  const A = window.BRASAS_AJUSTES || {};
+  let CAT = {}; try{ CAT = JSON.parse(localStorage.getItem("brasas-catalogo") || "{}") || {}; }catch(e){}
+  document.addEventListener("brasas-catalogo", e => { CAT = e.detail || CAT; });
+  const aviso = m => { try{ toast(m); }catch(e){} };
+
+  /* ---------- jsPDF (se baja recién al pedir la lista) ---------- */
+  const cargar = src => new Promise((ok, mal) => { const s = document.createElement("script"); s.src = src; s.onload = ok; s.onerror = mal; document.head.appendChild(s); });
+  let lib = null;
+  const LIB = () => lib || (lib = window.jspdf ? Promise.resolve() : cargar("https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"));
+
+  /* ---------- helpers ---------- */
+  const limpia = x => String(x ?? "").replace(/[−–—]/g, "-").replace(/[★☆✓✔→↗]/g, "").replace(/[   ]/g, " ").replace(/\s+/g, " ").replace(/[^\x20-\xff€•…“”‘’]/g, "").trim();
+  const $$m = n => "$" + Math.round(n).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+  const hoy = () => new Date().toLocaleDateString("es-AR", { day:"numeric", month:"long", year:"numeric" });
+  const roundKk = n => Math.round(n / 1000) * 1000;
+  const grande = u => /googleusercontent\.com/.test(u) ? String(u).replace(/=w\d+$/, "=w1100") : u;
+  const bitmap = async src => {
     try{
-      const j = await consultar("accion=mayorista&credencial=" + encodeURIComponent(cred));
-      if(j.ok){ activar(armar(j, "google"), true); toast(`Cuenta mayorista · ${String(j.nombre).split(" ")[0]}: ya ves tus precios por cantidad`); }
-      else if(S && S.via === "google"){ salir(false); }
-    }catch(e){}
-  }
-  window.BRASAS_MAYO_ENTRAR = entrarUsuario;
+      const r = await fetch(grande(src), { mode:"cors", cache:"force-cache" }); if(!r.ok) return null;
+      const b = await r.blob();
+      return await new Promise(ok => { const u = URL.createObjectURL(b), im = new Image(); im.onload = () => ok(im); im.onerror = () => ok(null); im.src = u; });
+    }catch(e){ return null; }
+  };
+  /* recorte centrado a la proporción de la celda → JPG liviano */
+  const recortar = (im, wmm, hmm) => {
+    const pxmm = 8, W = Math.round(wmm * pxmm), H = Math.round(hmm * pxmm), c = document.createElement("canvas"); c.width = W; c.height = H;
+    const g = c.getContext("2d"), k = Math.max(W / im.naturalWidth, H / im.naturalHeight), sw = W / k, sh = H / k;
+    g.fillStyle = "#fff"; g.fillRect(0, 0, W, H);
+    g.drawImage(im, (im.naturalWidth - sw) / 2, (im.naturalHeight - sh) / 2, sw, sh, 0, 0, W, H);
+    return c.toDataURL("image/jpeg", .84);
+  };
+  /* caja de medidas (SVG claro) → PNG */
+  const caja = (armado) => new Promise(ok => {
+    try{
+      const m = String(armado || "").match(/(\d+(?:[.,]\d+)?)\s*[x×*]\s*(\d+(?:[.,]\d+)?)\s*[x×*]\s*(\d+(?:[.,]\d+)?)\s*(cm|mm|m)?/i);
+      if(!m || !window.BRASAS_CAJA) return ok(null);
+      const svg = window.BRASAS_CAJA(m[1], m[2], m[3], (m[4] || "cm").toLowerCase(), "claro"); if(!svg) return ok(null);
+      const doc = new DOMParser().parseFromString(svg, "image/svg+xml"), el = doc.documentElement, vb = (el.getAttribute("viewBox") || "0 0 200 140").split(/\s+/).map(Number);
+      el.setAttribute("width", vb[2]); el.setAttribute("height", vb[3]); el.setAttribute("xmlns", "http://www.w3.org/2000/svg");
+      const im = new Image(), k = 3;
+      im.onload = () => { const c = document.createElement("canvas"); c.width = Math.round(vb[2] * k); c.height = Math.round(vb[3] * k); const g = c.getContext("2d"); g.fillStyle = "#fff"; g.fillRect(0, 0, c.width, c.height); g.drawImage(im, 0, 0, c.width, c.height); ok({ u:c.toDataURL("image/jpeg", .9), r:vb[2] / vb[3] }); };
+      im.onerror = () => ok(null); im.src = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(new XMLSerializer().serializeToString(el));
+    }catch(e){ ok(null); }
+  });
 
-  /* ---------- login: "Soy cliente mayorista" ---------- */
-  function loginMayo(){
-    const card = $(".login-card"); if(!card || $(".v45-may", card)) return;
-    card.insertAdjacentHTML("beforeend", `<div class="v45-may"><button type="button" class="v45-link" id="v45-abrir">Soy cliente mayorista</button>
-      <div class="v45-form" id="v45-form"><p>Entrá con tu <b>Google</b> (arriba, si te lo habilitamos) o escribí el <b>usuario</b> que te dimos.</p>
-        <div class="fila"><input id="v45-user" autocomplete="username" autocapitalize="characters" spellcheck="false" placeholder="Tu usuario"><button type="button" id="v45-entrar">Entrar</button></div><small id="v45-msg"></small></div></div>`);
-    $("#v45-abrir", card).addEventListener("click", ()=>{ $("#v45-form", card).classList.toggle("on"); setTimeout(()=> $("#v45-user", card).focus(), 50); });
-    const ir = async () => {
-      const b = $("#v45-entrar", card), m = $("#v45-msg", card), u = $("#v45-user", card).value;
-      m.textContent = ""; b.disabled = true; b.textContent = "Verificando…";
-      try{ const n = await entrarUsuario(u); $("#modal-login").classList.remove("abierto"); toast(`Hola ${String(n).split(" ")[0]}: ya ves tus precios mayoristas`); }
-      catch(e){ m.textContent = e.message === "corto" ? "Escribí tu usuario completo." : e.message === "sin servidor" ? "Sin conexión con el taller. Probá más tarde." : "Ese usuario no existe o está dado de baja. Revisalo o escribinos por WhatsApp."; }
-      b.disabled = false; b.textContent = "Entrar";
-    };
-    $("#v45-entrar", card).addEventListener("click", ir);
-    $("#v45-user", card).addEventListener("keydown", e=>{ if(e.key === "Enter"){ e.preventDefault(); ir(); } });
-  }
-  if(typeof abrirLogin === "function"){ const al = abrirLogin; abrirLogin = function(){ const r = al.apply(this, arguments); loginMayo(); return r; }; }
-  loginMayo();
+  /* ---------- datos ---------- */
+  const escalaPct = () => (window.BRASAS_ESCALA ? window.BRASAS_ESCALA() : []);
+  const maxN = () => { const e = escalaPct(); return e.length ? e[e.length - 1].desde : 10; };
+  const pctDe = n => escalaPct().reduce((a, e) => n >= e.desde ? e.pct : a, 0);
+  const TXT = (k, def) => { const v = String((CAT.textos && CAT.textos[k]) || "").trim(); return v && !/mayorista/i.test(v) ? v : def; };
 
-  /* ---------- encabezado: nombre, Mis compras y salir ---------- */
+  /* ---------- armado del PDF (A4 apaisado) ---------- */
+  const PW = 297, PH = 210, M = 10, GOLD = [201,162,74], INK = [17,17,16], GRIS = [110,108,102], VERDE = [31,122,72];
+  async function generar(){
+    await LIB();
+    const { jsPDF } = window.jspdf, doc = new jsPDF({ orientation:"landscape", unit:"mm", format:"a4", compress:true });
+    doc.setProperties({ title:"BRASAS - Lista de precios", author:"BRASAS" });
+    const top = maxN(), fecha = hoy();
+    const wa = String((CAT.web && CAT.web.whatsapp) || (typeof WHATSAPP_NUMERO !== "undefined" ? WHATSAPP_NUMERO : "")).replace(/\D/g, "");
+    const waTxt = wa ? "WhatsApp +" + wa.replace(/^(\d{2})(\d)(\d{4})(\d+)$/, "$1 $2 $3 $4") : "";
+    const set = (f, sz, col, st) => { doc.setFont("helvetica", st || "normal"); doc.setFontSize(sz); doc.setTextColor(...col); };
+    const tx = (t, x, y, o) => doc.text(limpia(t), x, y, o);
+
+    /* ===== portada ===== */
+    doc.setFillColor(11,11,10); doc.rect(0, 0, PW, PH, "F");
+    doc.setFillColor(...GOLD); doc.rect(M + 6, 30, 22, .8, "F");
+    set(0, 34, [255,255,255], "bold"); doc.setCharSpace(5); tx("BRASAS®", M + 6, 28); doc.setCharSpace(0);
+    set(0, 10, [190,184,170]); doc.setCharSpace(1.6); tx("HECHOS A MANO DESDE 2017 EN OLAVARRÍA, ARGENTINA", M + 6, 40); doc.setCharSpace(0);
+    set(0, 40, [255,255,255], "bold"); tx(limpia(TXT("pdfTitulo", "Lista de precios")), M + 6, 82);
+    set(0, 13, GOLD); tx(fecha, M + 6, 93);
+    set(0, 12, [225,220,208]); doc.text(doc.splitTextToSize(limpia(TXT("pdfIntro", "El mismo precio para todos. Cuantas más unidades iguales (mismo modelo y medida) llevás en un pedido, menos pagás por cada una. Envío gratis por Andreani a todo el país.")), 170), M + 6, 106);
+    /* escala de descuentos */
+    const E = escalaPct(), tw = (PW - 2 * M - 12 - 9 * 3) / 10, ty = 132;
+    set(0, 8, GOLD); doc.setCharSpace(1.4); tx(limpia(TXT("pdfEscala", "PRECIO POR UNIDAD SEGÚN LA CANTIDAD DE UNIDADES QUE LLEVES")).toUpperCase(), M + 6, ty - 5); doc.setCharSpace(0);
+    for(let k = 1; k <= top; k++){
+      const x = M + 6 + (k - 1) * (tw + 3), p = k === 1 ? 0 : pctDe(k), on = k === top;
+      doc.setDrawColor(...(on ? GOLD : [70,68,62])); doc.setLineWidth(on ? .6 : .3); doc.setFillColor(on ? 28 : 20, on ? 26 : 20, on ? 18 : 18); doc.roundedRect(x, ty, tw, 30, 1, 1, "FD");
+      set(0, 20, [255,255,255], "bold"); tx(k + (k === top ? "+" : ""), x + tw / 2, ty + 12, { align:"center" });
+      set(0, 6.5, [170,164,150]); tx(k === 1 ? "UNIDAD" : "UNIDADES", x + tw / 2, ty + 17, { align:"center" });
+      if(p){ set(0, 11, [120,210,160], "bold"); tx("-" + p + "%", x + tw / 2, ty + 25, { align:"center" }); } else { set(0, 8, [150,146,136]); tx("precio web", x + tw / 2, ty + 25, { align:"center" }); }
+    }
+    set(0, 9.5, [190,184,170]); doc.text(doc.splitTextToSize(limpia(TXT("pdfEscalaNota", "Cada recuadro es una cantidad de unidades iguales (mismo modelo y medida) en un mismo pedido. Los precios de las páginas siguientes ya incluyen el descuento de cada cantidad.")), PW - 2 * M - 12), M + 6, ty + 40);
+    set(0, 10, [225,220,208]); tx(["brasasargentina.com", waTxt].filter(Boolean).join("   ·   "), M + 6, PH - 16);
+    set(0, 8, [130,126,116]); tx(limpia(TXT("pdfGarantia", "Garantía de fábrica de 12 meses · Cada unidad se corta, se suelda y se termina a mano")), M + 6, PH - 10);
+
+    /* ===== una página por modelo ===== */
+    const modelos = (typeof MODELOS !== "undefined" ? MODELOS : []).filter(m => m.variantes && Object.keys(m.variantes).length);
+    let n = 0;
+    for(const m of modelos){
+      n++; aviso(`Armando la lista… (${n}/${modelos.length})`);
+      const tags = Object.keys(m.variantes), vs = tags.map(t => ({ tag:t, v:m.variantes[t] }));
+      const cand = []; const vistos = new Set();
+      [...(m.fotosBase || []), ...Object.values(m.fotosTag || {}).flat(), ...(m.fotos || [])].forEach(u => { if(typeof u === "string" && u.length > 4 && !vistos.has(u)){ vistos.add(u); cand.push(u); } });
+      const ims = []; const cargadas = await Promise.all(cand.slice(0, 7).map(bitmap)); cargadas.forEach(i => { if(i && ims.length < 4) ims.push(i); });
+      const cajas = await Promise.all(vs.slice(0, 4).map(x => caja(x.v.armado)));
+
+      const cabecera = () => {
+        doc.addPage("a4", "landscape"); doc.setFillColor(255,255,255); doc.rect(0, 0, PW, PH, "F");
+        set(0, 13, INK, "bold"); doc.setCharSpace(2.4); tx("BRASAS®", M, 15); doc.setCharSpace(0);
+        set(0, 8, GRIS); tx(limpia(TXT("pdfTitulo", "Lista de precios")).toUpperCase() + " · " + fecha.toUpperCase(), PW - M, 15, { align:"right" });
+        doc.setDrawColor(...INK); doc.setLineWidth(.5); doc.line(M, 19, PW - M, 19);
+      };
+      cabecera();
+      set(0, 21, INK, "bold"); tx(String(m.nombre || ""), M, 30);
+      set(0, 9.5, VERDE, "bold"); tx("Envío gratis por Andreani a todo el país", PW - M, 29, { align:"right" });
+      doc.setFillColor(...GOLD); doc.rect(M, 33, 24, .8, "F");
+
+      /* fotos (2 a 4) */
+      const FX = M, FY = 38, FW = 142, FH = 90, g = 3;
+      const celda = (im, x, y, w, h) => { try{ doc.addImage(recortar(im, w, h), "JPEG", x, y, w, h); }catch(e){} };
+      if(ims.length === 1) celda(ims[0], FX, FY, FW, FH);
+      else if(ims.length === 2){ const w = (FW - g) / 2; celda(ims[0], FX, FY, w, FH); celda(ims[1], FX + w + g, FY, w, FH); }
+      else if(ims.length === 3){ const w = (FW - g) / 2, h = (FH - g) / 2; celda(ims[0], FX, FY, w, FH); celda(ims[1], FX + w + g, FY, w, h); celda(ims[2], FX + w + g, FY + h + g, w, h); }
+      else if(ims.length >= 4){ const w = (FW - g) / 2, h = (FH - g) / 2; celda(ims[0], FX, FY, w, h); celda(ims[1], FX + w + g, FY, w, h); celda(ims[2], FX, FY + h + g, w, h); celda(ims[3], FX + w + g, FY + h + g, w, h); }
+      else { doc.setFillColor(238,236,230); doc.rect(FX, FY, FW, FH, "F"); }
+
+      /* texto a la derecha */
+      const RX = FX + FW + 8, RW = PW - M - RX;
+      let y = FY + 3;
+      const etiqueta = t => { set(0, 7, GRIS); doc.setCharSpace(1.2); tx(t, RX, y); doc.setCharSpace(0); y += 4.5; };
+      const parr = (t, sz, max) => { set(0, sz, [40,40,36]); const l = doc.splitTextToSize(limpia(t), RW).slice(0, max); doc.text(l, RX, y); y += l.length * (sz * .46 + .9) + 3; };
+      const des = String(m.descripcion || (vs[0].v.descripcion) || "").trim(), cons = String(m.consejo || vs[0].v.consejo || "").trim();
+      if(des){ etiqueta("DESCRIPCIÓN"); parr(des, 9.5, 8); }
+      if(cons){ etiqueta("¿CUÁL TE CONVIENE?"); parr(cons, 9.5, 3); }
+      /* cajas de cotas */
+      const cy = Math.max(y + 1, FY + FH - 36), ch = FY + FH - cy;
+      if(cajas.some(Boolean) && ch > 18){
+        set(0, 7, GRIS); doc.setCharSpace(1.2); tx("MEDIDAS DEL PRODUCTO ARMADO", RX, cy + 1); doc.setCharSpace(0);
+        const k = Math.min(4, cajas.filter(Boolean).length), cw = (RW - (k - 1) * 3) / k, ah = ch - 9; let i = 0;
+        vs.slice(0, 4).forEach((x, j) => { const c = cajas[j]; if(!c) return;
+          const w0 = Math.min(cw, ah * c.r), h0 = w0 / c.r, cx = RX + i * (cw + 3);
+          doc.setDrawColor(220,217,208); doc.setLineWidth(.2); doc.rect(cx, cy + 4, cw, ah + 1);
+          doc.addImage(c.u, "JPEG", cx + (cw - w0) / 2, cy + 4.5 + (ah - h0) / 2, w0, h0);
+          set(0, 7, INK, "bold"); tx(x.v.label || x.v.nombre || "", cx + cw / 2, cy + ch + 1, { align:"center" }); i++; });
+      }
+
+      /* tabla de precios por cantidad */
+      const cols = [{ t:"MEDIDA", w:38 }, { t:"ARMADO (cm)", w:27 }, { t:"PESO", w:13 }];
+      const qw = 17.2; for(let k = 1; k <= top; k++) cols.push({ t:k + (k === top ? "+" : "") + (k === 1 ? " unidad" : " unidades"), w:qw, q:k });
+      cols.push({ t:"MERCADOLIBRE", w:PW - 2 * M - 78 - qw * top });
+      let ty0 = 136; const rowH = vs.length > 5 ? 7.2 : 9.2, cabH = 16.4, WEB = limpia(TXT("pdfPrecioWeb", "precio web|por unidad")).split("|"), MLT = limpia(TXT("pdfPrecioML", "precio MercadoLibre|por unidad")).split("|");
+      const encabezado = yy => {
+        let x = M; const qx0 = M + 78, qx1 = qx0 + qw * top;
+        doc.setFillColor(...GOLD); doc.rect(qx0, yy, qx1 - qx0, 5.2, "F");
+        set(0, 6.4, INK, "bold"); doc.setCharSpace(.5); tx(limpia(TXT("pdfCantidades", "CANTIDAD DE UNIDADES IGUALES EN EL PEDIDO · PRECIO POR UNIDAD")).toUpperCase(), (qx0 + qx1) / 2, yy + 3.6, { align:"center" }); doc.setCharSpace(0);
+        const y1 = yy + 5.2;
+        doc.setFillColor(...INK); doc.rect(M, y1, PW - 2 * M, 6.2, "F"); doc.setFillColor(243,241,234); doc.rect(M, y1 + 6.2, PW - 2 * M, 5, "F");
+        cols.forEach((c, i) => { const al = i < 1 ? "left" : "center", px = al === "left" ? x + 2 : x + c.w / 2;
+          set(0, c.q ? 6.4 : 6.8, [255,255,255], "bold"); tx(c.t, px, y1 + 4.2, { align:al });
+          if(c.q){ if(c.q === 1) { set(0, 5.4, GRIS); WEB.forEach((l, j) => tx(l, px, y1 + 8.6 + j * 2.3, { align:"center" })); } else { set(0, 7, VERDE, "bold"); tx("-" + pctDe(c.q) + "%", px, y1 + 9.9, { align:"center" }); } }
+          else if(i === cols.length - 1){ set(0, 5.4, GRIS); MLT.forEach((l, j) => tx(l, px, y1 + 8.6 + j * 2.3, { align:"center" })); }
+          x += c.w; });
+      };
+      encabezado(ty0); let ry = ty0 + cabH;
+      for(const x of vs){
+        if(ry + rowH > PH - 12){ cabecera(); ty0 = 26; encabezado(ty0); ry = ty0 + cabH; }
+        const v = x.v; let cx = M;
+        doc.setDrawColor(222,219,210); doc.setLineWidth(.2); doc.line(M, ry + rowH, PW - M, ry + rowH);
+        const cen = rowH / 2 + 1.2;
+        set(0, 8.5, INK, "bold"); tx(v.label || v.nombre || x.tag, cx + 2, ry + cen); cx += cols[0].w;
+        set(0, 7.5, [60,60,56]); tx(String(v.armado || "-").replace(/x/gi, "x"), cx + cols[1].w / 2, ry + cen, { align:"center" }); cx += cols[1].w;
+        set(0, 7.5, [60,60,56]); tx(v.peso ? String(v.peso).replace(".", ",") + " kg" : "-", cx + cols[2].w / 2, ry + cen, { align:"center" }); cx += cols[2].w;
+        const base = window.BRASAS_MAYO_UNIT ? window.BRASAS_MAYO_UNIT(x.tag, 1) : roundKk(v.transferencia || 0);
+        for(let k = 1; k <= top; k++){
+          const p = window.BRASAS_MAYO_UNIT(x.tag, k);
+          set(0, 8, k === 1 ? INK : INK, "bold"); tx($$m(p), cx + qw / 2, ry + cen - (k > 1 ? 1.6 : 0), { align:"center" });
+          if(k > 1 && base > p){ set(0, 6, VERDE, "bold"); tx("-" + $$m(base - p), cx + qw / 2, ry + cen + 2.2, { align:"center" }); }
+          cx += qw;
+        }
+        const ml = Math.round(+(v.ml && v.ml.precio) || 0);
+        set(0, 8.5, ml ? INK : GRIS, ml ? "bold" : "normal"); tx(ml ? $$m(ml) : "-", cx + cols[cols.length - 1].w / 2, ry + cen, { align:"center" });
+        ry += rowH;
+      }
+      set(0, 6.6, GRIS);
+      const pie0 = limpia(TXT("pdfPie", "Precios por unidad por transferencia bancaria, en pesos argentinos, con envío gratis por Andreani. El precio de cada unidad baja según la cantidad de unidades iguales (mismo modelo y medida) del mismo pedido; es el mismo para todos. En verde, lo que ahorrás por unidad frente al precio de 1 unidad. Válidos al {fecha}; sujetos a cambio sin previo aviso.").replace(/\{fecha\}/g, fecha));
+      const pie = pie0 + (vs.some(x => x.v.peso) ? " " + limpia(TXT("pdfPeso", "El peso es de referencia y puede variar levemente.")) : "");
+      const pl = doc.splitTextToSize(pie, PW - 2 * M - 70).slice(0, 3); doc.text(pl, M, Math.max(ry + 5, PH - 11));
+      set(0, 7, GRIS); tx([limpia(TXT("pdfContacto", "")), "brasasargentina.com", waTxt].filter(Boolean).join("  ·  "), PW - M, PH - 8, { align:"right" });
+    }
+    return doc;
+  }
+
+  let ocupado = false;
+  async function descargar(btn){
+    if(ocupado) return; ocupado = true; if(btn) btn.disabled = true;
+    try{
+      aviso("Armando la lista de precios…");
+      const doc = await generar();
+      const nombre = "BRASAS-lista-de-precios.pdf";
+      if(/Instagram|FBAN|FBAV|Messenger|WhatsApp/i.test(navigator.userAgent)){ window.open(doc.output("bloburl"), "_blank"); }
+      else doc.save(nombre);
+      aviso("Lista de precios lista");
+      window.__listaPDF = doc;
+    }catch(e){ console.warn(e); aviso("No se pudo armar la lista. Probá de nuevo en un rato."); }
+    ocupado = false; if(btn) btn.disabled = false;
+  }
+  window.BRASAS_LISTA_PDF = descargar; window.BRASAS_LISTA_PDF_GENERAR = generar;
+
+  /* ---------- botones: colección, pie y encabezado ---------- */
+  const ICONO = `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12M7 10l5 5 5-5M4 20h16"/></svg>`;
+  function ponerBoton(){
+    const grid = $("#grid-modelos");
+    if(grid && !$(".v47-lista")){ grid.insertAdjacentHTML("afterend", `<div class="v47-lista"><button type="button" id="v47-btn">${ICONO}Descargar lista de precios (PDF)</button><span>Todos los modelos, medidas y precios por cantidad</span></div>`);
+      $("#v47-btn").addEventListener("click", e => descargar(e.currentTarget)); }
+    const pie = $(".pie-legal .in");
+    if(pie && !$("[data-v47]", pie)){ const b = document.createElement("button"); b.type = "button"; b.dataset.v47 = "1"; b.textContent = "Lista de precios (PDF)"; pie.prepend(b); b.addEventListener("click", () => descargar()); }
+  }
+  ponerBoton(); setTimeout(ponerBoton, 600); document.addEventListener("brasas-catalogo", () => setTimeout(ponerBoton, 300));
   const rauPrev = renderAccionesUsuario;
   renderAccionesUsuario = function(){
-    rauPrev.apply(this, arguments);
-    if(currentUser && currentUser.cred && currentUser.cred !== ultimaCred && A.appsScript) entrarGoogle(currentUser.cred);
-    if(!S || !S.on) return;
-    const chip = $("#acciones-usuario .user-chip");
-    if(chip && !$(".v45-badge", chip)) chip.insertAdjacentHTML("beforeend", `<span class="v45-badge">Mayorista</span>`);
-    const lo = $("#btn-logout"); if(lo && !lo.dataset.v45){ lo.dataset.v45 = "1"; lo.addEventListener("click", ()=>{ if(S && S.via === "google") salir(false); }); }
-    if(!currentUser){
-      const b = $("#btn-login-top");
-      if(b){
-        b.outerHTML = `<span class="user-chip">Hola, <b>${esc(String(S.nombre).split(" ")[0])}</b><span class="v45-badge">Mayorista</span></span><button id="btn-mis-compras">Mis pedidos</button><button id="btn-logout">Salir</button>`;
-        $("#btn-mis-compras").addEventListener("click", ()=>{ window.BRASAS_MIS_COMPRAS && window.BRASAS_MIS_COMPRAS(); });
-        $("#btn-logout").addEventListener("click", ()=> salir(true));
-      }
-    }
+    const r = rauPrev.apply(this, arguments);
+    const ancla = $("#btn-mis-compras") || $("#btn-ver-carrito");
+    if(ancla && !$("#btn-lista")){ const b = document.createElement("button"); b.id = "btn-lista"; b.type = "button"; b.textContent = "Lista de precios"; ancla.before(b); b.addEventListener("click", () => descargar()); }
+    return r;
   };
-
-  /* ---------- FICHA: precio por cantidad ---------- */
-  const mlTxt = n => money(n);
-  function pintarTiers(){
-    const caja = $(".precio-box");
-    let box = $("#v45-tiers");
-    if(!caja) return;
-    const tag = (typeof modeloActual !== "undefined" && modeloActual) ? tagActivo() : null;
-    const T = S && S.on && tag ? S.tiers[tag] : null;
-    caja.classList.toggle("v45-m", !!(T && T.length));
-    if(!T || !T.length){ if(box) box.remove(); return; }
-    if(!box){ box = document.createElement("div"); box.className = "v45-t"; box.id = "v45-tiers"; caja.appendChild(box); }
-    const inp = $("#cant-v25"), q = Math.max(1, Math.min(500, Math.round(+(inp && inp.value) || 1)));
-    const ml = S.ml[tag] || 0, web = S.web[tag] ? roundK(S.web[tag]) : 0;
-    const vs = p => ml && p ? Math.round((1 - p / ml) * 100) : 0;
-    const filas = [];
-    const act = q < S.minU ? -1 : T.reduce((a,t,i)=> q >= t.n ? i : a, 0);
-    if(web){ const dv = vs(web); filas.push(`<tr class="${act < 0 ? "on" : ""}"><td class="q">${S.minU > 2 ? `1 a ${S.minU - 1}` : "1"} unid.<small>precio web</small></td><td class="p">${money(web)}</td><td class="d web">${dv > 0 ? `−${dv}% vs ML` : ""}</td></tr>`); }
-    T.forEach((t,i)=>{ const dv = vs(t.p), sig = T[i+1];
-      filas.push(`<tr class="${act === i ? "on" : ""}"><td class="q">${t.n}${sig ? ` a ${sig.n - 1}` : " o más"} unid.<small>${i === 0 ? "precio mayorista" : "mayorista"}</small></td><td class="p">${money(t.p)}</td><td class="d">${dv > 0 ? `−${dv}% vs ML` : ""}</td></tr>`); });
-    const unit = window.BRASAS_MAYO_UNIT(tag, q);
-    const sig = T.find(t=> t.n > q);
-    box.innerHTML = `<div class="h"><b>Tu precio por cantidad</b><span>Envío gratis por Andreani, siempre</span></div>
-      <table>${filas.join("")}</table>
-      ${ml ? `<div class="ml">Precio en MercadoLibre hoy: <b>${mlTxt(ml)}</b></div>` : ""}
-      <div class="tot notranslate" translate="no"><span>${q} × ${money(unit)}</span><b>${money(unit * q)}</b>${sig ? `<em>Con ${sig.n} iguales, cada una baja a ${money(sig.p)}.</em>` : ""}</div>`;
-  }
-  document.addEventListener("input", e=>{ if(e.target && e.target.id === "cant-v25") setTimeout(pintarTiers, 0); });
-  document.addEventListener("click", e=>{ if(e.target.closest && e.target.closest(".cant button, #variantes, .miniaturas")) setTimeout(pintarTiers, 60); });
-  if(typeof abrirFicha === "function"){ const af = abrirFicha; abrirFicha = function(){ const r = af.apply(this, arguments); setTimeout(pintarTiers, 80); setTimeout(pintarTiers, 500); return r; }; }
-  if(typeof activarVariante === "function"){ const av = activarVariante; activarVariante = function(){ const r = av.apply(this, arguments); setTimeout(pintarTiers, 0); return r; }; }
-  document.addEventListener("brasas-catalogo", ()=> setTimeout(pintarTiers, 300));
-
-  /* ---------- al cargar: sesión recordada y link de acceso ---------- */
-  try{
-    const g = JSON.parse(lsGet(KEY) || "null");
-    if(g && g.on && g.tiers){
-      if(g.via === "usuario" || (g.via === "google" && currentUser)){ S = g; window.BRASAS_MAYO = S; document.body.classList.add("es-mayo"); }
-      if(g.via === "usuario" && A.appsScript) consultar("accion=mayorista&usuario=" + encodeURIComponent(g.usuario)).then(j=>{ if(j.ok) activar(armar(j, "usuario"), true); else if(j.error === "acceso") salir(false); }).catch(()=>{});
-    }
-  }catch(e){}
-  const porHash = () => {
-    const m = location.hash.match(/^#mayoristas?-([A-Za-z0-9]{6,40})$/);
-    if(!m) return;
-    history.replaceState(null, "", location.pathname + location.search);
-    entrarUsuario(m[1]).then(n=> toast(`Hola ${String(n).split(" ")[0]}: ya ves tus precios mayoristas`)).catch(()=> toast("Ese link de acceso no es válido. Escribinos por WhatsApp."));
-  };
-  window.addEventListener("hashchange", porHash);
-  const obs = new MutationObserver(()=>{ if(document.documentElement.dataset.brasasListo){ obs.disconnect(); porHash(); } });
-  obs.observe(document.documentElement, { attributes:true, attributeFilter:["data-brasas-listo"] }); { const de = document.documentElement; if(de.dataset.brasasListo) de.dataset.brasasListo = de.dataset.brasasListo; }
-  setTimeout(()=>{ try{ renderAccionesUsuario(); pintarTiers(); }catch(e){} }, 400);
+  try{ renderAccionesUsuario(); }catch(e){}
 })();
 </script>
 </body>
