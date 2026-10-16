@@ -7588,12 +7588,26 @@ body:has(.modal-compras.abierto) .flot,body:has(.modal-resenas.abierto) .flot,bo
     const lista = $("#compras-lista", card);
     if(!A.appsScript){ lista.innerHTML = `<div class="mc-vacio">Todavía no tenés compras registradas.</div>`; return; }
     const previa = leerCache(); const ini = sumarLocales(previa || []); if(ini.length) pintar(ini, !!(previa && previa.length) || ini.length > 0);     // al instante lo último que vio; se actualiza atrás
-    try{
-      const r = await fetch(urlScript(mayoU() ? "accion=miscompras&usuario=" + encodeURIComponent(mayoU().usuario) + "&_=" + Date.now() : "accion=miscompras&credencial=" + encodeURIComponent(currentUser.cred || "") + "&_=" + Date.now()), { cache:"no-store" });
-      const j = await r.json();
-      if(!j.ok){ if(j.error === "acceso" && mayoU()){ modal.classList.remove("abierto"); window.BRASAS_MAYO_SALIR && window.BRASAS_MAYO_SALIR(); return; } if(j.error === "google"){ currentUser.cred = ""; pendienteAbrir = true; modal.classList.remove("abierto"); abrirLogin(); return; } throw new Error(j.error); }
-      const lst = sumarLocales(j.compras || []); guardarCache(lst); pintar(lst);
-    }catch(e){ if(!(previa && previa.length)) lista.innerHTML = `<div class="mc-error">No pudimos traer tus compras ahora. Probá de nuevo en un rato.</div>`; }
+    const miCiclo = window.__mcCiclo = (window.__mcCiclo || 0) + 1;
+    const ocupado = () => !!(card.querySelector(".mc-form.on textarea") && card.querySelector(".mc-form.on textarea").value) || !!card.querySelector(".mcx-gr textarea:not(:placeholder-shown)") || (document.activeElement && /TEXTAREA|INPUT/.test(document.activeElement.tagName) && card.contains(document.activeElement));
+    const estado = t => { let e = $(".mcx-sync", card); if(!t){ if(e) e.remove(); return; } if(!e){ e = document.createElement("div"); e.className = "mcx-act mcx-sync"; const l = $("#compras-lista", card); l && l.before(e); } e.innerHTML = t; };
+    async function refrescar(primera){
+      if(miCiclo !== window.__mcCiclo || !modal.classList.contains("abierto")) return;
+      try{
+        const r = await fetch(urlScript(mayoU() ? "accion=miscompras&usuario=" + encodeURIComponent(mayoU().usuario) + "&_=" + Date.now() : "accion=miscompras&credencial=" + encodeURIComponent(currentUser.cred || "") + "&_=" + Date.now()), { cache:"no-store" });
+        const j = await r.json();
+        if(!j.ok){ if(j.error === "acceso" && mayoU()){ modal.classList.remove("abierto"); window.BRASAS_MAYO_SALIR && window.BRASAS_MAYO_SALIR(); return; } if(j.error === "google"){ currentUser.cred = ""; pendienteAbrir = true; modal.classList.remove("abierto"); abrirLogin(); return; } throw new Error(j.error); }
+        const lst = sumarLocales(j.compras || []), antes = JSON.stringify(leerCache() || []); guardarCache(lst);
+        estado("");
+        if(primera || (JSON.stringify(lst) !== antes && !ocupado())) pintar(lst);
+        setTimeout(() => refrescar(false), 15000);                       // mientras esté abierto, se mantiene al día solo
+      }catch(e){
+        if(!(previa && previa.length) && primera) lista.innerHTML = `<div class="mc-error">No pudimos traer tus compras ahora. Reintentando…</div>`;
+        else estado(`<i class="v43-spin"></i>Sin conexión con el servidor · reintentando…`);
+        setTimeout(() => refrescar(primera && !(previa && previa.length)), 5000);
+      }
+    }
+    refrescar(true);
   }
   window.BRASAS_MIS_COMPRAS = abrirMisCompras;
 
@@ -11325,7 +11339,7 @@ body.v46-ml-on #v46-acc{display:none;}
 <script>
 (function(){
   "use strict";
-  const BUILD = "20261015-230111";
+  const BUILD = "20261015-233359";
   window.BRASAS_BUILD = BUILD;
   const $ = (s, r) => (r || document).querySelector(s);
   const esc = t => String(t).replace(/[&<>"]/g, c => ({ "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;" }[c]));
